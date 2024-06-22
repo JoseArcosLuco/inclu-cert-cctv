@@ -9,9 +9,9 @@
                 VALUES(:name, 0)');
             $stmt->bindParam(':name',$name);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Cliente creado correctamente');
+                header('HTTP/1.1 201 Jornada creado correctamente');
             } else {
-                header('HTTP/1.1 404 Cliente no se ha creado correctamente');
+                header('HTTP/1.1 404 Jornada no se ha creado correctamente');
             }
         }
 
@@ -22,9 +22,9 @@
             $stmt = $conn->prepare('DELETE FROM cctv_jornada WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Cliente borrad correctamente');
+                header('HTTP/1.1 201 Jornada borrad correctamente');
             } else {
-                header('HTTP/1.1 404 Cliente no se ha podido borrar correctamente');
+                header('HTTP/1.1 404 Jornada no se ha podido borrar correctamente');
             }
         }
 
@@ -37,7 +37,7 @@
                 echo json_encode($result);
                 header('HTTP/1.1 201 OK');
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los clientes');
+                header('HTTP/1.1 404 No se ha podido consultar Jornada');
             }
         }
 
@@ -51,7 +51,7 @@
                 echo json_encode($result);
                 header('HTTP/1.1 201 OK');
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los clientes');
+                header('HTTP/1.1 404 No se ha podido consultar las Jornada');
             }
         }
 
@@ -65,9 +65,9 @@
             $stmt->bindParam(':id',$id);
 
             if($stmt->execute()){
-                header('HTTP/1.1 201 Cliente actualizado correctamente');
+                header('HTTP/1.1 201 Jornada actualizado correctamente');
             } else {
-                header('HTTP/1.1 404 Cliente no se ha podido actualizar correctamente');
+                header('HTTP/1.1 404 Jornada no se ha podido actualizar correctamente');
             }
 
         }
