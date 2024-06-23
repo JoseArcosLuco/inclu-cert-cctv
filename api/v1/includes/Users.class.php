@@ -2,8 +2,14 @@
     require_once('Database.class.php');
 
     class Users{
-        public static function create_users($idperfil,$nombres,$apellidos,$email,$password,){
+        public function fecha_creacion(){
+            $fechacreacion = date("Y-m-d H:i:s");
+            return $fechacreacion;
+        } 
+        
+        public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa){
             $database = new Database();
+            $fechacreacion = date("Y-m-d H:i:s");
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
                 VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 0)');
