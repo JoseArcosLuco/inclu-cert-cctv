@@ -1,12 +1,13 @@
 <?php
+    require_once('Database.class.php');
 
-    class Tokens{
-        function fecha_creacion(){
+    class Token{
+        public static function fecha_creacion(){
             $fechacreacion = date("Y-m-d H:i:s");
             return $fechacreacion;
         } 
 
-        function getAuthorizationHeader(){
+        public static function getAuthorizationHeader(){
             $headers = null;
             if (isset($_SERVER['Authorization'])) {
                 $headers = trim($_SERVER["Authorization"]);
@@ -28,8 +29,8 @@
         /**
          * get access token from header
          * */
-        function getBearerToken() {
-            $headers = getAuthorizationHeader();
+        public static function getBearerToken() {
+            $headers = Token::getAuthorizationHeader();
             // HEADER: Get the access token from the header
             if (!empty($headers)) {
                 if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
@@ -37,6 +38,25 @@
                 }
             }
             return null;
+        }
+
+        public static function checkTokenByBearer($token){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $fecha = Token::fecha_creacion();
+            $stmt = $conn->prepare('SELECT * FROM cctv_tokens WHERE token=:token and fecha>:fecha and estado=0');
+            $stmt->bindParam(':token',$token);
+            $stmt->bindParam(':fecha',$fecha);
+            if($stmt->execute()){
+                $rows = $stmt->rowCount();
+                if($rows>0){
+                    return true;
+                }else{
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
        
     }

@@ -10,6 +10,8 @@
         public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa){
             $database = new Database();
             $fechacreacion = date("Y-m-d H:i:s");
+            $hash = crypt($password,"inclusiveHash$71/_");
+            
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
                 VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 0)');
@@ -17,7 +19,7 @@
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
             $stmt->bindParam(':email',$email);
-            $stmt->bindParam(':password',$password);
+            $stmt->bindParam(':password',$hash);
             $stmt->bindParam(':codigogoogle2fa',$codigogoogle2fa);
             $stmt->bindParam(':fechacreacion',$fechacreacion);
             if($stmt->execute()){
