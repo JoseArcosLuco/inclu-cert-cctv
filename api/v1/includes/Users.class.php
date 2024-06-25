@@ -2,15 +2,19 @@
     require_once('Database.class.php');
 
     class Users{
-        public function fecha_creacion(){
+        public static function fecha_creacion(){
             $fechacreacion = date("Y-m-d H:i:s");
             return $fechacreacion;
-        } 
+        }
+        public static function hashearPass($password){
+            $hash = crypt($password,"inclusiveHash$71/_");
+            return $hash;
+        }  
         
         public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa){
             $database = new Database();
-            $fechacreacion = date("Y-m-d H:i:s");
-            $hash = crypt($password,"inclusiveHash$71/_");
+            $fechacreacion = Users::fecha_creacion();
+            $hash = Users::hashearPass($password);
             
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
@@ -72,13 +76,13 @@
         public static function update_users($id, $idperfil, $nombres, $apellidos, $email, $password, $codigogoogle2fa, $estado){
             $database = new Database();
             $conn = $database->getConnection();
-
+            $hash = Users::hashearPass($password);
             $stmt = $conn->prepare('UPDATE cctv_users SET id_perfil=:idperfil, nombres=:nombres, apellidos=:apellidos,email=:email, password=:password, codigo_google_2fa=:codigogoogle2fa, estado=:estado WHERE id=:id');
             $stmt->bindParam(':idperfil',$idperfil);
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
             $stmt->bindParam(':email',$email);
-            $stmt->bindParam(':password',$password);
+            $stmt->bindParam(':password',$hash);
             $stmt->bindParam(':codigogoogle2fa',$codigogoogle2fa);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
