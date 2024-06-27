@@ -1,14 +1,12 @@
 import { Routes ,RouterModule} from '@angular/router';
-import  {LoginComponent} from './share/login/login.component';
 import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
-    { path:'login', component: LoginComponent, data: { breadcrumb:'Login' } },
+    { path:'login', loadChildren:()=>import('./login/login.module').then(m=>m.LoginModule) },
+    { path:'admin', loadChildren:()=>import('./pages/pages.module').then(m=>m.PagesModule) },
+    { path:'',redirectTo:'login',pathMatch:'full'}
+    
 ];
-
-import { PagesRoutingModule } from './pages/pages.routing';
-
-
 
 @NgModule({
   declarations: [
@@ -16,7 +14,7 @@ import { PagesRoutingModule } from './pages/pages.routing';
   ],
   imports: [
     RouterModule.forRoot(routes),
-    PagesRoutingModule,
+    
   ],
   exports: [RouterModule]
 })
