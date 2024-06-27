@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-main-sidebar',
-  standalone: true,
-  imports: [],
   templateUrl: './main-sidebar.component.html',
   styleUrl: './main-sidebar.component.css'
 })
-export class MainSidebarComponent {
+export class MainSidebarComponent implements OnInit{
+  constructor() { }
 
+  ngOnInit(): void {
+  }
 }

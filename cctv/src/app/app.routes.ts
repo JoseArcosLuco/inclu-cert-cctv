@@ -1,10 +1,13 @@
 import { Routes ,RouterModule} from '@angular/router';
 import { NgModule } from '@angular/core';
+import { ShareModule } from './share/share.module';
+import { PagesModule } from './pages/pages.module';
 
 export const routes: Routes = [
     { path:'login', loadChildren:()=>import('./login/login.module').then(m=>m.LoginModule) },
-    { path:'admin', loadChildren:()=>import('./pages/pages.module').then(m=>m.PagesModule) },
-    { path:'',redirectTo:'login',pathMatch:'full'}
+    { path:'administracion', loadChildren:()=>import('./pages/pages.module').then(m=>m.PagesModule) },
+    { path:'',redirectTo:'login',pathMatch:'full'},
+    
     
 ];
 
@@ -14,7 +17,7 @@ export const routes: Routes = [
   ],
   imports: [
     RouterModule.forRoot(routes),
-    
+    PagesModule
   ],
   exports: [RouterModule]
 })
