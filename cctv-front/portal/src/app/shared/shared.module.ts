@@ -16,6 +16,7 @@ import { MainSidebarComponent } from './main-sidebar/main-sidebar.component';
   ],
   imports: [
     CommonModule
-  ]
+  ],
+  exports:[SharedComponent]
 })
 export class SharedModule { }
