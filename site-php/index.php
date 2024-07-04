@@ -1,18 +1,21 @@
-<? 
-ini_set('session.save_path',realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/tmp'));
-ini_set('session.gc_probability', 1);
+<?php 
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 require_once('./includes/Users.class.php');
 require_once('./includes/Token.class.php');
-$_SESSION["user"]=$_POST['usuario'];
-$_SESSION["pass"]=$_POST['password'];
+$_SESSION["user"]=isset($_POST['usuario']);
+$_SESSION["pass"]=isset($_POST['password']);
 $_SESSION["idperfil"] = 0;
 $_SESSION["falla"]=0;
 ?>
 
 <? 
-if ($_POST['usuario'])
+if (isset($_POST['usuario']))
 { 
     // Tomamos el valor ingresado
     $sql = trim($_POST['usuario']);
@@ -46,10 +49,16 @@ if ($_POST['usuario'])
                     $stmt->bindParam(':password',$hash);
                     if($stmt->execute()){
                         $result = $stmt->fetchAll();
-                        var_dump($result);
-                        echo 'paso por aquii';
+                        //var_dump($result);
+                        //echo 'paso por aquii';
+                        $rows = $stmt->rowCount();
+                        if($rows>0){
+                            $_SESSION["falla"]=0;
+                        }else{
+                            $_SESSION["falla"]=1;
+                        }
                     } else {
-                        
+                        $_SESSION["falla"]=1;
                     }
                     
                     
@@ -76,7 +85,7 @@ if ($_POST['usuario'])
                 
                 
                 
-                echo 'paso por aquiii';
+                //echo 'paso por aquiii';
 
                 $idperfil=0;
                 $nombreperfil='';
@@ -96,37 +105,23 @@ if ($_POST['usuario'])
                     $apellidos=$data['apellidos'];
                     $passwordbd=$data['password'];
 
-                    echo '<br>paso por aquiii while pdo';
+                    //echo '<br>paso por aquiii while pdo';
                 }
 
-                // while($data=$result)
-                // {
-                //     echo '<br>paso por aquiii while';
-                //     $idperfil=$data['idperfil'];
-                //     $nombreperfil=$data['nombreperfil'];
-                //     $email=$data['email'];
-                //     $id=$data['idusuario'];
-                //     $nombreuser=$data['nombreuser'];
-                //     $apellidos=$data['apellidos'];
-                //     $passwordbd=$data['password'];
-                // }
-
-                
-                print_r($user);
-                print_r($email);
-
+              
 
                 if($user==$email) { 
                     if($hash==$passwordbd) {
                         $_SESSION['idperfil'] = $idperfil;
+                        $_SESSION['nombreperfil'] = $nombreperfil;
                         $_SESSION['idapp'] = 1;
                         $_SESSION["nombre"]=$nombreuser;
                         $_SESSION["apellidos"]=$apellidos;
                         $_SESSION["iduser"]=$id;
                         $_SESSION["email"]=$email;
-                        $fecha_hora = date("d-m-Y H:i:s");
+                        $fecha_hora = date("Y-m-d H:i:s");
                         $token = Token::str_rand();
-
+                        $_SESSION["token"]=$token;
 
                     $database = new Database();
                     $conn = $database->getConnection();
@@ -135,7 +130,7 @@ if ($_POST['usuario'])
                     $stmt->bindParam(':fecha_hora',$fecha_hora);
                     $stmt->bindParam(':token',$token);
                     if($stmt->execute()){
-                        echo "<meta http-equiv='refresh' content='2; url=home.php?token=' />";
+                        echo "<meta http-equiv='refresh' content='2; url=dashboard.php?token=$token' />";
                     } else {
                     }?>
                         <div class="alert alert-success">Ingresando...</div>
