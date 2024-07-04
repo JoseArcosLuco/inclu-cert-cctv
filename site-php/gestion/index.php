@@ -3,6 +3,8 @@
 error_reporting( E_ALL );
 session_start();
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -27,35 +29,35 @@ session_start();
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> 
          <!--begin::Header-->
-         <?php include_once("../header.php");?>
+         <?php require_once("../header.php");?>
          <!--end::Header--> 
          
          <!--begin::Sidebar-->
-         <?php include_once("../main-sidebar.php");?>
+         <?php require_once("../main-sidebar.php");?>
          <!--end::Sidebar--> 
         
         <!--begin::App Main-->
         <main class="app-main"> 
             
             <!--begin::App Content Header-->
-            <?php include_once("../content-header.php");?>
+            <?php require_once("../content-header.php");?>
             <!--end::App Content Header--> 
              
             
             <!--begin::App Content-->
-            <?php include_once("formularioreporte.php");?>
+            <?php require_once("formularioreporte.php");?>
             <!--end::App Content-->
 
         </main> <!--end::App Main--> 
         
         <!--begin::Footer-->
-        <?php include_once("../footer.php");?>
+        <?php require_once("../footer.php");?>
         <!--end::Footer-->
     </div> <!--end::App Wrapper--> <!--begin::Script--> <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script> <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha256-whL0tQWoY1Ku1iskqPFvmZ+CHsvmRWx/PIoEvIeWh4I=" crossorigin="anonymous"></script> <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha256-YMa+wAM6QkVyz999odX7lPRxkoYAan8suedu4k2Zur8=" crossorigin="anonymous"></script> <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../js/adminlte.js"></script> <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script src="./../js/adminlte.js"></script> <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
         const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
         const Default = {
