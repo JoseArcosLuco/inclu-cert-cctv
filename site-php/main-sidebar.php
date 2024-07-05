@@ -1,6 +1,8 @@
 <?php 
 if (isset($_SESSION["token"])) {
     $token =$_SESSION['token'];
+}else{
+    $token = '';
 }
 ?>
 
@@ -16,13 +18,13 @@ if (isset($_SESSION["token"])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="./dashboard.php?token=<?echo $token;?>" class="nav-link active"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="dashboard.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Dashboard v1</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./reportes.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="formularios.php?form=informe&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./gestion/?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="formularios.php?form=formularioreporte&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Formulario Reportes CCTV</p>
                                     </a> </li>
                             </ul>
