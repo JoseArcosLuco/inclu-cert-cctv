@@ -154,7 +154,7 @@ if (isset($_POST['usuario']))
             }
 }
 
-var_dump($_SESSION["falla"]);
+//var_dump($_SESSION["falla"]);
     
 ?>
 
@@ -225,7 +225,7 @@ var_dump($_SESSION["falla"]);
         //codigo 3 = Periodo de inactividad
         $codigo = isset($_GET['cod']);
         
-        switch ("$codigo") {
+        switch ($codigo) {
             case 1:?>
             <div class="alert alert-danger">
                     <strong>ERROR!</strong> Sin autorizacion

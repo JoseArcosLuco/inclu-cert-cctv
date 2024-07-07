@@ -1,4 +1,5 @@
 <?php 
+include("config.php");
 if (isset($_SESSION["token"])) {
     $token =$_SESSION['token'];
 }else{
@@ -7,7 +8,7 @@ if (isset($_SESSION["token"])) {
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
-            <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="./index.html" class="brand-link"> <!--begin::Brand Image--> <img src="./assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">InclusiveCCTV</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
+            <div class="sidebar-brand"> <!--begin::Brand Link--> <a href="./index.html" class="brand-link"> <!--begin::Brand Image--> <img src="<?php echo $base_url?>/assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image opacity-75 shadow"> <!--end::Brand Image--> <!--begin::Brand Text--> <span class="brand-text fw-light">InclusiveCCTV</span> <!--end::Brand Text--> </a> <!--end::Brand Link--> </div> <!--end::Sidebar Brand--> <!--begin::Sidebar Wrapper-->
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
@@ -18,13 +19,13 @@ if (isset($_SESSION["token"])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="dashboard.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/dashboard.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Dashboard v1</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="formularios.php?form=informe&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="formularios.php?form=formularioreporte&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Formulario Reportes CCTV</p>
                                     </a> </li>
                             </ul>
@@ -36,10 +37,10 @@ if (isset($_SESSION["token"])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="./admUsuarios.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/admin/formularios.php?form=admTipoPlanta&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Usuarios</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./admComisarias.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/admin/formularios.php?form=admComiserias&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Comisarias</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="./admClientes.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
