@@ -8,7 +8,7 @@
 
     $database = new Database();
     $conn = $database->getConnection();
-    $stmt = $conn->prepare('SELECT id, nombre, estado FROM cctv_tipo_planta WHERE estado=1');
+    $stmt = $conn->prepare('SELECT id, nombre, estado FROM cctv_tipo_planta WHERE estado in (0,1)');
     if($stmt->execute()){
         $result = $stmt->fetchAll();
         $rows = $stmt->rowCount();
@@ -36,15 +36,24 @@
                         <div class="card-body p-0">
                             
                             <form id="dataForm">
-                                <input type="hidden" id="acciones" name="acciones" value="<? echo $acciones?>">
-                                <label for="nombre">Nombre:</label>
-                                <input type="text" id="nombre" name="nombre" required>
-                                <label for="estado">Estado:</label>
-                                <select id="estado" name="estado" required>
-                                    <option value="1">Activo</option>
-                                    <option value="0">Inactivo</option>
-                                </select>
-                                <button type="submit">Agregar</button>
+                            <input type="hidden" id="acciones" name="acciones" value="<? echo $acciones?>">    
+                            <input type="hidden" id="id_aux" name="id_aux" value="">    
+                                <div class="mb-3" >
+                                    <label class="form-label fw-bold" for="nombre">Nombre:</label>
+                                    <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ingresa Nombre" required>
+                                </div>
+                                <div class="mb-3" >
+                                    <label class="form-label fw-bold" for="estado">Estado:</label>
+                                    <select class="form-control" id="estado" name="estado" required>
+                                        <option value="1">Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3" >
+                                    <button class="btn btn-primary" type="submit">Agregar</button>
+                                </div>
+                                
+                                
                             </form>
                         </div>
                     </div>       
@@ -75,7 +84,8 @@
                                                 <?php echo $row["estado"] == 1 ? 'Activo' : 'Inactivo'; ?>
                                             </td>
                                             <td>
-                                                <button type="button" onclick="removeRow(this)" name="delete_row[]" style="margin-right:10px;" value="">Delete</button>
+                                                <button type="button" onclick='removeRow(<?php echo $row["id"]; ?>)' class="btn btn-danger" value="">Delete</button>
+                                                &nbsp;<button type="button" onclick="actualizaEstado(this)" class="btn btn-secondary" value="<?php echo $row["estado"] ?>">Activar/Desactivar</button>
                                             </td>
                                         </tr>
                                     <? }  ?>
@@ -90,8 +100,26 @@
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        function removeRow(el) {
-            el.parentNode.remove();
+        function removeRow(id) {
+            
+            document.getElementById('acciones').value = 'eliminar';
+            document.getElementById('id_aux').value = id;
+            
+            $.ajax({
+                type: 'post',
+                url: 'TipoPlanta.php',
+                data: {
+                    id_aux: document.getElementById('id_aux').value,
+                    acciones: document.getElementById('acciones').value
+                },
+                dataType: 'text',
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (response) {
+                    alert(response);
+                },
+            });
         }   
         
         $(document).on("submit","#dataForm",function(e){
