@@ -43,9 +43,9 @@
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
                 echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                //header('HTTP/1.1 201 OK');
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los tipo planta');
+                //header('HTTP/1.1 404 No se ha podido consultar los tipo planta');
             }
         }
 
