@@ -9,9 +9,11 @@
                 VALUES(:name, 0)');
             $stmt->bindParam(':name',$name);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Tipo Planta creado correctamente');
+                //header('HTTP/1.1 201 Tipo Planta creado correctamente');
+                return $stmt->fetch(PDO::FETCH_ASSOC);
             } else {
-                header('HTTP/1.1 404 Tipo Planta no se ha creado correctamente');
+                //header('HTTP/1.1 404 Tipo Planta no se ha creado correctamente');
+                return false;
             }
         }
 

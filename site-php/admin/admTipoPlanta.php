@@ -1,5 +1,9 @@
 <?php
     include("../includes/Database.class.php");
+    include("../includes/TipoPlanta.class.php");
+
+    isset($_POST['acciones']) ? $acciones = $_POST['acciones'] : $acciones = 'agregar';
+    isset($_POST['token']) ? $token = $_POST['token'] : $token = '';
 
 
     $database = new Database();
@@ -9,91 +13,100 @@
         $result = $stmt->fetchAll();
         $rows = $stmt->rowCount();
         if($rows>0){
-            echo 'rows:'.$rows;
+            //echo 'rows:'.$rows;
         }else{
-            echo 'rows-else:'.$rows;
+            //echo 'rows-else:'.$rows;
         }
-        print_r(json_encode($result));
+        
     }
+    $data = $result;
 
-   
-    // $data = array();
-    // if ($rows > 0) {
-    //     while ($row = $result) {
-    //         $data[] = $row;
-    //     }
-    // }
-
-
-
-
-
-
-
+    //print_r($data);
+ 
 ?>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h3 class="card-title">Mantenedor de CCTV Tipo Plantas</h3>
-            </div> 
-            <div class="card-body p-0">
-                
-                <form id="dataForm">
-                    <label for="id">ID:</label>
-                    <input type="number" id="id" name="id" required>
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" required>
-                    <label for="estado">Estado:</label>
-                    <select id="estado" name="estado" required>
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                    <button type="submit">Agregar</button>
-                </form>
+    <div class="app-content"> 
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Mantenedor de CCTV Tipo Plantas</h3>
+                        </div> 
+                        <div class="card-body p-0">
+                            
+                            <form id="dataForm">
+                                <input type="hidden" id="acciones" name="acciones" value="<? echo $acciones?>">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" id="nombre" name="nombre" required>
+                                <label for="estado">Estado:</label>
+                                <select id="estado" name="estado" required>
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                                <button type="submit">Agregar</button>
+                            </form>
+                        </div>
+                    </div>       
+                </div>
             </div>
-        </div>       
+                <div class="row">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Striped Full Width Table</h3>
+                        </div>
+                        <div class="card-body p-0">    
+                            <table id="dataTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <? foreach ($data as $row){  ?>
+                                        <tr class="align-middle">
+                                            <td><?php echo $row["id"]; ?> </td>
+                                            
+                                            <td><?php echo $row["nombre"]; ?></td>
+                                            <td>
+                                                <?php echo $row["estado"] == 1 ? 'Activo' : 'Inactivo'; ?>
+                                            </td>
+                                            <td>
+                                                <button type="button" onclick="removeRow(this)" name="delete_row[]" style="margin-right:10px;" value="">Delete</button>
+                                            </td>
+                                        </tr>
+                                    <? }  ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
     
-    <table id="dataTable" class="display">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        $(document).ready(function() {
-            var table = $('#dataTable').DataTable({
-                "ajax": "api/get_data.php",
-                "columns": [
-                    { "data": "id" },
-                    { "data": "nombre" },
-                    { "data": "estado", "render": function(data, type, row) {
-                        return data == 1 ? 'Activo' : 'Inactivo';
-                    }}
-                ]
-            });
-
-            $('#dataForm').on('submit', function(event) {
-                event.preventDefault();
-                var id = $('#id').val();
-                var nombre = $('#nombre').val();
-                var estado = $('#estado').val();
-                table.row.add({
-                    "id": id,
-                    "nombre": nombre,
-                    "estado": estado == 1 ? 'Activo' : 'Inactivo'
-                }).draw(false);
-                this.reset();
+        function removeRow(el) {
+            el.parentNode.remove();
+        }   
+        
+        $(document).on("submit","#dataForm",function(e){
+            e.preventDefault();
+            $.ajax({
+                type: 'post',
+                url: 'TipoPlanta.php',
+                data: $(this).serialize(),
+                dataType: 'text',
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (response) {
+                    alert(response);
+                },
             });
         });
     </script>
