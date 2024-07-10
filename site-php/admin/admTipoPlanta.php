@@ -85,7 +85,7 @@
                                             </td>
                                             <td>
                                                 <button type="button" onclick='removeRow(<?php echo $row["id"]; ?>)' class="btn btn-danger" value="">Delete</button>
-                                                &nbsp;<button type="button" onclick="actualizaEstado(this)" class="btn btn-secondary" value="<?php echo $row["estado"] ?>">Activar/Desactivar</button>
+                                                &nbsp;<button type="button" onclick="actualizaEstado('<?php echo $row['id'] ?>','<?php echo $row['nombre'] ?>','<?php echo $row['estado'] ?>')" class="btn btn-secondary" value="<?php echo $row['estado'] ?>">Activar/Desactivar</button>
                                             </td>
                                         </tr>
                                     <? }  ?>

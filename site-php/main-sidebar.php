@@ -38,10 +38,10 @@ if (isset($_SESSION["token"])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/admin/formularios.php?form=admTipoPlanta&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Usuarios</p>
+                                        <p>Admin Tipo Planta</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/admin/formularios.php?form=admComiserias&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Comisarias</p>
+                                        <p>Admin Comisarias</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="./admClientes.php?token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Clientes</p>
