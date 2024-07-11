@@ -19,6 +19,7 @@
             $stmt->bindParam(':fecha_gestion',$fecha);
             
             if($stmt->execute()){
+                $idInsertado = $conn->lastInsertId();
                 header('HTTP/1.1 201 gestion plantas camaras creado correctamente');
             } else {
                 header('HTTP/1.1 404 gestion plantas camaras no se ha creado correctamente');

@@ -31,24 +31,24 @@ if($stmt->execute()){
 
 <div class="app-content"> <!--begin::Container-->
                 <div class="container-fluid"> <!--begin::Row-->
-                    <div class="row g-4"> 
+                    <div class="row g-2"> 
                         <div class="col-md-8 col-xs-6"> <!--begin::Quick Example-->
-                            <div class="card card-primary card-outline mb-4"> <!--begin::Header-->
+                            <div class="card card-primary card-outline mb-2"> <!--begin::Header-->
                                 <div class="card-header">
                                     <div class="card-title">Ingreso Reporte Turno</div>
                                 </div> <!--end::Header--> <!--begin::Form-->
-                                <form id="dataForm"> <!--begin::Body-->
+                                <form id="dataForm" name="dataForm"> <!--begin::Body-->
                                 <input type="hidden" id="id_aux" name="id_aux">
                                 <input type="hidden" id="acciones" name="acciones">
                                     <div class="card-body">
-                                        <div class="mb-3"> 
+                                        <div class="mb-1"> 
                                             <label class="form-label">Fecha Turno</label> 
                                             <input type="date" class="form-control" id="fecha" name="fecha" required>
                                             <div id="emailHelp" class="form-text">
                                                 Reportar fecha y hora exacta para el registro interno.
                                             </div>
                                         </div>
-                                        <div class="mb-3"> 
+                                        <div class="mb-1"> 
                                             <label class="form-label">Planta</label> 
                                             <select class="form-control" name="planta" id="planta" required>
                                                 <option value="">Seleccione</option>
@@ -76,6 +76,20 @@ if($stmt->execute()){
                                             <label class="form-label">Horario</label>
                                             <input type="text" class="form-control" id="horario" name="horario" readonly>
                                         </div>
+                                        <div class="row mb-3"> 
+                                            <div class="col-4">
+                                                <label class="form-label">Camaras Intermitencia</label>
+                                                <input type="number" class="form-control" id="conintermitencia" name="conintermitencia" required>  
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label">Camaras Sin Conexion</label>
+                                                <input type="number" class="form-control" id="camarassinconexion" name="camarassinconexion" required>  
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="form-label">Camaras Totales</label>
+                                                <input type="number" class="form-control" id="camarastotales" name="camarastotales" required>  
+                                            </div>
+                                        </div>
                                         <div class="mb-3"> 
                                             <label class="form-label">Responsable</label> 
                                             <select class="form-control" name="responsable" id="responsable" required>
@@ -83,26 +97,30 @@ if($stmt->execute()){
                                             </select> 
                                         </div>
                                         <div class="mb-3"> 
-                                            <label class="form-label">Planta sin Conexion</label> 
+                                            <label class="form-label">Planta En Linea</label> 
                                             <select class="form-control" name="planta_sin_conexion" id="planta_sin_conexion" required>
                                                 <option value="">Seleccione</option>
-                                                <? foreach ($dataPlantas as $row){  ?>
-                                                    <option value="<?php echo $row["id"]; ?>"><?php echo $row["nombre"]; ?></option>
-                                                <? } ?>
+                                                <option value="1">Si</option>
+                                                <option value="2">No</option>
                                             </select> 
                                         </div>
                                         <div class="mb-3"> 
                                             <label for="exampleInputPassword1" class="form-label">Observaciones Turno</label> 
-                                            <input type="text" class="form-control" id="obs_turno" required> 
+                                            <input type="text" class="form-control" name="obs_turno" id="obs_turno" required> 
                                         </div>
                                         <div class="mb-3"> 
                                             <label for="exampleInputPassword1" class="form-label">Observaciones Semana</label> 
-                                            <input type="text" class="form-control" id="obs_semana"> 
+                                            <input type="text" class="form-control" name="obs_semana" id="obs_semana"> 
                                         </div>
 
                                         
                                     </div> <!--end::Body--> <!--begin::Footer-->
-                                    <div class="card-footer"> <button type="submit" class="btn btn-primary">Submit</button> </div> <!--end::Footer-->
+                                    <div class="card-footer"> 
+                                        <button type="submit" class="btn btn-primary" id="submitBtn">Enviar Reporte</button> 
+                                    </div> <!--end::Footer-->
+                                    <div class="col-md-6" id="mensaje" name="mensaje"> 
+                            
+                                    </div>
                                 </form> <!--end::Form-->
                             </div> <!--end::Quick Example--> <!--begin::Input Group-->
                             
@@ -165,17 +183,31 @@ if($stmt->execute()){
 
                 $(document).on("submit","#dataForm",function(e){
                     e.preventDefault();
+                    $('#submitBtn').attr("disabled", true);
+                    $("#submitBtn").attr("value", 'Enviando...');
+                    const self = this;
                     document.getElementById('acciones').value = 'grabarreporte';
                     $.ajax({
                         type: 'post',
                         url: 'formularioreporteback.php',
                         data: $(this).serialize(),
                         dataType: 'text',
+                        cache: false,
+                        async: true,
                         success: function (response) {
                             alert(response);
+                            $('#submitBtn').attr("disabled", false);
+                            $("#submitBtn").attr("value", 'Enviar Reporte');
+                            $('#mensaje').html(response).fadeIn('slow');
+                            $('#mensaje').delay(5000).fadeOut('slow');
+                            document.getElementById("dataForm").reset();
                         },
                         error: function (response) {
                             alert(response);
+                            $('#submitBtn').attr("disabled", false);
+                            $("#submitBtn").attr("value", 'Enviar Reporte');
+                            $('#mensaje').html(response).fadeIn('slow');
+                            $('#mensaje').delay(5000).fadeOut('slow');
                         },
                     });
                 });
