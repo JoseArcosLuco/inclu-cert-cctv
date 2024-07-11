@@ -159,7 +159,7 @@ if (isset($_POST['usuario'])) {
                     </a>
                 </div> <!-- /.social-auth-links -->
                 <p class="mb-1"> <a href="forgot-password.html">Olvido su contraseña?</a> </p>
-                <p class="mb-0"> <a href="register.html" class="text-center">
+                <p class="mb-0"> <a href="registro.php" class="text-center">
                         Registrar nuevo usuario!
                     </a> </p>
             </div> <!-- /.login-card-body -->

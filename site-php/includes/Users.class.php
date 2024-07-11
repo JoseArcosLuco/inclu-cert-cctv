@@ -35,7 +35,7 @@
             
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
-                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 0)');
+                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 1)');
             $stmt->bindParam(':idperfil',$idperfil);
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
