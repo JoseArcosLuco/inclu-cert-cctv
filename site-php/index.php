@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -8,13 +7,11 @@ session_start();
 
 require_once('./includes/Users.class.php');
 require_once('./includes/Token.class.php');
-$_SESSION["user"]=isset($_POST['usuario']);
-$_SESSION["pass"]=isset($_POST['password']);
+$_SESSION["user"]= $_POST['usuario'] ?? null;
+$_SESSION["pass"]= $_POST['password'] ?? null;
 $_SESSION["idperfil"] = 0;
 $_SESSION["falla"]=0;
-?>
 
-<? 
 if (isset($_POST['usuario']))
 { 
     // Tomamos el valor ingresado
@@ -33,23 +30,31 @@ if (isset($_POST['usuario']))
                 $_SESSION["falla"]=1;
             } 
                 /* Utilizaremos la función empty de PHP mediante la cual preguntaremos si nuestra variable $user (la que contiene el valor de usuario del formulario) se encuentra vacia, lo que significaría que el usuario no ingreso nada en el campo. Si este fuera el caso, desplegaríamos un mensaje en la página con "echo" y luego cambiariamos el valor de nuestra variable "falla" (la bandera definida en el vector de sesión) a 1. En caso de que el usuario no este vacío, pasamos al else y revisamos lo demás */
-                else{ 
+            else{ 
                     
-                    if(empty($pass)) { 
-                        echo "<p style='color:red;'>No ha ingresado una password.";
-                        $_SESSION["falla"]=1;
+                if(empty($pass)) { 
+                    echo "<p style='color:red;'>No ha ingresado una password.";
+                    $_SESSION["falla"]=1;
                 } /* Haremos la misma comprobación anterior pero en este caso con la variable $pass (que almacena el valor de password del formulario). En caso de que no este vacía, pasamos al else */
                 else{ 
                     
                     $database = new Database();
                     $hash = Users::hashearPass($pass);
                     $conn = $database->getConnection();
-                    $stmt = $conn->prepare('SELECT u.id as idusuario,u.email,u.password,p.id as idperfil,p.nombre as nombreperfil,u.nombres as nombreuser,u.apellidos FROM cctv_users as u inner join cctv_perfil as p on u.id_perfil = p.id WHERE u.email=:email and u.password = :password and u.estado=1 and p.estado=1');
+                    $stmt = $conn->prepare('SELECT u.id as idusuario,
+											u.email,u.password,p.id as idperfil,
+											p.nombre as nombreperfil,
+											u.nombres as nombreuser,
+											u.apellidos 
+											FROM cctv_users as u 
+											INNER JOIN cctv_perfil AS p ON u.id_perfil = p.id 
+											WHERE u.email= :email and u.password = :password and u.estado=1 and p.estado=1');
+
                     $stmt->bindParam(':email',$user);
                     $stmt->bindParam(':password',$hash);
                     if($stmt->execute()){
                         $result = $stmt->fetchAll();
-                        //var_dump($result);
+                        var_dump($result);
                         //echo 'paso por aquii';
                         $rows = $stmt->rowCount();
                         if($rows>0){
@@ -61,96 +66,82 @@ if (isset($_POST['usuario']))
                         $_SESSION["falla"]=1;
                     }
                     
-                    
-                $resultado = $result;
 
-                if(!$resultado) { 
-                    //$error=mysql_error();
-                    //print $error;
-                    $_SESSION["falla"]=1;
-                    //exit(); 
-                } 
-                
-                if(count($resultado)==0) {
-                ?>
-                    <div class="alert alert-danger">
-                        <strong>ERROR!</strong> Usuario incorrecto
-                    </div>
-                <?
-                    $_SESSION["falla"]=1;
-                    //exit();
-                } /* Luego mediante otro if , hacemos un llamado a la función mysql_affected_rows() la cual se encarga de notificar si es que la consulta no afecto a ninguna fila de nuestra tabla (o sea, no hubo coincidencias), esta función retorna un entero, que es 0 en caso de no haber filas afectadas. En caso de que así sea desplegamos un mensaje informando que el usuario no fue encontrado mediante la sentencia "echo", cambiamos el valor de la variable falla del vector de sesión y finalmente salimos del código mediante la función exit();. Si el resultado de la función no es cero, significa que hubo coincidencias y pasamos al else */ 
+					if(!$result) { 
+						//$error=mysql_error();
+						//print $error;
+						$_SESSION["falla"]=1;
+						//exit(); 
+					} 
+					
+					if(count($result)==0) {
+						echo "<div class='alert alert-danger'><strong>ERROR!</strong> Contraseña Incorrectaaaaaaaaa</div>";
+						$_SESSION["falla"]=1;
+						//exit();
+					} /* Luego mediante otro if , hacemos un llamado a la función mysql_affected_rows() la cual se encarga de notificar si es que la consulta no afecto a ninguna fila de nuestra tabla (o sea, no hubo coincidencias), esta función retorna un entero, que es 0 en caso de no haber filas afectadas. En caso de que así sea desplegamos un mensaje informando que el usuario no fue encontrado mediante la sentencia "echo", cambiamos el valor de la variable falla del vector de sesión y finalmente salimos del código mediante la función exit();. Si el resultado de la función no es cero, significa que hubo coincidencias y pasamos al else */ 
 
-                else { 
-                
-                
-                
-                //echo 'paso por aquiii';
+					else { 
+						//echo 'paso por aquiii';
 
-                $idperfil=0;
-                $nombreperfil='';
-                $email='';
-                $id=0;
-                $nombreuser='';
-                $apellidos='';
-                $passwordbd='';
-                
-                foreach ( $result as $data) {
-                    // ...
-                    $idperfil=$data['idperfil'];
-                    $nombreperfil=$data['nombreperfil'];
-                    $email=$data['email'];
-                    $id=$data['idusuario'];
-                    $nombreuser=$data['nombreuser'];
-                    $apellidos=$data['apellidos'];
-                    $passwordbd=$data['password'];
+						$idperfil=0;
+						$nombreperfil='';
+						$email='';
+						$id=0;
+						$nombreuser='';
+						$apellidos='';
+						$passwordbd='';
+						
+						foreach ( $result as $data) {
+							// ...
+							$idperfil=$data['idperfil'];
+							$nombreperfil=$data['nombreperfil'];
+							$email=$data['email'];
+							$id=$data['idusuario'];
+							$nombreuser=$data['nombreuser'];
+							$apellidos=$data['apellidos'];
+							$passwordbd=$data['password'];
 
-                    //echo '<br>paso por aquiii while pdo';
-                }
+							//echo '<br>paso por aquiii while pdo';
+						}
 
-              
+						if($user==$email) { 
+							if($hash==$passwordbd) {
+								$_SESSION['idperfil'] = $idperfil;
+								$_SESSION['nombreperfil'] = $nombreperfil;
+								$_SESSION['idapp'] = 1;
+								$_SESSION["nombre"]=$nombreuser;
+								$_SESSION["apellidos"]=$apellidos;
+								$_SESSION["iduser"]=$id;
+								$_SESSION["email"]=$email;
+								$fecha_hora = date("Y-m-d H:i:s");
+								$token = Token::str_rand();
+								$_SESSION["token"]=$token;
 
-                if($user==$email) { 
-                    if($hash==$passwordbd) {
-                        $_SESSION['idperfil'] = $idperfil;
-                        $_SESSION['nombreperfil'] = $nombreperfil;
-                        $_SESSION['idapp'] = 1;
-                        $_SESSION["nombre"]=$nombreuser;
-                        $_SESSION["apellidos"]=$apellidos;
-                        $_SESSION["iduser"]=$id;
-                        $_SESSION["email"]=$email;
-                        $fecha_hora = date("Y-m-d H:i:s");
-                        $token = Token::str_rand();
-                        $_SESSION["token"]=$token;
+								$database = new Database();
+								$conn = $database->getConnection();
+								$stmt = $conn->prepare('insert into cctv_tokens (id_users,fecha,token) values (:iduser,:fecha_hora,:token)');
+								$stmt->bindParam(':iduser',$id);
+								$stmt->bindParam(':fecha_hora',$fecha_hora);
+								$stmt->bindParam(':token',$token);
+								if($stmt->execute()){
+									echo "<meta http-equiv='refresh' content='2; url=dashboard.php?token=$token' />";
+								} else {
+								}
+									echo "<div class='alert alert-success'>Ingresando...</div>";
+							
 
-                    $database = new Database();
-                    $conn = $database->getConnection();
-                    $stmt = $conn->prepare('insert into cctv_tokens (id_users,fecha,token) values (:iduser,:fecha_hora,:token)');
-                    $stmt->bindParam(':iduser',$id);
-                    $stmt->bindParam(':fecha_hora',$fecha_hora);
-                    $stmt->bindParam(':token',$token);
-                    if($stmt->execute()){
-                        echo "<meta http-equiv='refresh' content='2; url=dashboard.php?token=$token' />";
-                    } else {
-                    }?>
-                        <div class="alert alert-success">Ingresando...</div>
-                <?
+							} else {
+								echo "<div class= 'alert alert-danger'><strong>ERROR!</strong> Contraseña Incorrecta</div>";
+								echo "<meta http-equiv='refresh' content='2; url=error.php?cod=1' />";
 
-                } else {?>
-                    <div class="alert alert-danger">
-                        <strong>ERROR!</strong> Contraseña Incorrecta
-                    </div>
-                    <meta http-equiv='refresh' content='2; url=error.php?cod=1' />
+								$_SESSION["falla"]=1;
+							} 
 
-                <?
-                    $_SESSION["falla"]=1;
-                } 
-
-                } else { 
-                    echo "<p style='color:red;'>Existe un error en el nombre de usuario.</p>";
-                    $_SESSION["falla"]=1;
-                }
-                } } }
+						} else { 
+							echo "<p style='color:red;'>Existe un error en el nombre de usuario.</p>";
+							$_SESSION["falla"]=1;
+						}
+					} } }
             }
 }
 
