@@ -14,8 +14,10 @@ $_SESSION["pass"] = $_POST['password'] ?? null;
 $_SESSION["idperfil"] = 0;
 $_SESSION["falla"] = 0;
 
-
+include('codigos.php');
 $mensaje = '';
+$codigo = isset($_GET['cod']) ? (int)$_GET['cod']: 0;
+$output = getMensajeAlerta($codigo);
 
 if (isset($_POST['usuario'])) { 
     
@@ -121,6 +123,7 @@ if (isset($_POST['usuario'])) {
 </head> <!--end::Head--> <!--begin::Body-->
 
 <body class="login-page bg-body-secondary">
+    <?php echo $mensaje ?>
     <div class="login-box">
         <div class="login-logo">
             <a href="../index2.html">
@@ -162,32 +165,7 @@ if (isset($_POST['usuario'])) {
             </div> <!-- /.login-card-body -->
         </div>
     </div> <!-- /.login-box --> <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <div>
-    <?
-        //Codigo 1 = Sin autorizacion
-        //codigo 2 = Sesion cerrada
-        //codigo 3 = Periodo de inactividad
-        $codigo = isset($_GET['cod']);
-        
-        switch ($codigo) {
-            case 1:?>
-            <div class="alert alert-danger">
-                    <strong>ERROR!</strong> Sin autorizacion
-                </div>
-            <?break;
-            case 2:?>
-            <div class="alert alert-success" style="color: #FFFFFF;background-color: #498C2D;border-color: #d6e9c6;">
-            <strong>Correcto!</strong> Sesion Cerrada
-            </div>
-            <?break;
-            case 3:?>
-            <div class="alert alert-info" style="color: #FFFFFF;background-color: #076480;border-color: #bce8f1;">
-            <strong>ATENCIÓN! </strong>Para un correcto funcionamineto de la aplicacíon se recomienda utilizar Google Chrome <a href="https://www.google.com/intl/es-419/chrome/browser/desktop/index.html" target="_blank"><img src="../img/google-chrome.ico" width="32" height="32"></a>
-                </div>
-        <?break;
-        }
-    ?>
-    </div>
+    <div class="mt-5"><?php echo $output ?></div>
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script> <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha256-whL0tQWoY1Ku1iskqPFvmZ+CHsvmRWx/PIoEvIeWh4I=" crossorigin="anonymous"></script> <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha256-YMa+wAM6QkVyz999odX7lPRxkoYAan8suedu4k2Zur8=" crossorigin="anonymous"></script> <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
