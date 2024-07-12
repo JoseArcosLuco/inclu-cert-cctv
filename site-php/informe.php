@@ -1,84 +1,62 @@
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
-    <div class="card mb-4">
+                            <div class="card mb-4">
                                 <div class="card-header">
                                     <h3 class="card-title">Bordered Table</h3>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body">
-                                    <table class="table table-bordered">
+                                    <table id="datatable" class="display" style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th style="width: 10px">#</th>
+                                                <th>ID</th>
                                                 <th>Planta</th>
-                                                <th>Planta Sin Conexion</th>
-                                                <th>Planta En Linea</th>
-                                                <th>Planta Intermitencia</th>
-                                                <th>Camaras sin conexion</th>
-                                                <th>Operacion</th>
-                                                <th>Total Camaras</th>
-                                                <th>Direccion</th>
-                                                <th>Comuna</th>
-                                                <th>Mapa</th>
-                                                <th style="width: 40px">Label</th>
+                                                <th>Nombre Usuario</th>
+                                                <th>Turno</th>
+                                                
+                                                <th>Horario</th>
+                                                <th>Planta en Línea</th>
+                                                <th>Cámaras Con Intermitencia</th>
+                                                <th>Cámaras sin Conexión</th>
+                                                <th>Cámaras Totales</th>
+                                                <th>Observaciones</th>
+                                                <th>Fecha Gestion</th>
+                                                <th>Fecha Registro</th>
+                                                <th>Estado Reporte</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr class="align-middle">
-                                                <td>1.</td>
-                                                <td>VALLE DE LA LUNA</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-
-                                                <td>
-                                                    <div class="progress progress-xs">
-                                                        <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                    </div>
-                                                </td>
-                                                <td><span class="badge text-bg-danger">55%</span></td>
-                                            </tr>
-                                            <tr class="align-middle">
-                                                <td>2.</td>
-                                                <td>CHACRAS</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>
-                                                    <div class="progress progress-xs">
-                                                        <div class="progress-bar text-bg-warning" style="width: 70%"></div>
-                                                    </div>
-                                                </td>
-                                                <td> <span class="badge text-bg-warning">70%</span> </td>
-                                            </tr>
-                                            <tr class="align-middle">
-                                                <td>3.</td>
-                                                <td>ANDROMEDA</td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td>
-                                                    <div class="progress progress-xs progress-striped active">
-                                                        <div class="progress-bar text-bg-primary" style="width: 30%"></div>
-                                                    </div>
-                                                </td>
-                                                <td> <span class="badge text-bg-primary">30%</span> </td>
-                                            </tr>
-                                            
-                                        </tbody>
                                     </table>
-                                </div> <!-- /.card-body -->
-                                <div class="card-footer clearfix">
-                                    <ul class="pagination pagination-sm m-0 float-end">
-                                        <li class="page-item"> <a class="page-link" href="#">&laquo;</a> </li>
-                                        <li class="page-item"> <a class="page-link" href="#">1</a> </li>
-                                        <li class="page-item"> <a class="page-link" href="#">2</a> </li>
-                                        <li class="page-item"> <a class="page-link" href="#">3</a> </li>
-                                        <li class="page-item"> <a class="page-link" href="#">&raquo;</a> </li>
-                                    </ul>
-                                </div>
+                                </div> 
+                                
                             </div> <!-- /.card -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
+
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#datatable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": "informedatos.php",
+            "columns": [
+                { "data": "id" },
+                { "data": "planta" },
+                { "data": "nombreusuario" },
+                { "data": "turno" },
+                { "data": "horario" },
+                { "data": "planta_en_linea" },
+                { "data": "camarasintermitencia" },
+                { "data": "camaras_sin_conexion" },
+                { "data": "camaras_totales" },
+                { "data": "observaciones" },
+                { "data": "fecha_gestion" },
+                { "data": "fecha_registro" },
+                { "data": "estadoreporte" }
+            ]
+        });
+    });
+</script>

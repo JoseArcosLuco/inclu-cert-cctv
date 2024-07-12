@@ -1,10 +1,7 @@
 <?php 
-
 error_reporting( E_ALL );
 session_start();
-
-
-
+$formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
 ?>
 
 <!DOCTYPE html>
@@ -34,20 +31,20 @@ session_start();
          <!--end::Header--> 
          
          <!--begin::Sidebar-->
-         <?php include("./main-sidebar.php");?>
+         <?php include "./main-sidebar.php";?>
          <!--end::Sidebar--> 
         
         <!--begin::App Main-->
         <main class="app-main"> 
             
             <!--begin::App Content Header-->
-            <?php include("./content-header.php");?>
+            <?php include "./content-header.php";?>
             <!--end::App Content Header--> 
              
             
             <!--begin::App Content-->
             <?php 
-            $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
+            
             
             switch( $formAccion ) {
                 case "formularioreporte":

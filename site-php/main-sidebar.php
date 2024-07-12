@@ -23,10 +23,10 @@ if (isset($_SESSION["token"])) {
                                         <p>Dashboard v1</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Reportes</p>
+                                        <p>Informes</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Formulario Reportes CCTV</p>
+                                        <p>Reportes CCTV</p>
                                     </a> </li>
                             </ul>
                         </li>
