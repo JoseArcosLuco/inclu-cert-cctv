@@ -1,4 +1,4 @@
-<?php
+<?php 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,146 +7,101 @@ session_start();
 
 require_once('./includes/Users.class.php');
 require_once('./includes/Token.class.php');
-$_SESSION["user"]= $_POST['usuario'] ?? null;
-$_SESSION["pass"]= $_POST['password'] ?? null;
+
+
+$_SESSION["user"] = $_POST['usuario'] ?? null;
+$_SESSION["pass"] = $_POST['password'] ?? null;
 $_SESSION["idperfil"] = 0;
-$_SESSION["falla"]=0;
+$_SESSION["falla"] = 0;
 
-if (isset($_POST['usuario']))
-{ 
-    // Tomamos el valor ingresado
-    $sql = trim($_POST['usuario']);
-    // Si está vacío, lo informamos, sino realizamos la búsqueda
-    if(empty($sql)){
-        echo "No se ha ingresado una cadena a buscar";
-    } else {
-            
-            $user=$_POST['usuario'];
-            $pass=$_POST['password'];
-            //$idapp=$_POST['idapp'];
-            /* Asignamos a las variables $user y $pass los valores "usuario" y "clave" recogidos de nuestro formulario de ingreso de la página HTML. */ 
-            if(empty($user)) { 
-                echo "<p style='color:red;'>No ha ingresado un nombre de usuario.";
-                $_SESSION["falla"]=1;
-            } 
-                /* Utilizaremos la función empty de PHP mediante la cual preguntaremos si nuestra variable $user (la que contiene el valor de usuario del formulario) se encuentra vacia, lo que significaría que el usuario no ingreso nada en el campo. Si este fuera el caso, desplegaríamos un mensaje en la página con "echo" y luego cambiariamos el valor de nuestra variable "falla" (la bandera definida en el vector de sesión) a 1. En caso de que el usuario no este vacío, pasamos al else y revisamos lo demás */
-            else{ 
-                    
-                if(empty($pass)) { 
-                    echo "<p style='color:red;'>No ha ingresado una password.";
-                    $_SESSION["falla"]=1;
-                } /* Haremos la misma comprobación anterior pero en este caso con la variable $pass (que almacena el valor de password del formulario). En caso de que no este vacía, pasamos al else */
-                else{ 
-                    
-                    $database = new Database();
-                    $hash = Users::hashearPass($pass);
-                    $conn = $database->getConnection();
-                    $stmt = $conn->prepare('SELECT u.id as idusuario,
-											u.email,u.password,p.id as idperfil,
-											p.nombre as nombreperfil,
-											u.nombres as nombreuser,
-											u.apellidos 
-											FROM cctv_users as u 
-											INNER JOIN cctv_perfil AS p ON u.id_perfil = p.id 
-											WHERE u.email= :email and u.password = :password and u.estado=1 and p.estado=1');
+include('codigos.php');
+$mensaje = '';
+$codigo = isset($_GET['cod']) ? (int)$_GET['cod']: 0;
+$output = getMensajeAlerta($codigo);
 
-                    $stmt->bindParam(':email',$user);
-                    $stmt->bindParam(':password',$hash);
-                    if($stmt->execute()){
-                        $result = $stmt->fetchAll();
-                        var_dump($result);
-                        //echo 'paso por aquii';
-                        $rows = $stmt->rowCount();
-                        if($rows>0){
-                            $_SESSION["falla"]=0;
-                        }else{
-                            $_SESSION["falla"]=1;
-                        }
-                    } else {
-                        $_SESSION["falla"]=1;
-                    }
-                    
-
-					if(!$result) { 
-						//$error=mysql_error();
-						//print $error;
-						$_SESSION["falla"]=1;
-						//exit(); 
-					} 
-					
-					if(count($result)==0) {
-						echo "<div class='alert alert-danger'><strong>ERROR!</strong> Contraseña Incorrectaaaaaaaaa</div>";
-						$_SESSION["falla"]=1;
-						//exit();
-					} /* Luego mediante otro if , hacemos un llamado a la función mysql_affected_rows() la cual se encarga de notificar si es que la consulta no afecto a ninguna fila de nuestra tabla (o sea, no hubo coincidencias), esta función retorna un entero, que es 0 en caso de no haber filas afectadas. En caso de que así sea desplegamos un mensaje informando que el usuario no fue encontrado mediante la sentencia "echo", cambiamos el valor de la variable falla del vector de sesión y finalmente salimos del código mediante la función exit();. Si el resultado de la función no es cero, significa que hubo coincidencias y pasamos al else */ 
-
-					else { 
-						//echo 'paso por aquiii';
-
-						$idperfil=0;
-						$nombreperfil='';
-						$email='';
-						$id=0;
-						$nombreuser='';
-						$apellidos='';
-						$passwordbd='';
-						
-						foreach ( $result as $data) {
-							// ...
-							$idperfil=$data['idperfil'];
-							$nombreperfil=$data['nombreperfil'];
-							$email=$data['email'];
-							$id=$data['idusuario'];
-							$nombreuser=$data['nombreuser'];
-							$apellidos=$data['apellidos'];
-							$passwordbd=$data['password'];
-
-							//echo '<br>paso por aquiii while pdo';
-						}
-
-						if($user==$email) { 
-							if($hash==$passwordbd) {
-								$_SESSION['idperfil'] = $idperfil;
-								$_SESSION['nombreperfil'] = $nombreperfil;
-								$_SESSION['idapp'] = 1;
-								$_SESSION["nombre"]=$nombreuser;
-								$_SESSION["apellidos"]=$apellidos;
-								$_SESSION["iduser"]=$id;
-								$_SESSION["email"]=$email;
-								$fecha_hora = date("Y-m-d H:i:s");
-								$token = Token::str_rand();
-								$_SESSION["token"]=$token;
-
-								$database = new Database();
-								$conn = $database->getConnection();
-								$stmt = $conn->prepare('insert into cctv_tokens (id_users,fecha,token) values (:iduser,:fecha_hora,:token)');
-								$stmt->bindParam(':iduser',$id);
-								$stmt->bindParam(':fecha_hora',$fecha_hora);
-								$stmt->bindParam(':token',$token);
-								if($stmt->execute()){
-									echo "<meta http-equiv='refresh' content='2; url=dashboard.php?token=$token' />";
-								} else {
-								}
-									echo "<div class='alert alert-success'>Ingresando...</div>";
-							
-
-							} else {
-								echo "<div class= 'alert alert-danger'><strong>ERROR!</strong> Contraseña Incorrecta</div>";
-								echo "<meta http-equiv='refresh' content='2; url=error.php?cod=1' />";
-
-								$_SESSION["falla"]=1;
-							} 
-
-						} else { 
-							echo "<p style='color:red;'>Existe un error en el nombre de usuario.</p>";
-							$_SESSION["falla"]=1;
-						}
-					} } }
-            }
-}
-
-//var_dump($_SESSION["falla"]);
+if (isset($_POST['usuario'])) { 
     
+    $user = trim($_POST['usuario']);
+    $pass = trim($_POST['password']);
+
+    if (empty($user)) { 
+        echo "<p style='color:red;'>No ha ingresado un nombre de usuario.</p>";
+        $_SESSION["falla"] = 1;
+    } 
+    
+    elseif (empty($pass)) { 
+        echo "<p style='color:red;'>No ha ingresado una password.</p>";
+        $_SESSION["falla"] = 1;
+    } 
+    
+    else { 
+        $database = new Database();
+        $hash = Users::hashearPass($pass);
+        $conn = $database->getConnection();
+
+        // Consulta
+        $stmt = $conn->prepare('SELECT u.id as idusuario, u.email, u.password, p.id as idperfil, p.nombre as nombreperfil, u.nombres as nombreuser, u.apellidos 
+                                FROM cctv_users as u 
+                                INNER JOIN cctv_perfil as p ON u.id_perfil = p.id 
+                                WHERE u.email= :email AND u.password= :password AND u.estado=1 AND p.estado=1');
+        $stmt->bindParam(':email', $user);
+        $stmt->bindParam(':password', $hash);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetchAll();
+            if (count($result) > 0) {
+                $_SESSION["falla"] = 0;
+                //data tendrá solo el primer resultado
+                $data = $result[0];
+                $idperfil = $data['idperfil'];
+                $nombreperfil = $data['nombreperfil'];
+                $email = $data['email'];
+                $id = $data['idusuario'];
+                $nombreuser = $data['nombreuser'];
+                $apellidos = $data['apellidos'];
+                $passwordbd = $data['password'];
+
+                if ($user == $email && $hash == $passwordbd) {
+                    $_SESSION['idperfil'] = $idperfil;
+                    $_SESSION['nombreperfil'] = $nombreperfil;
+                    $_SESSION["nombre"] = $nombreuser;
+                    $_SESSION["apellidos"] = $apellidos;
+                    $_SESSION["iduser"] = $id;
+                    $_SESSION["email"] = $email;
+                    $fecha_hora = date("Y-m-d H:i:s");
+                    $token = Token::str_rand();
+                    $_SESSION["token"] = $token;
+
+                    // Insertar token
+                    $stmt = $conn->prepare('INSERT INTO cctv_tokens (id_users, fecha, token) VALUES (:iduser, :fecha_hora, :token)');
+                    $stmt->bindParam(':iduser', $id);
+                    $stmt->bindParam(':fecha_hora', $fecha_hora);
+                    $stmt->bindParam(':token', $token);
+
+                    if ($stmt->execute()) {
+                        // Login correcto 
+                        echo "<div class='alert alert-success'>Ingresando...</div>";
+                        echo "<meta http-equiv='refresh' content='2; url=dashboard.php?token=$token' />";
+                    } else {
+                        echo "<div class='alert alert-danger'>Error al guardar el token.</div>";
+                    }
+                } else {
+                    // Contraseña Incorrecta
+                    echo "<div class='alert alert-danger'><strong>ERROR!</strong> Contraseña Incorrecta</div>";
+                    echo "<meta http-equiv='refresh' content='2; url=index.php?cod=2;' />";
+                    $_SESSION["falla"] = 1;
+                }
+            } else {
+                // Usuario o Cosntraseña incorrecta
+                // var_dump($result);
+                echo "<div class='alert alert-danger'><strong>ERROR!</strong> Usuario incorrecto</div>";
+                $_SESSION["falla"] = 1;
+            }
+        } else {
+            $_SESSION["falla"] = 1;
+        }
+    }
+}
 ?>
 
 
@@ -169,6 +124,7 @@ if (isset($_POST['usuario']))
 </head> <!--end::Head--> <!--begin::Body-->
 
 <body class="login-page bg-body-secondary">
+    <?php echo $mensaje ?>
     <div class="login-box">
         <div class="login-logo">
             <a href="../index2.html">
@@ -204,38 +160,13 @@ if (isset($_POST['usuario']))
                     </a>
                 </div> <!-- /.social-auth-links -->
                 <p class="mb-1"> <a href="forgot-password.html">Olvido su contraseña?</a> </p>
-                <p class="mb-0"> <a href="register.html" class="text-center">
+                <p class="mb-0"> <a href="registro.php" class="text-center">
                         Registrar nuevo usuario!
                     </a> </p>
             </div> <!-- /.login-card-body -->
         </div>
     </div> <!-- /.login-box --> <!--begin::Third Party Plugin(OverlayScrollbars)-->
-    <div>
-    <?
-        //Codigo 1 = Sin autorizacion
-        //codigo 2 = Sesion cerrada
-        //codigo 3 = Periodo de inactividad
-        $codigo = isset($_GET['cod']);
-        
-        switch ($codigo) {
-            case 1:?>
-            <div class="alert alert-danger">
-                    <strong>ERROR!</strong> Sin autorizacion
-                </div>
-            <?break;
-            case 2:?>
-            <div class="alert alert-success" style="color: #FFFFFF;background-color: #498C2D;border-color: #d6e9c6;">
-            <strong>Correcto!</strong> Sesion Cerrada
-            </div>
-            <?break;
-            case 3:?>
-            <div class="alert alert-info" style="color: #FFFFFF;background-color: #076480;border-color: #bce8f1;">
-            <strong>ATENCIÓN! </strong>Para un correcto funcionamineto de la aplicacíon se recomienda utilizar Google Chrome <a href="https://www.google.com/intl/es-419/chrome/browser/desktop/index.html" target="_blank"><img src="../img/google-chrome.ico" width="32" height="32"></a>
-                </div>
-        <?break;
-        }
-    ?>
-    </div>
+    <div class="mt-5"><?php echo $output ?></div>
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script> <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha256-whL0tQWoY1Ku1iskqPFvmZ+CHsvmRWx/PIoEvIeWh4I=" crossorigin="anonymous"></script> <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha256-YMa+wAM6QkVyz999odX7lPRxkoYAan8suedu4k2Zur8=" crossorigin="anonymous"></script> <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->

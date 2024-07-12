@@ -10,15 +10,32 @@
             $hash = crypt($password,"inclusiveHash$71/_");
             return $hash;
         }  
+
+        public static function email_existente($email) {
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cctv_users WHERE email = :email');
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            return $count > 0;
+        }
         
         public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa){
+            if (self::email_existente($email)) {
+                return [
+                    'status' => false,
+                    'message' => 'El correo electrónico ya está registrado.'
+                ];
+            }
+
             $database = new Database();
             $fechacreacion = Users::fecha_creacion();
             $hash = Users::hashearPass($password);
             
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
-                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 0)');
+                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 1)');
             $stmt->bindParam(':idperfil',$idperfil);
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
@@ -26,10 +43,16 @@
             $stmt->bindParam(':password',$hash);
             $stmt->bindParam(':codigogoogle2fa',$codigogoogle2fa);
             $stmt->bindParam(':fechacreacion',$fechacreacion);
-            if($stmt->execute()){
-                header('HTTP/1.1 201 Users creado correctamente');
+            if ($stmt->execute()) {
+                return [
+                    'status' => true,
+                    'message' => 'Usuario creado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Users no se ha creado correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Error al crear el usuario.'
+                ];
             }
         }
 
