@@ -7,6 +7,9 @@ switch( $formAccion ) {
     case "informe":
         $tituloFormulario = 'Informe Reportes';
         break;
+    case "usuarios":
+        $tituloFormulario = 'Registro de Usuarios';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;
@@ -17,13 +20,13 @@ switch( $formAccion ) {
     <div class="container-fluid"> <!--begin::Row-->
         <div class="row">
             <div class="col-sm-6">
-                <h3 class="mb-0"><?echo $tituloFormulario;?></h3>
+                <h3 class="mb-0"><?php echo $tituloFormulario;?></h3>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="./dashboard.php?token=<?php echo $token ?>">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        <?echo $tituloFormulario;?>
+                        <?php echo $tituloFormulario;?>
                     </li>
                 </ol>
             </div>

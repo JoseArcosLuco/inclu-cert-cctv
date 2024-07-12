@@ -22,17 +22,18 @@ $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
     <link rel="icon" href="./assets/img/inclusive.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous"><!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet"> 
 </head> <!--end::Head--> <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> 
-         <!--begin::Header-->
-         <?php include("./header.php");?>
-         <!--end::Header--> 
-         
-         <!--begin::Sidebar-->
-         <?php include "./main-sidebar.php";?>
-         <!--end::Sidebar--> 
+        <!--begin::Header-->
+        <?php include("./header.php");?>
+        <!--end::Header--> 
+        
+        <!--begin::Sidebar-->
+        <?php include "./main-sidebar.php";?>
+        <!--end::Sidebar--> 
         
         <!--begin::App Main-->
         <main class="app-main"> 
@@ -40,7 +41,7 @@ $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
             <!--begin::App Content Header-->
             <?php include "./content-header.php";?>
             <!--end::App Content Header--> 
-             
+            
             
             <!--begin::App Content-->
             <?php 
@@ -54,7 +55,9 @@ $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
                 case "informe":
                     include "informe.php";
                     break;
-                case "test":
+                case "usuarios":
+                    include "admUsuarios.php";
+                    break;
             }
             
             

@@ -21,7 +21,7 @@
             return $count > 0;
         }
         
-        public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa){
+        public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa,$estado){
             if (self::email_existente($email)) {
                 return [
                     'status' => false,
@@ -35,7 +35,7 @@
             
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
-                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 1)');
+                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, :estado)');
             $stmt->bindParam(':idperfil',$idperfil);
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
@@ -43,6 +43,8 @@
             $stmt->bindParam(':password',$hash);
             $stmt->bindParam(':codigogoogle2fa',$codigogoogle2fa);
             $stmt->bindParam(':fechacreacion',$fechacreacion);
+            $stmt->bindParam(':estado',$estado);
+            $stmt->execute();
             if ($stmt->execute()) {
                 return [
                     'status' => true,
@@ -75,8 +77,7 @@
             $stmt = $conn->prepare('SELECT * FROM cctv_users');
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                return $result;
             } else {
                 header('HTTP/1.1 404 No se ha podido consultar los usuarios');
             }

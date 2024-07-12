@@ -34,7 +34,6 @@
             $stmt = $conn->prepare('SELECT * FROM cctv_perfil');
             if($stmt->execute()){
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                header('HTTP/1.1 201 OK');
                 return $result;
             } else {
                 header('HTTP/1.1 404 No se ha podido consultar los perfiles');
