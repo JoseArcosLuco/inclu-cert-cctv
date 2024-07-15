@@ -16,7 +16,7 @@ $perfiles = Perfil::get_all_perfiles();
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Usuario<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
             <div class="card-body p-0">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
                             <th>
@@ -34,7 +34,7 @@ $perfiles = Perfil::get_all_perfiles();
                             <th>
                                 Email
                             </th>
-                            <th>
+                            <th class="text-start">
                                 Fecha de Creación
                             </th>
                             <th>
@@ -46,41 +46,6 @@ $perfiles = Perfil::get_all_perfiles();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(!empty($usuarios)): ?>
-                            <?php foreach($usuarios as $usuario): ?>
-                                <tr>
-                                    <td>
-                                        <?php echo htmlspecialchars($usuario['id']); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo htmlspecialchars($usuario['id_perfil']); ?>
-                                    </td>
-                                    <td class="text-capitalize">
-                                        <?php echo htmlspecialchars($usuario['nombres']); ?>
-                                    </td>
-                                    <td class="text-capitalize">
-                                        <?php echo htmlspecialchars($usuario['apellidos']); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo htmlspecialchars($usuario['email']); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo htmlspecialchars($usuario['fecha_creacion']); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $usuario['estado'] ? 'Activo' : 'Inactivo'; ?>
-                                    </td>
-                                    <td class="d-flex gap-3 justify-content-center">
-                                        <a href="" class="btn btn-warning"><i class="material-icons">edit</i></a>
-                                        <a href="" class="btn btn-danger"><i class="material-icons">delete</i></a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td>No se encontraron Usuarios</td>
-                            </tr>
-                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>      
@@ -169,19 +134,131 @@ $perfiles = Perfil::get_all_perfiles();
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+
+    //Crear Usuario
     $("#addUser").click(function(){
-        $("#formUsuarios").trigger("reset");
+        $('#formUsuarios').attr('data-action', 'create_user');
+        $('#formUsuarios')[0].reset();
         $('#modalCRUD').modal('show');
+    });
+
+    //Editar Usuario
+    $('#tabla tbody').on('click', '.btnEditar', function() {
+        var data = tablaUsuarios.row($(this).parents('tr')).data();
+        $('#formUsuarios').attr('data-action', 'edit_user');
+        $('#formUsuarios').attr('data-id', data.id);
+        $('#id_perfil').val(data.id_perfil);
+        $('#nombres').val(data.nombres);
+        $('#apellidos').val(data.apellidos);
+        $('#email').val(data.email);    
+        $('#estado').val(data.estado);
+        $('#password').val(data.password);
+
+        $('#modalCRUD').modal('show');
+    });
+
+    //Eliminar Usuario
+    $('#tabla tbody').on('click', '.btnBorrar', function() {
+    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
+    var data = tablaUsuarios.row($row).data();
+    var userId = data.id;
+    
+    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/users.php",
+            data: { action: 'delete_user', id: userId },
+            datatype: "json",
+            encode: true,
+            success: function(response) {
+                if (response.status) {
+                    // Remover la fila de la tabla
+                    tablaUsuarios.row($row).remove().draw()  ;
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // Manejar errores de AJAX
+                console.log("Error en AJAX: " + textStatus, errorThrown);
+                alert("Error en la solicitud: " + textStatus);
+            }
+        });
+    }
     });
 </script>
 <script>
-    // agregar usuario
+    $(document).ready( function(){
+        tablaUsuarios =  $('#tabla').DataTable({
+            "ajax": {            
+                "url": "./ajax_handler/users.php",
+                "type": 'POST',
+                "data": {action: 'get_users'},
+                "dataSrc": ""
+            },
+            "columns":[
+                {   
+                    "data": "id",
+                    "createdCell": function(td, cellData, rowData, row, col) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": "id_perfil",
+                    "render": function(data, type, row) {
+                        if (data == 1){data = 'Super Admin'}
+                        else if (data == 2){data = 'Administrador'}
+                        else if (data == 3){data = 'Supervisor'}
+                        else if (data == 4){data = 'Operador'}
+                        return data;
+                    }
+                },
+                {   
+                    "data": "nombres",
+                    "createdCell": function(td, cellData, rowData, row, col) {
+                        $(td).addClass('text-capitalize');
+                    }
+                },
+                {   
+                    "data": "apellidos",
+                    "createdCell": function(td, cellData, rowData, row, col) {
+                        $(td).addClass('text-capitalize');
+                    }
+                },
+                {"data": "email"},
+                {
+                    "data": "fecha_creacion",
+                    "createdCell": function(td, cellData, rowData, row, col) {
+                        $(td).addClass('text-start');
+                    }
+                },
+                {
+                    "data": "estado",
+                    "render": function(data, type, row) {
+                        return data == 1 ? 'Activo' : 'Inactivo';
+                    }
+                },
+                {"defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+            ],
+            "createdRow": function(row, data, dataIndex) {
+            $(row).attr('data-id', data.id); // Añadir atributo data-id
+            }
 
-    $("#formUsuarios").submit(function(e) {
+        });
+    });
+</script>
+<script>
+    // fomrulario Subir/Editar usuarios
+
+    $("#formUsuarios"). submit(function(e) {
         e.preventDefault();
 
+        var action = $(this).attr('data-action');
+        var id = $(this).attr('data-id') || null;
+
         var formData = {
-            action: 'create_user',
+            action: action,
+            id:id,
             id_perfil: $.trim($("#id_perfil").val()),
             nombres: $.trim($("#nombres").val()),
             apellidos: $.trim($("#apellidos").val()),
@@ -197,35 +274,38 @@ $perfiles = Perfil::get_all_perfiles();
             datatype: "json",
             encode: true,
             success: function(data) {
-                console.log(data);
-                console.log("data.status: ", data['status']);
-                console.log("data.status: ", data[0]);
-                console.log("data.message: ", data.message);
-                $('#modalCRUD').modal('hide');
                 if (data.status) {
-                    alert(data.message);
-                    $('#modalCRUD').modal('hide');
-                    let newRow = `<tr>
-                        <td>${data.user.id}</td>
-                        <td>${data.user.id_perfil}</td>
-                        <td class="text-capitalize">${data.user.nombres}</td>
-                        <td class="text-capitalize">${data.user.apellidos}</td>
-                        <td>${data.user.email}</td>
-                        <td>${data.user.fecha_creacion}</td>
-                        <td>${data.user.estado ? 'Activo' : 'Inactivo'}</td>
-                        <td class="d-flex gap-3 justify-content-center">
-                            <a href="" class="btn btn-warning"><i class="material-icons">edit</i></a>
-                            <a href="" class="btn btn-danger"><i class="material-icons">delete</i></a>
-                        </td>
-                    </tr>`;
-                    console.log(newRow)
-                    $("table tbody").append(newRow);
-                    // Clear the form
-                    $("#formUsuarios")[0].reset();
+                    if (action === 'create_user'){
+                        var newRow = tablaUsuarios.row.add({
+                                "id": data.user.id,
+                                "id_perfil": data.user.id_perfil,
+                                "email": data.user.email,
+                                "nombres": data.user.nombres,
+                                "apellidos": data.user.apellidos,
+                                "fecha_creacion": data.user.fecha_creacion,
+                                "estado": data.user.estado
+                            }).draw().node();
+                            $(newRow).attr('data-id', data.user.id);
+                            $('#modalCRUD').modal('hide');
+                    }else if (action === 'edit_user'){
+                        var row = tablaUsuarios.row($('[data-id="' + id + '"]'));
+                        console.log(row.data());
+                        row.data({
+                            "id": id,
+                            "id_perfil": formData.id_perfil,
+                            "email": formData.email,
+                            "nombres": formData.nombres,
+                            "apellidos": formData.apellidos,
+                            "estado": formData.estado,
+                            "fecha_creacion": row.data().fecha_creacion // Mantener la fecha de creación existente
+                        }).draw();
+                        $('#modalCRUD').modal('hide');
+
+                    }
                     
                 } else {
                     alert(data.message);
-                    console.log("nofunkopapito")
+                    // console.log("nofunkopapito")
                 } },
             error:function(jqXHR, textStatus, errorThrown) {
                 // Manejar errores de AJAX
