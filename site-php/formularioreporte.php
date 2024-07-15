@@ -15,7 +15,6 @@ if($stmt->execute()){
     }
 }
 
-
 $stmt = $conn->prepare('SELECT id, nombre FROM cctv_jornada WHERE estado =1');
 if($stmt->execute()){
     $resultJornadas = $stmt->fetchAll();
@@ -52,18 +51,18 @@ if($stmt->execute()){
                                             <label class="form-label">Planta</label> 
                                             <select class="form-control" name="planta" id="planta" required>
                                                 <option value="">Seleccione</option>
-                                                <? foreach ($dataPlantas as $row){  ?>
+                                                <?php foreach ($dataPlantas as $row){  ?>
                                                     <option value="<?php echo $row["id"]; ?>"><?php echo $row["nombre"]; ?></option>
-                                                <? } ?>
+                                                <?php  } ?>
                                             </select>
                                         </div>
                                         <div class="mb-3"> 
                                             <label class="form-label">Jornada</label> 
                                             <select class="form-control" name="jornada" id="jornada" onchange="javascript:buscarturno(this.value);" required>
                                                 <option value="">Seleccione</option>
-                                                <? foreach ($dataJornadas as $row){  ?>
+                                                <?php foreach ($dataJornadas as $row){  ?>
                                                     <option value="<?php echo $row["id"]; ?>"><?php echo $row["nombre"]; ?></option>
-                                                <? } ?>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                         <div class="mb-3"> 

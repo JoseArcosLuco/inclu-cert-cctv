@@ -1,7 +1,7 @@
 <?php 
 include "./config.php";
 error_reporting( E_ALL );
-session_start();
+// session_start();
 
 
 if ( isset( $_SESSION["token"] ) ) {
@@ -10,7 +10,7 @@ if ( isset( $_SESSION["token"] ) ) {
     $token = "";
 }
 if ( empty( $token ) ) {
-    echo "<meta http-equiv='refresh' content='2; url=".$base_url."/index.php?cod=2' />";
+    echo "<meta http-equiv='refresh' content='2; url=".$base_url."/index.php?cod=1' />";
 }
 ?>
 

@@ -10,7 +10,7 @@ if ( isset( $_SESSION["token"] ) ) {
     $token = "";
 }
 if ( empty( $token ) ) {
-    echo "<meta http-equiv='refresh' content='2; url=index.php?cod=2' />";
+    echo "<meta http-equiv='refresh' content='2; url=index.php?cod=1' />";
 }
 ?>
 

@@ -21,7 +21,7 @@
             return $count > 0;
         }
         
-        public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa){
+        public static function create_users($idperfil,$nombres,$apellidos,$email,$password,$codigogoogle2fa,$estado){
             if (self::email_existente($email)) {
                 return [
                     'status' => false,
@@ -35,7 +35,7 @@
             
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_users (id_perfil,nombres,apellidos,email,password,codigo_google_2fa,fecha_creacion,estado)
-                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, 1)');
+                VALUES(:idperfil,:nombres,:apellidos,:email,:password,:codigogoogle2fa,:fechacreacion, :estado)');
             $stmt->bindParam(':idperfil',$idperfil);
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
@@ -43,6 +43,7 @@
             $stmt->bindParam(':password',$hash);
             $stmt->bindParam(':codigogoogle2fa',$codigogoogle2fa);
             $stmt->bindParam(':fechacreacion',$fechacreacion);
+            $stmt->bindParam(':estado',$estado);
             if ($stmt->execute()) {
                 return [
                     'status' => true,
@@ -63,9 +64,15 @@
             $stmt = $conn->prepare('DELETE FROM cctv_users WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Users borrado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Usuario borrado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Users no se ha podido borrar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido borrar el usuario.'
+                ];
             }
         }
 
@@ -74,11 +81,11 @@
             $conn = $database->getConnection();
             $stmt = $conn->prepare('SELECT * FROM cctv_users');
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
                 header('HTTP/1.1 404 No se ha podido consultar los usuarios');
+                return [];
             }
         }
 
@@ -110,10 +117,16 @@
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
 
-            if($stmt->execute()){
-                header('HTTP/1.1 201 Perfil actualizado correctamente');
+            if ($stmt->execute()) {
+                return [
+                    'status' => true,
+                    'message' => 'Perfil actualizado correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Perfil no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Perfil no se ha podido actualizar correctamente'
+                ];
             }
 
         }

@@ -2,7 +2,6 @@
 function getMensajeAlerta($codigo) {
     $output = '';
 
-    //el match funciona mejor que el switch a mi gusto
     match (true) {
         $codigo == 1 => $output = "<div class='alert alert-danger'><strong>ERROR!</strong> Sin autorización</div>",
         $codigo == 2 => $output = "<div class='alert alert-success' style='color: #FFFFFF;background-color: #498C2D;border-color: #d6e9c6'><strong>Correcto!</strong> Sesión Cerrada</div>",
