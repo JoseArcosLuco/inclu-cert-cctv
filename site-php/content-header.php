@@ -1,5 +1,6 @@
 <?php
 $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
+$tituloFormulario='';
 switch( $formAccion ) {
     case "formularioreporte":
         $tituloFormulario = 'Formulario Reporte';
@@ -9,6 +10,12 @@ switch( $formAccion ) {
         break;
     case "usuarios":
         $tituloFormulario = 'Registro de Usuarios';
+        break;
+    case "tipoplanta":
+        $tituloFormulario = 'Registro de Tipos Plantas';
+        break;
+    case "comisarias":
+        $tituloFormulario = 'Registro de Comisarias';
         break;
     case "":
         $tituloFormulario = 'Dashboard';

@@ -27,7 +27,7 @@ if (isset($_POST)) {
             echo json_encode($response);
             break;
         
-        case 'get_tipo_planta':
+        case 'get_tipoplanta':
             $response = TipoPlanta::get_all_tipo_planta();
             echo json_encode($response);
             break;

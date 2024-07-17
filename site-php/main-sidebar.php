@@ -40,7 +40,7 @@ if (isset($_SESSION["token"])) {
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=tipoplanta&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Tipo Planta</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/admin/formularios.php?form=admComiserias&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=comisarias&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Comisarias</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="./admClientes.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>

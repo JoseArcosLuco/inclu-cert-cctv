@@ -1,7 +1,5 @@
 <?php
 require_once('../includes/Comisarias.class.php');
-
-
 header('Content-Type: application/json');
 
 if (isset($_POST)) {
@@ -44,7 +42,7 @@ if (isset($_POST)) {
             $movil = $_POST['movil'];
             $estado = $_POST['estado'];
 
-            $response = Comisarias::update_comisarias($id, $nombres,$direccion,$telefono,$movil,$estado);
+            $response = Comisarias::update_comisarias($id, $nombres, $direccion, $telefono, $movil, $estado);
             
             if ($response['status']) {
                 $database = new Database();

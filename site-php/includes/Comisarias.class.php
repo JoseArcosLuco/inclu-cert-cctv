@@ -52,9 +52,15 @@
             $stmt = $conn->prepare('DELETE FROM cctv_comisarias WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Comisarias borrado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'comisaria eliminada correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Comisarias no se ha podido borrar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'error al eliminar comisaria correctamente'
+                ];
             }
         }
 

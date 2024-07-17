@@ -38,7 +38,7 @@ include("./includes/Database.class.php");
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between align-items-center">
-                        <h5 class="modal-title" id="exampleModalLabel">Agregar Tipo Planta</h5>
+                        <h5 class="modal-title" name="exampleModalLabel" id="exampleModalLabel">Agregar Tipo Planta</h5>
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -86,6 +86,9 @@ include("./includes/Database.class.php");
         $('#formTipoPlanta').attr('data-action', 'create_');
         $('#formTipoPlanta')[0].reset();
         $('#modalCRUD').modal('show');
+
+        const p = document.getElementById("exampleModalLabel");
+        p.innerText = "Agregar Tipo Planta!";
     });
 
     //Editar
@@ -93,7 +96,11 @@ include("./includes/Database.class.php");
         var data = tabla.row($(this).parents('tr')).data();
         $('#formTipoPlanta').attr('data-action', 'edit_');
         $('#formTipoPlanta').attr('data-id', data.id);
-        $('#nombres').val(data.nombres);
+        
+        const p = document.getElementById("exampleModalLabel");
+        p.innerText = "Editar Tipo Planta!";
+        
+        $('#nombres').val(data.nombre);
         $('#estado').val(data.estado);
         $('#modalCRUD').modal('show');
     });
@@ -145,7 +152,7 @@ include("./includes/Database.class.php");
                     }
                 },
                 {   
-                    "data": "nombres",
+                    "data": "nombre",
                     "createdCell": function(td, cellData, rowData, row, col) {
                         $(td).addClass('text-capitalize');
                     }
@@ -168,7 +175,7 @@ include("./includes/Database.class.php");
 <script>
     // fomrulario Subir/Editar usuarios
 
-    $("#form"). submit(function(e) {
+    $("#formTipoPlanta"). submit(function(e) {
         e.preventDefault();
 
         var action = $(this).attr('data-action');
@@ -192,7 +199,7 @@ include("./includes/Database.class.php");
                     if (action === 'create_'){
                         var newRow = tabla.row.add({
                                 "id": data.row.id,
-                                "nombres": data.row.nombres,
+                                "nombre": data.row.nombre,
                                 "estado": data.row.estado
                             }).draw().node();
                             $(newRow).attr('data-id', data.row.id);
@@ -202,7 +209,7 @@ include("./includes/Database.class.php");
                         console.log(row.data());
                         row.data({
                             "id": id,
-                            "nombres": formData.nombres,
+                            "nombre": formData.nombres,
                             "estado": formData.estado,
                         }).draw();
                         $('#modalCRUD').modal('hide');

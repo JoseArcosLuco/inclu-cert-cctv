@@ -22,13 +22,10 @@
                 ];
             }
             
-            
-            
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_tipo_planta (nombre,estado)
-                VALUES(:name, :estado)');
-            $stmt->bindParam(':name',$name);
+            $stmt = $conn->prepare('INSERT INTO cctv_tipo_planta (nombre,estado) VALUES (:nombre, :estado)');
+            $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':estado',$estado);
             if($stmt->execute()){
                 return [
@@ -74,8 +71,10 @@
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los registros get_all_tipo_planta');
-                return [];
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido leer la tabla tipo planta.'
+                ];
             }
         }
 
@@ -85,11 +84,13 @@
             $stmt = $conn->prepare('SELECT * FROM cctv_tipo_planta WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                //header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                //header('HTTP/1.1 404 No se ha podido consultar los tipo planta');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido leer los datos solicitados get_tipo_planta_by_id.'
+                ];
             }
         }
         public static function get_tipo_planta_by_name($name){

@@ -49,7 +49,7 @@ require_once('./includes/Perfil.class.php');
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between align-items-center">
-                        <h5 class="modal-title" id="exampleModalLabel">Agregar Comisaria</h5>
+                        <h5 class="modal-title" name="exampleModalLabel" id="exampleModalLabel">Agregar Comisaria</h5>
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -122,6 +122,8 @@ require_once('./includes/Perfil.class.php');
         $('#formComisaria').attr('data-action', 'create_');
         $('#formComisaria')[0].reset();
         $('#modalCRUD').modal('show');
+        const p = document.getElementById("exampleModalLabel");
+        p.innerText = "Agregar Comisaria!";
     });
 
     //Editar
@@ -129,12 +131,15 @@ require_once('./includes/Perfil.class.php');
         var data = tabla.row($(this).parents('tr')).data();
         $('#formComisaria').attr('data-action', 'edit_');
         $('#formComisaria').attr('data-id', data.id);
-        $('#nombres').val(data.nombres);
+        $('#nombres').val(data.nombre);
         $('#direccion').val(data.direccion);
         $('#telefono').val(data.telefono);
         $('#movil').val(data.movil);
         $('#estado').val(data.estado);
         $('#modalCRUD').modal('show');
+        
+        const p = document.getElementById("exampleModalLabel");
+        p.innerText = "Editar Comisaria!";
     });
 
     //Eliminar
@@ -171,7 +176,7 @@ require_once('./includes/Perfil.class.php');
     $(document).ready( function(){
         tabla =  $('#tabla').DataTable({
             "ajax": {            
-                "url": "./ajax_handler/comisaria.php",
+                "url": "./ajax_handler/comisarias.php",
                 "type": 'POST',
                 "data": {action: 'get_comisaria'},
                 "dataSrc": ""
@@ -184,7 +189,7 @@ require_once('./includes/Perfil.class.php');
                     }
                 },
                 {   
-                    "data": "nombres",
+                    "data": "nombre",
                     "createdCell": function(td, cellData, rowData, row, col) {
                         $(td).addClass('text-capitalize');
                     }
@@ -243,7 +248,7 @@ require_once('./includes/Perfil.class.php');
         console.log(formData);
         $.ajax({
             type: "POST",
-            url: "./ajax_handler/comisaria.php",
+            url: "./ajax_handler/comisarias.php",
             data: formData,
             datatype: "json",
             encode: true,
@@ -251,21 +256,21 @@ require_once('./includes/Perfil.class.php');
                 if (data.status) {
                     if (action === 'create_'){
                         var newRow = tabla.row.add({
-                                "id": data.id,
-                                "nombres": data.nombres,
-                                "direccion": data.direccion,
-                                "telefono": data.telefono,
-                                "movil": data.movil,
-                                "estado": data.estado
+                                "id": data.row.id,
+                                "nombre": data.row.nombre,
+                                "direccion": data.row.direccion,
+                                "telefono": data.row.telefono,
+                                "movil": data.row.movil,
+                                "estado": data.row.estado
                             }).draw().node();
-                            $(newRow).attr('data-id', data.id);
+                            $(newRow).attr('data-id', data.row.id);
                             $('#modalCRUD').modal('hide');
                     }else if (action === 'edit_'){
                         var row = tabla.row($('[data-id="' + id + '"]'));
                         console.log(row.data());
                         row.data({
                             "id": id,
-                            "nombres": formData.nombres,
+                            "nombre": formData.nombres,
                             "direccion": formData.direccion,
                             "telefono": formData.telefono,
                             "movil": formData.movil,
