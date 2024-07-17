@@ -65,6 +65,9 @@ $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
                 case "comisarias":
                     include "admComisaria.php";
                     break;
+                case "plantas":
+                    include "admPlanta.php";
+                    break;
             }
             
             

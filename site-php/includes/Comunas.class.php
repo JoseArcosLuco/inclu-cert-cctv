@@ -36,10 +36,21 @@
             $stmt->bindParam(':idciudad',$idciudad);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los comunas');
+                return [];
+            }
+        }
+
+        public static function get_all_comunas_without_id(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT * FROM cctv_comunas');
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
             }
         }
 
