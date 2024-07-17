@@ -152,7 +152,7 @@ $perfiles = Perfil::get_all_perfiles();
         $('#apellidos').val(data.apellidos);
         $('#email').val(data.email);    
         $('#estado').val(data.estado);
-        $('#password').val(data.password);
+        $('#password').val('');
 
         $('#modalCRUD').modal('show');
     });
@@ -188,6 +188,14 @@ $perfiles = Perfil::get_all_perfiles();
     });
 </script>
 <script>
+    var perfiles = <?php echo json_encode($perfiles); ?>;
+    var perfilesMap = {};
+
+    // Convertir el array de perfiles a un mapa para un acceso más rápido
+    perfiles.forEach(function(perfil) {
+        perfilesMap[perfil.id] = perfil.nombre;
+    });
+    
     $(document).ready( function(){
         tablaUsuarios =  $('#tabla').DataTable({
             "ajax": {            
@@ -205,12 +213,8 @@ $perfiles = Perfil::get_all_perfiles();
                 },
                 {
                     "data": "id_perfil",
-                    "render": function(data, type, row) {
-                        if (data == 1){data = 'Super Admin'}
-                        else if (data == 2){data = 'Administrador'}
-                        else if (data == 3){data = 'Supervisor'}
-                        else if (data == 4){data = 'Operador'}
-                        return data;
+                    "render": function(data) {
+                        return perfilesMap[data] || 'Desconocido';
                     }
                 },
                 {   
