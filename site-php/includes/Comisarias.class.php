@@ -2,19 +2,46 @@
     require_once('Database.class.php');
 
     class Comisarias{
-        public static function create_comisarias($nombre,$direccion,$telefono,$movil){
+        
+        public static function comisaria_existente($nombre) {
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cctv_comisarias WHERE nombre = :nombre');
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            return $count > 0;
+        }
+        
+        public static function create_comisarias($nombre,$direccion,$telefono,$movil,$estado){
+            
+            if (self::comisaria_existente($nombre)) {
+                return [
+                    'status' => false,
+                    'message' => 'El nombre comsaria ya está registrado.'
+                ];
+            }
+            
+            
             $database = new Database();
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_comisarias (nombre,direccion,telefono,movil,estado)
-                VALUES(:name, 0)');
+                VALUES(:nombre,:direccion,:telefono,:movil,:estado)');
             $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':direccion',$direccion);
             $stmt->bindParam(':telefono',$telefono);
             $stmt->bindParam(':movil',$movil);
+            $stmt->bindParam(':estado',$estado);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Comisarias creado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'comisaria creada correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Comisarias no se ha creado correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'error al crear comisarias correctamente'
+                ];
             }
         }
 
@@ -36,11 +63,11 @@
             $conn = $database->getConnection();
             $stmt = $conn->prepare('SELECT * FROM cctv_comisarias');
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
                 header('HTTP/1.1 404 No se ha podido consultar los comisarias');
+                return [];
             }
         }
 
@@ -50,11 +77,11 @@
             $stmt = $conn->prepare('SELECT * FROM cctv_comisarias WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los comisarias');
+                header('HTTP/1.1 404 No se ha podido consultar los comisaria por id');
+                return [];
             }
         }
 
@@ -71,9 +98,15 @@
             $stmt->bindParam(':id',$id);
 
             if($stmt->execute()){
-                header('HTTP/1.1 201 Comisarias actualizado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Comisaria actualizado correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Comisarias no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Comisaria no se ha podido actualizar correctamente'
+                ];
             }
 
         }

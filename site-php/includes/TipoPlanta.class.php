@@ -2,18 +2,44 @@
     require_once('Database.class.php');
 
     class TipoPlanta{
-        public static function create_tipo_planta($name){
+        
+        
+        public static function tipoplanta_existente($nombre) {
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cctv_tipo_planta WHERE nombre = :nombre');
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            return $count > 0;
+        }
+        public static function create_tipo_planta($nombre,$estado){
+            
+            if (self::tipoplanta_existente($nombre)) {
+                return [
+                    'status' => false,
+                    'message' => 'El nombre tipo planta ya está registrado.'
+                ];
+            }
+            
+            
+            
             $database = new Database();
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_tipo_planta (nombre,estado)
-                VALUES(:name, 0)');
+                VALUES(:name, :estado)');
             $stmt->bindParam(':name',$name);
+            $stmt->bindParam(':estado',$estado);
             if($stmt->execute()){
-                //header('HTTP/1.1 201 Tipo Planta creado correctamente');
-                return true;
+                return [
+                    'status' => true,
+                    'message' => 'Tipo Planta creado correctamente.'
+                ];
             } else {
-                //header('HTTP/1.1 404 Tipo Planta no se ha creado correctamente');
-                return false;
+                return [
+                    'status' => true,
+                    'message' => 'Error al crear el tipo planta..'
+                ];
             }
         }
 
@@ -24,11 +50,15 @@
                 $stmt = $conn->prepare('DELETE FROM cctv_tipo_planta WHERE id=:id');
                 $stmt->bindParam(':id',$id);
                 if($stmt->execute()){
-                    return true;
-                    //header('HTTP/1.1 201 Tipo Planta borrado correctamente');
+                    return [
+                        'status' => true,
+                        'message' => 'Tipo Planta borrado correctamente.'
+                    ];
                 } else {
-                    return false;
-                    //header('HTTP/1.1 404 Tipo Planta no se ha podido borrar correctamente');
+                    return [
+                        'status' => false,
+                        'message' => 'No se ha podido borrar el registro revisar.'
+                    ];
                 }
             }else{
                 return false;
@@ -41,11 +71,11 @@
             $conn = $database->getConnection();
             $stmt = $conn->prepare('SELECT * FROM cctv_tipo_planta');
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                //header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                //header('HTTP/1.1 404 No se ha podido consultar los tipo planta');
+                header('HTTP/1.1 404 No se ha podido consultar los registros get_all_tipo_planta');
+                return [];
             }
         }
 
@@ -105,9 +135,15 @@
             $stmt->bindParam(':id',$id);
 
             if($stmt->execute()){
-                header('HTTP/1.1 201 Tipo Planta actualizado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'tipo planta actualizado correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Tipo Planta no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'tipo planta no se ha podido actualizar correctamente'
+                ];
             }
 
         }

@@ -95,11 +95,11 @@
             $stmt = $conn->prepare('SELECT * FROM cctv_users WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los users');
+                header('HTTP/1.1 404 No se ha podido consultar los usuarios');
+                return [];
             }
         }
 
