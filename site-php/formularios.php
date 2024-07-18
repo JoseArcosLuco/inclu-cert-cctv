@@ -9,7 +9,7 @@ $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Inclusive CCTV - Formulario Reporte</title><!--begin::Primary Meta Tags-->
+    <title>Inclusive CCTV</title><!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="title" content="CCTV | Formulario Reporte">
     <meta name="author" content="iarcos.cl">

@@ -5,6 +5,44 @@ if (isset($_SESSION["token"])) {
 }else{
     $token = '';
 }
+
+//limpiamos las variables
+$menuActiveFr = '';
+$menuActiveI = '';
+$menuActiveU = '';
+$menuActiveTp = '';
+$menuActiveC = '';
+$menuActiveP = '';
+$form = '';
+
+if (isset($_GET['form'])) {
+    $form = $_GET['form']; 
+
+    
+
+
+    switch ($form) {    
+        case "formularioreporte":
+            $menuActiveFr = 'active';
+            break;
+        case "informe":
+            $menuActiveI = 'active';
+            break;
+        case "usuarios":
+            $menuActiveU = 'active';
+            break;
+        case "tipoplanta":
+            $menuActiveTp = 'active';
+            break;
+        case "comisarias":
+            $menuActiveC = 'active';
+            break;
+        case "plantas":
+            $menuActiveP = 'active';
+            break;
+    }
+}
+
 ?>
 
 <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark"> <!--begin::Sidebar Brand-->
@@ -12,56 +50,56 @@ if (isset($_SESSION["token"])) {
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item menu-open"> <a href="#" class="nav-link active"> <i class="nav-icon bi bi-speedometer"></i>
+                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Dashboard
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/dashboard.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Dashboard v1</p>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/dashboard.php?form=dashboard&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveD;?>"> <i class="nav-icon bi bi-circle"></i>
+                                        <p>Dashboard</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveI;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Informes</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveFr;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes CCTV</p>
                                     </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <li class="nav-item <?php if($menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
                                 <p>
                                     Administración
                                     <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=tipoplanta&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=tipoplanta&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTp;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Tipo Planta</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=comisarias&token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=comisarias&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveC;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Comisarias</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./admClientes.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <!-- <li class="nav-item"> <a href="./admClientes.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Clientes</p>
                                     </a> </li>
                                 <li class="nav-item"> <a href="./admPerfiles.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Perfiles</p>
-                                    </a> </li>
+                                    </a> </li> -->
                                 <li class="nav-item"> 
-                                    <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link"> 
+                                    <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveP;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Plantas</p>
+                                        <p>Admin Plantas</p>
                                     </a> 
                                 </li>
-                                <li class="nav-item"> <a href="./admCiudades.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <!-- <li class="nav-item"> <a href="./admCiudades.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Ciudades</p>
-                                    </a> </li>
+                                    </a> </li> -->
                                 <li class="nav-item">
-                                    <a href="./formularios.php?form=usuarios&token=<?php echo $token;?>" class="nav-link">
+                                    <a href="./formularios.php?form=usuarios&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveU;?>">
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Usuarios</p>
+                                        <p>Admin Usuarios</p>
                                     </a>
                                 </li>
                             </ul>
