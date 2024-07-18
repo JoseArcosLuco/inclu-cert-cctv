@@ -57,9 +57,20 @@
             }
         }
 
+        public static function delete_related_tokens($userId) {
+            $database = new Database();
+            $conn = $database->getConnection();
+    
+            $stmt = $conn->prepare('DELETE FROM cctv_tokens WHERE id_users = :id');
+            $stmt->bindParam(':id', $userId);
+            return $stmt->execute();
+        }
+
         public static function delete_users_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
+
+            self::delete_related_tokens($id);
 
             $stmt = $conn->prepare('DELETE FROM cctv_users WHERE id=:id');
             $stmt->bindParam(':id',$id);
@@ -106,13 +117,19 @@
         public static function update_users($id, $idperfil, $nombres, $apellidos, $email, $password, $codigogoogle2fa, $estado){
             $database = new Database();
             $conn = $database->getConnection();
-            $hash = Users::hashearPass($password);
-            $stmt = $conn->prepare('UPDATE cctv_users SET id_perfil=:idperfil, nombres=:nombres, apellidos=:apellidos,email=:email, password=:password, codigo_google_2fa=:codigogoogle2fa, estado=:estado WHERE id=:id');
+            
+            if ($password == '') {
+                $stmt = $conn->prepare('UPDATE cctv_users SET id_perfil=:idperfil, nombres=:nombres, apellidos=:apellidos, email=:email, codigo_google_2fa=:codigogoogle2fa, estado=:estado WHERE id=:id');
+            } else {
+                $hash = Users::hashearPass($password);
+                $stmt = $conn->prepare('UPDATE cctv_users SET id_perfil=:idperfil, nombres=:nombres, apellidos=:apellidos, email=:email, password=:password, codigo_google_2fa=:codigogoogle2fa, estado=:estado WHERE id=:id');
+                $stmt->bindParam(':password', $hash);
+            }
+
             $stmt->bindParam(':idperfil',$idperfil);
             $stmt->bindParam(':nombres',$nombres);
             $stmt->bindParam(':apellidos',$apellidos);
             $stmt->bindParam(':email',$email);
-            $stmt->bindParam(':password',$hash);
             $stmt->bindParam(':codigogoogle2fa',$codigogoogle2fa);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);

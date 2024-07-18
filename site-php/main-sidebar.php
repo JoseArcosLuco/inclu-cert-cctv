@@ -49,9 +49,12 @@ if (isset($_SESSION["token"])) {
                                 <li class="nav-item"> <a href="./admPerfiles.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Perfiles</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./admPlantas.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
+                                <li class="nav-item"> 
+                                    <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link"> 
+                                        <i class="nav-icon bi bi-circle"></i>
                                         <p>Plantas</p>
-                                    </a> </li>
+                                    </a> 
+                                </li>
                                 <li class="nav-item"> <a href="./admCiudades.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Ciudades</p>
                                     </a> </li>
