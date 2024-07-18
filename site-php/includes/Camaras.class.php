@@ -2,17 +2,24 @@
     require_once('Database.class.php');
 
     class Camaras{
-        public static function create_camaras($idplantas,$name){
+        public static function create_camaras($idplantas,$nombre,$estado){
             $database = new Database();
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_camaras (id_plantas,nombre,estado)
-                VALUES(:name, 0)');
+                VALUES(:idplantas ,:nombre, :estado)');
             $stmt->bindParam(':idplantas',$idplantas);
-            $stmt->bindParam(':name',$name);
-            if($stmt->execute()){
-                header('HTTP/1.1 201 Camaras creado correctamente');
+            $stmt->bindParam(':nombre',$nombre);
+            $stmt->bindParam(':estado',$estado);
+            if ($stmt->execute()) {
+                return [
+                    'status' => true,
+                    'message' => 'Cámara creada correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Camaras no se ha creado correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Error al crear la cámara.'
+                ];
             }
         }
 
@@ -23,9 +30,15 @@
             $stmt = $conn->prepare('DELETE FROM cctv_camaras WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Camaras borrado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Cámara borrado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Camaras no se ha podido borrar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido borrar la Cámara '.$id
+                ];
             }
         }
 
@@ -36,10 +49,21 @@
             $stmt->bindParam(':idplantas',$idplantas);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los camaras');
+                return [];
+            }
+        }
+
+        public static function get_all_camaras_without_plantaId(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT * FROM cctv_camaras');
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
             }
         }
 
@@ -57,20 +81,26 @@
             }
         }
 
-        public static function update_camaras($id, $idplantas, $name, $estado){
+        public static function update_camaras($id, $idplantas, $nombre, $estado){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_camaras SET id_plantas=:idplantas, nombre=:name, estado=:estado WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_camaras SET id_plantas=:idplantas, nombre=:nombre, estado=:estado WHERE id=:id');
             $stmt->bindParam(':idplantas',$idplantas);
-            $stmt->bindParam(':name',$name);
+            $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
 
-            if($stmt->execute()){
-                header('HTTP/1.1 201 Camaras actualizado correctamente');
+            if ($stmt->execute()) {
+                return [
+                    'status' => true,
+                    'message' => 'Cámara actualizada correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Camaras no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Cámara '. $nombre .' no se ha podido actualizar correctamente'
+                ];
             }
 
         }

@@ -15,6 +15,7 @@ $menuActiveTp = '';
 $menuActiveC = '';
 $menuActiveP = '';
 $menuActiveJ = '';
+$menuActiveCam = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -48,6 +49,9 @@ if (isset($_GET['form'])) {
         case "dashboard":
             $menuActiveD = 'active';
             break;
+        case "camaras":
+            $menuActiveCam = 'active';
+            break;
     }
 }
 
@@ -76,7 +80,7 @@ if (isset($_GET['form'])) {
                                     </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item <?php if($menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <li class="nav-item <?php if($menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
                                 <p>
                                     Administración
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -111,6 +115,12 @@ if (isset($_GET['form'])) {
                                     <a href="./formularios.php?form=usuarios&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveU;?>">
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Usuarios</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="./formularios.php?form=camaras&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCam;?>">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Admin Cámaras</p>
                                     </a>
                                 </li>
                             </ul>
