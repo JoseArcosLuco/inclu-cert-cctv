@@ -7,12 +7,14 @@ if (isset($_SESSION["token"])) {
 }
 
 //limpiamos las variables
+$menuActiveD = '';
 $menuActiveFr = '';
 $menuActiveI = '';
 $menuActiveU = '';
 $menuActiveTp = '';
 $menuActiveC = '';
 $menuActiveP = '';
+$menuActiveJ = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -39,6 +41,12 @@ if (isset($_GET['form'])) {
             break;
         case "plantas":
             $menuActiveP = 'active';
+            break;
+        case "jornadas":
+            $menuActiveJ = 'active';
+            break;
+        case "dashboard":
+            $menuActiveD = 'active';
             break;
     }
 }
@@ -68,7 +76,7 @@ if (isset($_GET['form'])) {
                                     </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item <?php if($menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <li class="nav-item <?php if($menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
                                 <p>
                                     Administración
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -80,6 +88,9 @@ if (isset($_GET['form'])) {
                                     </a> </li>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=comisarias&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveC;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Comisarias</p>
+                                    </a> </li>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=jornadas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveJ;?>"> <i class="nav-icon bi bi-circle"></i>
+                                        <p>Admin Jornadas</p>
                                     </a> </li>
                                 <!-- <li class="nav-item"> <a href="./admClientes.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Clientes</p>

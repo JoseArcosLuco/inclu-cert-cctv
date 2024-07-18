@@ -17,6 +17,9 @@ switch( $formAccion ) {
     case "comisarias":
         $tituloFormulario = 'Registro de Comisarias';
         break;
+    case "jornadas":
+        $tituloFormulario = 'Registro de Jornadas';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;

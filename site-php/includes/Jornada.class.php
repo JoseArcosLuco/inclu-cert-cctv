@@ -1,17 +1,42 @@
 <?php
     require_once('Database.class.php');
 
-    class Client{
-        public static function create_jornada($name){
+    class Jornada{
+        public static function jornada_existente($nombre) {
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cctv_jornada WHERE nombre = :nombre');
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            return $count > 0;
+        }
+        public static function create_jornada($nombre,$estado){
+            
+            if (self::jornada_existente($nombre)) {
+                return [
+                    'status' => false,
+                    'message' => 'El nombre jornada ya está registrado favor intente con otro nombre.'
+                ];
+            }
+            
             $database = new Database();
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_jornada(nombre,estado)
-                VALUES(:name, 0)');
-            $stmt->bindParam(':name',$name);
+                VALUES(:nombre, :estado)');
+            $stmt->bindParam(':nombre',$nombre);
+            $stmt->bindParam(':estado',$estado);
+
             if($stmt->execute()){
-                header('HTTP/1.1 201 Jornada creado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Jornada creado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Jornada no se ha creado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Error al crear la jornada..'
+                ];
             }
         }
 
@@ -22,9 +47,15 @@
             $stmt = $conn->prepare('DELETE FROM cctv_jornada WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Jornada borrad correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Jornada borrado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Jornada no se ha podido borrar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido borrar el registro revisar.'
+                ];
             }
         }
 
@@ -33,11 +64,13 @@
             $conn = $database->getConnection();
             $stmt = $conn->prepare('SELECT * FROM cctv_jornada');
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar Jornada');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido leer la tabla jornada.'
+                ];
             }
         }
 
@@ -47,11 +80,13 @@
             $stmt = $conn->prepare('SELECT * FROM cctv_jornada WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar las Jornada');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido leer los datos solicitados get_jornada_by_id.'
+                ];
             }
         }
 
@@ -65,9 +100,15 @@
             $stmt->bindParam(':id',$id);
 
             if($stmt->execute()){
-                header('HTTP/1.1 201 Jornada actualizado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'jornada actualizado correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Jornada no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'jornada no se ha podido actualizar correctamente'
+                ];
             }
 
         }
