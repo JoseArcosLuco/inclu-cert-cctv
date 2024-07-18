@@ -107,7 +107,7 @@ $plantas = Plantas::get_all_plantas();
     var data = tablaPerfil.row($row).data();
     var perfilId = data.id;
     
-    if (confirm('¿Estás seguro de que deseas eliminar este perfil?')) {
+    if (confirm('¿Estás seguro de que deseas eliminar este perfil? Los usuarios con este perfil tendrás que editarlos manualmente para asignarle uno')) {
         $.ajax({
             type: "POST",
             url: "./ajax_handler/perfiles.php",
