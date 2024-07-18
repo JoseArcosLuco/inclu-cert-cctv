@@ -2,6 +2,7 @@
 require_once('../includes/Users.class.php');
 header('Content-Type: application/json');
 
+
 if (isset($_POST)) {
     $action = $_POST['action'];
 
@@ -44,7 +45,6 @@ if (isset($_POST)) {
             $password = $_POST['password'];
             $estado = $_POST['estado'];
             $codigogoogle2fa = '';
-
             $response = Users::update_users($id, $idperfil, $nombres, $apellidos, $email, $password, $codigogoogle2fa, $estado);
             
             if ($response['status']) {

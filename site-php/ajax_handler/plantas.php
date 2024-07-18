@@ -3,10 +3,6 @@ require_once('../includes/Plantas.class.php');
 require_once('../includes/Comunas.class.php');
 header('Content-Type: application/json');
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 if (isset($_POST)) {
     $action = $_POST['action'];
 
@@ -70,7 +66,7 @@ if (isset($_POST)) {
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
-                $stmt = $conn->prepare('SELECT * FROM cctv_users WHERE id = :id');
+                $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id = :id');
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
                 $updatedPlanta = $stmt->fetch(PDO::FETCH_ASSOC);
