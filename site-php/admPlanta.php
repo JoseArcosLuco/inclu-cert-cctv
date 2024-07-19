@@ -228,7 +228,7 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                 success: function(data) {
                     var $comunaSelect = $('#id_comuna');
                     $comunaSelect.empty();
-
+                    $comunaSelect.append('<option value="">Seleccione</option>');
                     $.each(data, function(index, comuna) {
                         $comunaSelect.append('<option value="' + comuna.id + '">' + comuna.nombre + '</option>');
                     });

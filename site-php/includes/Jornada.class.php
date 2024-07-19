@@ -34,7 +34,7 @@
                 ];
             } else {
                 return [
-                    'status' => true,
+                    'status' => false,
                     'message' => 'Error al crear la jornada..'
                 ];
             }

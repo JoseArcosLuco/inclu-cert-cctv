@@ -17,6 +17,7 @@ $menuActiveP = '';
 $menuActiveJ = '';
 $menuActiveCam = '';
 $menuActivePerfil = '';
+$menuActiveClientes = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -56,6 +57,9 @@ if (isset($_GET['form'])) {
         case "perfil":
             $menuActivePerfil = 'active';
             break;
+        case "clientes":
+            $menuActiveClientes = 'active';
+            break;
     }
 }
 
@@ -84,7 +88,7 @@ if (isset($_GET['form'])) {
                                     </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item <?php if($menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''|| $menuActivePerfil!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <li class="nav-item <?php if($menuActiveClientes!='' || $menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''|| $menuActivePerfil!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
                                 <p>
                                     Administración
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -106,12 +110,9 @@ if (isset($_GET['form'])) {
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=jornadas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveJ;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Jornadas</p>
                                     </a> </li>
-                                <!-- <li class="nav-item"> <a href="./admClientes.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Clientes</p>
+                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=clientes&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveClientes;?>"> <i class="nav-icon bi bi-circle"></i>
+                                        <p>Admin Clientes</p>
                                     </a> </li>
-                                <li class="nav-item"> <a href="./admPerfiles.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Perfiles</p>
-                                    </a> </li> -->
                                 <li class="nav-item"> 
                                     <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveP;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>

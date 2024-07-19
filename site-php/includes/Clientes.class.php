@@ -1,66 +1,103 @@
 <?php
     require_once('Database.class.php');
 
-    class Client{
-        public static function create_client($email, $name, $city, $telephone){
+    class Clientes{
+        
+        public static function cliente_existente($nombre) {
             $database = new Database();
             $conn = $database->getConnection();
-
-            $stmt = $conn->prepare('INSERT INTO listado_clientes(email, name, city, telephone)
-                VALUES(:email, :name, :city, :telephone)');
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cctv_clientes WHERE nombre = :nombre');
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            return $count > 0;
+        }
+        public static function create_cliente($nombre, $email, $fecha_contrato, $contacto, $estado){
+            
+            if (self::cliente_existente($nombre)) {
+                return [
+                    'status' => false,
+                    'message' => 'El nombre cliente ya está registrado favor intente con otro nombre.'
+                ];
+            }
+            
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('INSERT INTO cctv_clientes(nombre, email, fecha_contrato, contacto, estado)
+                                    VALUES(:nombre, :email, :fecha_contrato, :contacto, :estado)');
+            $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':email',$email);
-            $stmt->bindParam(':name',$name);
-            $stmt->bindParam(':city',$city);
-            $stmt->bindParam(':telephone',$telephone);
-
+            $stmt->bindParam(':fecha_contrato',$fecha_contrato);
+            $stmt->bindParam(':contacto',$contacto);
+            $stmt->bindParam(':estado',$estado);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Cliente creado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Cliente creado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Cliente no se ha creado correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Error al crear Cliente..'
+                ];
             }
         }
 
         public static function delete_client_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
-
-            $stmt = $conn->prepare('DELETE FROM listado_clientes WHERE id=:id');
+            $stmt = $conn->prepare('DELETE FROM cctv_clientes WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Cliente borrad correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Cliente eliminado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Cliente no se ha podido borrar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Error al eliminar Cliente..'
+                ];
             }
         }
 
         public static function get_all_clients(){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_jornada');
+            $stmt = $conn->prepare('SELECT * FROM cctv_clientes');
             if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los clientes');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido leer la tabla clientes.'
+                ];
             }
         }
 
-        public static function update_client($id, $email, $name, $city, $telephone){
+        public static function update_cliente($id, $nombre ,$email, $fecha_contrato, $contacto, $estado){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE listado_clientes SET email=:email, name=:name, city=:city, telephone=:telephone WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_clientes SET email=:email, nombre=:nombre, email=:email, fecha_contrato=:fecha_contrato, contacto=:contacto, estado=:estado WHERE id=:id');
+            $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':email',$email);
-            $stmt->bindParam(':name',$name);
-            $stmt->bindParam(':city',$city);
-            $stmt->bindParam(':telephone',$telephone);
+            $stmt->bindParam(':fecha_contrato',$fecha_contrato);
+            $stmt->bindParam(':contacto',$contacto);
+            $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
 
             if($stmt->execute()){
-                header('HTTP/1.1 201 Cliente actualizado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Cliente actualizado correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Cliente no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'cliente no se ha podido actualizar correctamente'
+                ];
             }
 
         }

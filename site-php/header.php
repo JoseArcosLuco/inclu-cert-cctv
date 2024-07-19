@@ -156,7 +156,7 @@ if (isset($_SESSION["nombreperfil"])) {
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end"> <!--begin::User Image-->
                             <li class="user-header text-bg-primary"> <img src="<?php echo $base_url?>/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image">
                                 <p>
-                                <?php echo $_SESSION['nombre']; ?> <?php echo $_SESSION['apellidos']; ?> - <?php echo $_SESSION['nombreperfil']; ?>
+                                <?php echo $nombre; ?> <?php echo $apellidos; ?> - <?php echo $nombreperfil; ?>
                                     <small>Member since Nov. 2023</small>
                                 </p>
                             </li> <!--end::User Image--> <!--begin::Menu Body-->
