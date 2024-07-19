@@ -6,11 +6,13 @@ require_once('./includes/Ciudades.class.php');
 require_once('./includes/Comisarias.class.php');
 require_once('./includes/TipoPlanta.class.php');
 require_once('./includes/Comunas.class.php');
+require_once('./includes/Clientes.class.php');
 
 $ciudades = Ciudades::get_all_ciudades();
 $comunas = Comunas::get_all_comunas_without_id();
 $comisarias = Comisarias::get_all_comisarias();
 $tiposPlanta = TipoPlanta::get_all_tipo_planta();
+$clientes = Clientes::get_all_clients();
 
 ?>
 
@@ -28,6 +30,12 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                                 ID
                             </th>
                             <th>
+                                Cliente
+                            </th>
+                            <th>
+                                Nombre
+                            </th>
+                            <th>
                                 Comuna
                             </th>
                             <th>
@@ -35,9 +43,6 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                             </th>
                             <th>
                                 Tipo de Planta
-                            </th>
-                            <th>
-                                Nombre
                             </th>
                             <th class="text-start">
                                 Grupo
@@ -92,11 +97,24 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
+                                        <label class="col-form-label w-100">Cliente:
+                                            <select class="form-select" name="id_clientes" id="id_clientes" required>
+                                                <?php foreach ($clientes as $cliente): ?>
+                                                    <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>    
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
                                         <label class="col-form-label w-100">Dirección:
                                             <input type="text" class="form-control" id="direccion" required>
                                         </label>
                                     </div>
-                                </div>    
+                                </div> 
                             </div>
                             <div class="row"> 
                                 <div class="col-lg-6">
@@ -255,6 +273,7 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
         $('#formPlantas').attr('data-action', 'edit_planta');
         $('#formPlantas').attr('data-id', data.id);
         $('#nombre').val(data.nombre);
+        $('#id_clientes').val(data.id_clientes);
         $('#direccion').val(data.ubicacion);
         $('#id_comuna').val(data.id_comuna);
         $('#id_comisaria').val(data.id_comisarias);
@@ -301,6 +320,14 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
     });
 </script>
 <script>
+    //ver clientes en tabla
+    var clientes = <?php echo json_encode($clientes); ?>;
+    var clientesMap = {};
+
+    clientes.forEach(function(cliente) {
+        clientesMap[cliente.id] = cliente.nombre;
+    });
+
     //ver comunas en tabla
     var comunas = <?php echo json_encode($comunas); ?>;
     var comunasMap = {};
@@ -341,6 +368,21 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                     }
                 },
                 {
+                    "data": "id_clientes",
+                    "render": function(data) {
+                        return clientesMap[data] || 'Desconocido';
+                    },
+                    "createdCell": function(td) {
+                        $(td).addClass('text-capitalize');
+                    }
+                },
+                {
+                    "data": "nombre",
+                    "createdCell": function(td) {
+                        $(td).addClass('text-capitalize');
+                    }
+                },
+                {
                     "data": "id_comuna",
                     "render": function(data) {
                         return comunasMap[data] || 'Desconocido';
@@ -367,11 +409,6 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                         $(td).addClass('text-capitalize');
                     }
                 },
-                {
-                    "data": "nombre",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-capitalize');
-                    }},
                 {
                     "data": "grupo",
                     "createdCell": function(td, cellData, rowData, row, col) {
@@ -424,6 +461,7 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
             id_comisarias: $.trim($("#id_comisaria").val()),
             id_tipo_planta: $.trim($("#id_tipoPlanta").val()),
             nombre: $.trim($("#nombre").val()),
+            id_clientes: $.trim($("#id_clientes").val()),
             grupo: $.trim($("#grupo").val()),
             ubicacion: $.trim($("#direccion").val()),
             encargado_contacto: $.trim($("#nombreEncargado").val()),
@@ -445,10 +483,11 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                     if (action === 'create_planta'){
                         var newRow = tablaPlantas.row.add({
                             "id": data.planta.id,
+                            "nombre": data.planta.nombre,
+                            "id_clientes": data.planta.id_clientes,
                             "id_comuna": data.planta.id_comuna,
                             "id_comisarias": data.planta.id_comisarias,
                             "id_tipo_planta": data.planta.id_tipo_planta,
-                            "nombre": data.planta.nombre,
                             "grupo": data.planta.grupo,
                             "ubicacion": data.planta.ubicacion,
                             "encargado_contacto": data.planta.encargado_contacto,
@@ -465,10 +504,11 @@ $tiposPlanta = TipoPlanta::get_all_tipo_planta();
                         console.log(row.data());
                         row.data({
                             "id": id,
+                            "nombre":formData.nombre,
+                            "id_clientes":formData.id_clientes,
                             "id_comuna": formData.id_comuna,
                             "id_comisarias": formData.id_comisarias,
                             "id_tipo_planta": formData.id_tipo_planta,
-                            "nombre": formData.nombre,
                             "grupo": formData.grupo,
                             "ubicacion": formData.ubicacion,
                             "encargado_contacto": formData.encargado_contacto,

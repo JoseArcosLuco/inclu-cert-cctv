@@ -2,15 +2,16 @@
     require_once('Database.class.php');
 
     class Plantas{
-        public static function create_plantas($idcomuna,$idcomisarias,$idtipoplanta,$nombre,$grupo,$ubicacion,$encargadocontacto,$encargadoemail,$encargadotelefono,$mapa,$estado){
+        public static function create_plantas($idcomuna,$idcomisarias,$idtipoplanta,$idclientes,$nombre,$grupo,$ubicacion,$encargadocontacto,$encargadoemail,$encargadotelefono,$mapa,$estado){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_plantas (id_comuna,id_comisarias,id_tipo_planta,nombre,grupo,ubicacion,encargado_contacto,encargado_email,encargado_telefono,mapa,estado)
-                VALUES(:idcomuna,:idcomisarias,:idtipoplanta,:nombre,:grupo,:ubicacion,:encargadocontacto,:encargadoemail,:encargadotelefono,:mapa,:estado)');
+            $stmt = $conn->prepare('INSERT INTO cctv_plantas (id_comuna,id_comisarias,id_tipo_planta,id_clientes,nombre,grupo,ubicacion,encargado_contacto,encargado_email,encargado_telefono,mapa,estado)
+                VALUES(:idcomuna,:idcomisarias,:idtipoplanta,:id_clientes,:nombre,:grupo,:ubicacion,:encargadocontacto,:encargadoemail,:encargadotelefono,:mapa,:estado)');
             
             $stmt->bindParam(':idcomuna',$idcomuna);
             $stmt->bindParam(':idcomisarias',$idcomisarias);
             $stmt->bindParam(':idtipoplanta',$idtipoplanta);
+            $stmt->bindParam(':id_clientes',$idclientes);
             $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':grupo',$grupo);
             $stmt->bindParam(':ubicacion',$ubicacion);
@@ -60,7 +61,6 @@
                 $result = $stmt->fetchAll();
                 return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar las plantas');
                 return [];
             }
         }
@@ -79,14 +79,15 @@
             }
         }
 
-        public static function update_plantas($id, $idcomuna, $idcomisarias, $idtipoplanta, $nombre, $grupo, $ubicacion, $encargadocontacto, $encargadoemail, $encargadotelefono, $mapa, $estado){
+        public static function update_plantas($id, $idcomuna, $idcomisarias, $idtipoplanta,$idcliente,$nombre, $grupo, $ubicacion, $encargadocontacto, $encargadoemail, $encargadotelefono, $mapa, $estado){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_plantas SET id_comuna=:idcomuna,id_comisarias=:idcomisarias,id_tipo_planta=:idtipoplanta,nombre=:nombre,grupo=:grupo,ubicacion=:ubicacion,encargado_contacto=:encargadocontacto,encargado_email=:encargadoemail,encargado_telefono=:encargadotelefono,mapa=:mapa,estado=:estado WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_plantas SET id_comuna=:idcomuna,id_comisarias=:idcomisarias,id_tipo_planta=:idtipoplanta,id_clientes=:idclientes,nombre=:nombre,grupo=:grupo,ubicacion=:ubicacion,encargado_contacto=:encargadocontacto,encargado_email=:encargadoemail,encargado_telefono=:encargadotelefono,mapa=:mapa,estado=:estado WHERE id=:id');
             $stmt->bindParam(':idcomuna',$idcomuna);
             $stmt->bindParam(':idcomisarias',$idcomisarias);
             $stmt->bindParam(':idtipoplanta',$idtipoplanta);
+            $stmt->bindParam(':idclientes',$idcliente);
             $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':grupo',$grupo);
             $stmt->bindParam(':ubicacion',$ubicacion);

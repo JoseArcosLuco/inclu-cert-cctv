@@ -53,10 +53,15 @@ if (isset($_POST)) {
 
         case 'delete_perfil':
             $id = $_POST['id'];
+
             $response = Perfil::delete_perfil_by_id($id);
+
+            if (!$response['status'] && isset($response['usuarios'])) {
+                $response['usuarios'] = $response['usuarios'];
+            }
+        
             echo json_encode($response);
             break;
-        // Otros casos para update, delete, etc.
     }
 }
 ?>

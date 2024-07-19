@@ -46,17 +46,31 @@
         public static function delete_client_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('DELETE FROM cctv_clientes WHERE id=:id');
-            $stmt->bindParam(':id',$id);
-            if($stmt->execute()){
-                return [
-                    'status' => true,
-                    'message' => 'Cliente eliminado correctamente.'
-                ];
+
+            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $clientesPlanta = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($clientesPlanta)) {
+                $stmt = $conn->prepare('DELETE FROM cctv_clientes WHERE id=:id');
+                $stmt->bindParam(':id',$id);
+                if($stmt->execute()){
+                    return [
+                        'status' => true,
+                        'message' => 'Cliente eliminado correctamente.'
+                    ];
+                } else {
+                    return [
+                        'status' => false,
+                        'message' => 'Error al eliminar Cliente..'
+                    ];
+                }
             } else {
                 return [
                     'status' => false,
-                    'message' => 'Error al eliminar Cliente..'
+                    'message' => 'No se puede eliminar el cliente '.$id.' porque tiene las siguientes plantas asociadas: ',
+                    'clientes' => $clientesPlanta
                 ];
             }
         }

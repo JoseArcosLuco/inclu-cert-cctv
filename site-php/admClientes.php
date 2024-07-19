@@ -54,16 +54,23 @@ include("./includes/Database.class.php");
                     <form id="formClientes" name="formClientes">    
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-lg-8">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre Cliente:
                                             <input type="text" class="form-control" id="nombre">
                                         </label>
                                     </div>
                                 </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Fecha Contrato:
+                                            <input type="date" class="form-control" id="fecha_contrato">
+                                        </label>
+                                    </div>
+                                </div> 
                             </div>
                             <div class="row"> 
-                                <div class="col-lg-8">
+                                <div class="col-lg-12">
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Email:
@@ -72,13 +79,6 @@ include("./includes/Database.class.php");
                                         </div>
                                     </div>               
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Fecha Contrato:
-                                            <input type="date" class="form-control" id="fecha_contrato">
-                                        </label>
-                                    </div>
-                                </div>  
                             </div>
                             <div class="row">
                                 <div class="col-lg-8">
@@ -140,7 +140,7 @@ include("./includes/Database.class.php");
     //Eliminar Usuario
     $('#tabla tbody').on('click', '.btnBorrar', function() {
     var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tabla.row($row).data();
+    var data = tablaClientes.row($row).data();
     var userId = data.id;
     
     if (confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
@@ -153,7 +153,16 @@ include("./includes/Database.class.php");
             success: function(response) {
                 if (response.status) {
                     // Remover la fila de la tabla
-                    tabla.row($row).remove().draw()  ;
+                    tablaClientes.row($row).remove().draw()  ;
+
+                } else if(response.clientes) {
+                    let clientes = response.clientes
+                    let listaClientes = '';
+                    for (let i = 0; i < clientes.length; i++) {
+                        listaClientes += 'ID: '+ clientes[i].id +' - Nombre: ' + clientes[i].nombre + '\n';
+                    }
+                    alert(response.message + '\n\n' + listaClientes);
+
                 } else {
                     alert(response.message);
                 }
