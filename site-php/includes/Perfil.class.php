@@ -2,16 +2,42 @@
     require_once('Database.class.php');
 
     class Perfil{
-        public static function create_perfil($name){
+
+        public static function nombre_existente($nombre) {
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT COUNT(*) FROM cctv_perfil WHERE nombre = :nombre');
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+            return $count > 0;
+        }
+
+        public static function create_perfil($nombre, $estado){
+
+            if (self::nombre_existente($nombre)) {
+                return [
+                    'status' => false,
+                    'message' => 'El Perfil '.$nombre.' ya está registrado.'
+                ];
+            }
+
             $database = new Database();
             $conn = $database->getConnection();
             $stmt = $conn->prepare('INSERT INTO cctv_perfil (nombre,estado)
-                VALUES(:name, 0)');
-            $stmt->bindParam(':name',$name);
-            if($stmt->execute()){
-                header('HTTP/1.1 201 Perfil creado correctamente');
+                VALUES(:nombre, :estado)');
+            $stmt->bindParam(':nombre',$nombre);
+            $stmt->bindParam(':estado',$estado);
+            if ($stmt->execute()) {
+                return [
+                    'status' => true,
+                    'message' => 'Perfil creado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Perfil no se ha creado correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Error al crear el perfil.'
+                ];
             }
         }
 
@@ -19,12 +45,22 @@
             $database = new Database();
             $conn = $database->getConnection();
 
+            $stmt = $conn->prepare('UPDATE cctv_users SET id_perfil = NULL WHERE id_perfil = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
             $stmt = $conn->prepare('DELETE FROM cctv_perfil WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                header('HTTP/1.1 201 Perfil borrado correctamente');
+                return [
+                    'status' => true,
+                    'message' => 'Perfil borrado correctamente.'
+                ];
             } else {
-                header('HTTP/1.1 404 Perfil no se ha podido borrar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido borrar el perfil '.$id
+                ];
             }
         }
 
@@ -36,8 +72,7 @@
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los perfiles');
-                return[];
+                return [];
             }
         }
 
@@ -55,19 +90,25 @@
             }
         }
 
-        public static function update_perfil($id, $name, $estado){
+        public static function update_perfil($id, $nombre, $estado){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_perfil SET nombre=:name, estado=:estado WHERE id=:id');
-            $stmt->bindParam(':name',$name);
+            $stmt = $conn->prepare('UPDATE cctv_perfil SET nombre=:nombre, estado=:estado WHERE id=:id');
+            $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
 
-            if($stmt->execute()){
-                header('HTTP/1.1 201 Perfil actualizado correctamente');
+            if ($stmt->execute()) {
+                return [
+                    'status' => true,
+                    'message' => 'Perfil actualizado correctamente'
+                ];
             } else {
-                header('HTTP/1.1 404 Perfil no se ha podido actualizar correctamente');
+                return [
+                    'status' => false,
+                    'message' => 'Perfil no se ha podido actualizar correctamente'
+                ];
             }
 
         }

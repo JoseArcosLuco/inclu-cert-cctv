@@ -95,7 +95,6 @@
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los usuarios');
                 return [];
             }
         }
@@ -109,7 +108,6 @@
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar los usuarios');
                 return [];
             }
         }

@@ -19,7 +19,7 @@ $perfiles = Perfil::get_all_perfiles();
                 <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
-                            <th>
+                            <th class="text-center">
                                 ID
                             </th>
                             <th>
