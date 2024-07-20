@@ -20,6 +20,7 @@ if (isset($_POST)) {
             $idTipoPlanta = $_POST['id_tipo_planta'];
             $grupo = $_POST['grupo'];
             $nombre = $_POST['nombre'];
+            $idCLiente = $_POST['id_clientes'];
             $direccion = $_POST['ubicacion'];
             $nombreEncargado = $_POST['encargado_contacto'];
             $emailEncargado = $_POST['encargado_email'];
@@ -27,7 +28,7 @@ if (isset($_POST)) {
             $mapa = $_POST['mapa'];
             $estado = $_POST['estado'];
 
-            $response = Plantas::create_plantas($idComuna, $idComisaria, $idTipoPlanta, $nombre, $grupo, $direccion,$nombreEncargado,$emailEncargado,$telEncargado,$mapa, $estado);
+            $response = Plantas::create_plantas($idComuna, $idComisaria, $idTipoPlanta, $idCLiente,$nombre, $grupo, $direccion,$nombreEncargado,$emailEncargado,$telEncargado,$mapa, $estado);
             
             if ($response['status']) {
                 $database = new Database();
@@ -52,6 +53,7 @@ if (isset($_POST)) {
             $idComuna = $_POST['id_comuna'];
             $idComisaria = $_POST['id_comisarias'];
             $idTipoPlanta = $_POST['id_tipo_planta'];
+            $idCLiente = $_POST['id_clientes'];
             $grupo = $_POST['grupo'];
             $nombre = $_POST['nombre'];
             $direccion = $_POST['ubicacion'];
@@ -61,7 +63,7 @@ if (isset($_POST)) {
             $mapa = $_POST['mapa'];
             $estado = $_POST['estado'];
 
-            $response = Plantas::update_plantas($id,$idComuna, $idComisaria, $idTipoPlanta, $nombre, $grupo, $direccion,$nombreEncargado,$emailEncargado,$telEncargado,$mapa, $estado);
+            $response = Plantas::update_plantas($id,$idComuna, $idComisaria, $idTipoPlanta,$idCLiente,$nombre, $grupo, $direccion,$nombreEncargado,$emailEncargado,$telEncargado,$mapa, $estado);
             
             if ($response['status']) {
                 $database = new Database();

@@ -45,21 +45,30 @@
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_users SET id_perfil = NULL WHERE id_perfil = :id');
-            $stmt->bindParam(':id', $id);
+            $stmt = $conn->prepare('SELECT * FROM cctv_users WHERE id_perfil = :id_perfil');
+            $stmt->bindParam(':id_perfil', $id);
             $stmt->execute();
-
-            $stmt = $conn->prepare('DELETE FROM cctv_perfil WHERE id=:id');
-            $stmt->bindParam(':id',$id);
-            if($stmt->execute()){
-                return [
-                    'status' => true,
-                    'message' => 'Perfil borrado correctamente.'
-                ];
+            $usuariosPerfil = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+            if (empty($usuariosPerfil)) {
+                $stmt = $conn->prepare('DELETE FROM cctv_perfil WHERE id=:id');
+                $stmt->bindParam(':id',$id);
+                if($stmt->execute()){
+                    return [
+                        'status' => true,
+                        'message' => 'Perfil borrado correctamente.'
+                    ];
+                } else {
+                    return [
+                        'status' => false,
+                        'message' => 'No se ha podido borrar el perfil '.$id
+                    ];
+                }
             } else {
                 return [
                     'status' => false,
-                    'message' => 'No se ha podido borrar el perfil '.$id
+                    'message' => 'No se puede eliminar el perfil '.$id.' porque tiene los siguientes usuarios asociados: ',
+                    'usuarios' => $usuariosPerfil
                 ];
             }
         }

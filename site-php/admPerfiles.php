@@ -107,7 +107,7 @@ $plantas = Plantas::get_all_plantas();
     var data = tablaPerfil.row($row).data();
     var perfilId = data.id;
     
-    if (confirm('¿Estás seguro de que deseas eliminar este perfil? Los usuarios con este perfil tendrás que editarlos manualmente para asignarle uno')) {
+    if (confirm('¿Estás seguro de que deseas eliminar este perfil?')) {
         $.ajax({
             type: "POST",
             url: "./ajax_handler/perfiles.php",
@@ -118,6 +118,14 @@ $plantas = Plantas::get_all_plantas();
                 if (response.status) {
                     // Remover la fila de la tabla
                     tablaPerfil.row($row).remove().draw()  ;
+                }
+                else if(response.usuarios){
+                    let usuarios = response.usuarios
+                    let listaUsuarios = '';
+                    for (let i = 0; i < usuarios.length; i++) {
+                        listaUsuarios += 'ID: '+ usuarios[i].id +' - Nombres: ' + usuarios[i].nombres + ' ' + usuarios[i].apellidos + '\n';
+                    }
+                    alert(response.message + '\n\n' + listaUsuarios);
                 } else {
                     alert(response.message);
                 }
