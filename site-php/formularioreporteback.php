@@ -136,6 +136,18 @@
                     break;
             case 'editar':
                 break;
+            case 'get_plantas':
+                $id_cliente = $_POST['id_cliente'];
+                $database = new Database();
+                $conn = $database->getConnection();
+                $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id_cliente');
+                $stmt->bindParam(':id_cliente', $id_cliente);
+                $stmt->execute();
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                echo json_encode($response);
+                break;
+
             default:
                 echo 'Fail';
                 break;
