@@ -9,7 +9,7 @@ include("./includes/Database.class.php");
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Cliente<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
-            <div class="card-body p-0">
+            <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
@@ -54,14 +54,14 @@ include("./includes/Database.class.php");
                     <form id="formClientes" name="formClientes">    
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-8">
+                                <div class="col-md-8 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre Cliente:
                                             <input type="text" class="form-control" id="nombre">
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-md-4 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Fecha Contrato:
                                             <input type="date" class="form-control" id="fecha_contrato">
@@ -70,7 +70,7 @@ include("./includes/Database.class.php");
                                 </div> 
                             </div>
                             <div class="row"> 
-                                <div class="col-lg-12">
+                                <div class="col-md-12 mb-3">
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Email:
@@ -81,14 +81,14 @@ include("./includes/Database.class.php");
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-8">
+                                <div class="col-md-8 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Contacto:
                                             <input type="text" class="form-control" id="contacto">
                                         </label>
                                     </div>
                                 </div>    
-                                <div class="col-lg-4">    
+                                <div class="col-md-4 mb-3">    
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
@@ -181,6 +181,7 @@ include("./includes/Database.class.php");
     
     $(document).ready( function(){
         tablaClientes =  $('#tabla').DataTable({
+            responsive: true,
             "ajax": {            
                 "url": "./ajax_handler/clientes.php",
                 "type": 'POST',
@@ -223,6 +224,9 @@ include("./includes/Database.class.php");
             ],
             "createdRow": function(row, data, dataIndex) {
             $(row).attr('data-id', data.id); // Añadir atributo data-id
+            },
+            "language": {
+                "url": "./assets/json/español.json"
             }
 
         });

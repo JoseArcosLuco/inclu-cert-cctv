@@ -13,7 +13,7 @@ $plantas = Plantas::get_all_plantas();
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Perfil<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
-            <div class="card-body p-0">
+            <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
@@ -49,14 +49,14 @@ $plantas = Plantas::get_all_plantas();
                     <form id="formPerfil" name="formPerfil">    
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre:
                                             <input type="text" class="form-control" id="nombre" name="nombre">
                                         </label>
                                     </div>
                                 </div>  
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
@@ -142,6 +142,7 @@ $plantas = Plantas::get_all_plantas();
 <script>
     $(document).ready( function(){
         tablaPerfil =  $('#tabla').DataTable({
+            responsive: true,
             "ajax": {            
                 "url": "./ajax_handler/perfiles.php",
                 "type": 'POST',
@@ -171,6 +172,9 @@ $plantas = Plantas::get_all_plantas();
             ],
             "createdRow": function(row, data, dataIndex) {
             $(row).attr('data-id', data.id); // Añadir atributo data-id
+            },
+            "language": {
+                "url": "./assets/json/español.json"
             }
 
         });

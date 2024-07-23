@@ -15,7 +15,7 @@ $perfiles = Perfil::get_all_perfiles();
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Usuario<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
-            <div class="card-body p-0">
+            <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
@@ -63,14 +63,14 @@ $perfiles = Perfil::get_all_perfiles();
                     <form id="formUsuarios" name="formUsuarios">    
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombres:
                                             <input type="text" class="form-control" id="nombres">
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Apellidos:
                                             <input type="text" class="form-control" id="apellidos">
@@ -79,7 +79,7 @@ $perfiles = Perfil::get_all_perfiles();
                                 </div>    
                             </div>
                             <div class="row"> 
-                                <div class="col-lg-8">
+                                <div class="col-md-8 mb-3">
                                 <div class="form-group">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Email:
@@ -88,7 +88,7 @@ $perfiles = Perfil::get_all_perfiles();
                                     </div>
                                 </div>               
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-md-4 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Perfil:
                                             <select class="form-select" name="id_perfil" id="id_perfil">
@@ -101,14 +101,14 @@ $perfiles = Perfil::get_all_perfiles();
                                 </div>  
                             </div>
                             <div class="row">
-                                <div class="col-lg-8">
+                                <div class="col-md-8 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Contraseña:
                                             <input type="password" class="form-control" id="password">
                                         </label>
                                     </div>
                                 </div>    
-                                <div class="col-lg-4">    
+                                <div class="col-md-4 mb-3">    
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
@@ -198,6 +198,7 @@ $perfiles = Perfil::get_all_perfiles();
     
     $(document).ready( function(){
         tablaUsuarios =  $('#tabla').DataTable({
+            responsive: true,
             "ajax": {            
                 "url": "./ajax_handler/users.php",
                 "type": 'POST',
@@ -246,6 +247,9 @@ $perfiles = Perfil::get_all_perfiles();
             ],
             "createdRow": function(row, data, dataIndex) {
             $(row).attr('data-id', data.id); // Añadir atributo data-id
+            },
+            "language": {
+                "url": "./assets/json/español.json"
             }
 
         });

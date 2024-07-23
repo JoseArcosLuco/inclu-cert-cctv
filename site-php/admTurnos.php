@@ -14,7 +14,7 @@ $jornadas = Jornada::get_all_jornadas();
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Turno<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
-            <div class="card-body p-0">
+            <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
@@ -56,14 +56,14 @@ $jornadas = Jornada::get_all_jornadas();
                     <form id="formTurno" name="formTurno">    
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre:
                                             <input type="text" class="form-control" id="nombre" name="nombre">
                                         </label>
                                     </div>
                                 </div>  
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Planta:
                                             <select class="form-select" name="id_plantas" id="id_plantas" required>
@@ -76,7 +76,7 @@ $jornadas = Jornada::get_all_jornadas();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Jornada:
                                             <select class="form-select" name="id_jornada" id="id_jornada" required>
@@ -87,7 +87,7 @@ $jornadas = Jornada::get_all_jornadas();
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
@@ -183,6 +183,7 @@ $jornadas = Jornada::get_all_jornadas();
 
     $(document).ready( function(){
         tablaTurnos =  $('#tabla').DataTable({
+            responsive: true,
             "ajax": {            
                 "url": "./ajax_handler/turnos.php",
                 "type": 'POST',
@@ -224,6 +225,9 @@ $jornadas = Jornada::get_all_jornadas();
             ],
             "createdRow": function(row, data, dataIndex) {
             $(row).attr('data-id', data.id); // Añadir atributo data-id
+            },
+            "language": {
+                "url": "./assets/json/español.json"
             }
 
         });
