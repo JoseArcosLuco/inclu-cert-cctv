@@ -18,6 +18,7 @@ $menuActiveJ = '';
 $menuActiveCam = '';
 $menuActivePerfil = '';
 $menuActiveClientes = '';
+$menuActiveTurnos = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -60,6 +61,9 @@ if (isset($_GET['form'])) {
         case "clientes":
             $menuActiveClientes = 'active';
             break;
+        case "turnos":
+            $menuActiveTurnos = 'active';
+            break;
     }
 }
 
@@ -88,7 +92,7 @@ if (isset($_GET['form'])) {
                                     </a> </li>
                             </ul>
                         </li>
-                        <li class="nav-item <?php if($menuActiveClientes!='' || $menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''|| $menuActivePerfil!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                        <li class="nav-item <?php if($menuActiveClientes!='' || $menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''|| $menuActivePerfil!=''|| $menuActiveTurnos!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
                                 <p>
                                     Administración
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -110,6 +114,12 @@ if (isset($_GET['form'])) {
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=jornadas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveJ;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Jornadas</p>
                                     </a> </li>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=turnos&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTurnos;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Admin Turnos</p>
+                                    </a> 
+                                </li>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=clientes&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveClientes;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Admin Clientes</p>
                                     </a> </li>
