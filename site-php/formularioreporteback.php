@@ -72,37 +72,20 @@
                 }
                 break;
 
-            case 'buscarturnos':
-                if(!empty($id)){
-                    try {
-                        $salida ="";
-                        $database = new Database();
-                        $conn = $database->getConnection();
-                        $stmt = $conn->prepare('SELECT id, nombre FROM cctv_turnos WHERE id_plantas = :idplanta and id_jornada = :id and estado=1');
-                        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                        $stmt->bindParam(':idplanta', $idplanta, PDO::PARAM_INT);
-                        if($stmt->execute()){
-                            $result = $stmt->fetchAll();
-                            $rows = $stmt->rowCount();
-                            $salida = '<option value="">Seleccione</option>';
-                            if($rows>0){
-                                foreach($result as $row){
-                                   $salida = $salida . '<option value="'.$row['id'].'">'.$row['nombre'].'</option>';
-                                }
-                            }else{
-                                $salida = '<option value="">Seleccione</option>';
-                            }
-                        }
+            case 'get_turnos':
+                $id_plantas = $_POST['id_plantas'];
+                $id_jornada = $_POST['id_jornada'];
+                $database = new Database();
+                $conn = $database->getConnection();
+                $stmt = $conn->prepare('SELECT * FROM cctv_turnos WHERE id_plantas = :id_plantas AND id_jornada = :id_jornada AND estado = 1');
+                $stmt->bindParam(':id_plantas', $id_plantas);
+                $stmt->bindParam(':id_jornada', $id_jornada);
+                $stmt->execute();
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                        echo $salida;
-
-                    } catch(Exception $e) {
-                        echo'fail'. $e->getMessage() .'';
-                    }
-                }else{
-                    echo 'fail: id no puede estar vacio!';
-                }
+                echo json_encode($response);
                 break;
+
             case 'buscarresponsables':
                     if(!empty($idplanta) && !empty($idturno)){
                         try {
@@ -118,7 +101,7 @@
                                 $salida = '<option value="">Seleccione</option>';
                                 if($rows>0){
                                     foreach($result as $row){
-                                       $salida = $salida . '<option value="'.$row['id'].'">'.$row['nombre'].'</option>';
+                                        $salida = $salida . '<option value="'.$row['id'].'">'.$row['nombre'].'</option>';
                                     }
                                 }else{
                                     $salida = '<option value="">Seleccione</option>';

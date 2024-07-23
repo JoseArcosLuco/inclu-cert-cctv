@@ -51,14 +51,14 @@ $clientes = Clientes::get_all_clients();
                         <input type="hidden" id="id_aux" name="id_aux">
                         <input type="hidden" id="acciones" name="acciones">
                         <div class="card-body">
-                            <div class="mb-1"> 
+                            <div class="mb-3"> 
                                 <label class="form-label">Fecha Turno</label> 
                                 <input type="date" class="form-control" id="fecha" name="fecha" required>
                                 <div id="emailHelp" class="form-text">
                                     Reportar fecha y hora exacta para el registro interno.
                                 </div>
                             </div>
-                            <div class="mb-1"> 
+                            <div class="mb-3"> 
                                 <label class="form-label">Planta</label> 
                                 <select class="form-control" name="planta" id="planta" required>
                                     <option value="">Seleccione un Cliente</option>
@@ -66,7 +66,7 @@ $clientes = Clientes::get_all_clients();
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Jornada</label> 
-                                <select class="form-control" name="jornada" id="jornada" onchange="javascript:buscarturno(this.value);" required>
+                                <select class="form-control" name="jornada" id="jornada" onchange="buscarhorario()" required">
                                     <option value="">Seleccione</option>
                                     <?php foreach ($dataJornadas as $row){  ?>
                                         <option value="<?php echo $row["id"]; ?>"><?php echo $row["nombre"]; ?></option>
@@ -75,8 +75,8 @@ $clientes = Clientes::get_all_clients();
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Turno</label> 
-                                <select class="form-control" name="turno" id="turno" onchange="javascript:buscarhorario();buscarresponsables();" required>
-                                    <option value="">Seleccione</option>
+                                <select class="form-control" name="turno" id="turno" onchange="buscarresponsables();" required>
+                                    <option value="">Seleccione una Planta</option>
                                 </select>
                             </div>
                             <div class="mb-3"> 
@@ -133,17 +133,12 @@ $clientes = Clientes::get_all_clients();
             </div> <!--end::Col--> <!--begin::Col-->
             <div class="col-md-6"> 
                 <div class="card card-danger card-outline mb-4"> 
-                    <div class="card-header">
+                    <div class="card-header p-4">
                         <div class="card-title">Gestión Camaras</div>
                     </div>
                     <div class="card-body" name="plantaCamaras" id="plantaCamaras"> <!--begin::Row-->
-                        <div class="row"> <!--begin::Col-->
-                            <div class="col-3"> Camara 1 </div> <!--end::Col--> <!--begin::Col-->
-                            <div class="col-4"> <input type="checkbox" class="form-check-input" name="checkbox_1" id="checkbox_1" placeholder=".col-4"> 
-                                                    <label class="form-check-label" for="gridCheck1">
-                                                        Habilitada?
-                                                    </label> </div> <!--end::Col--> <!--begin::Col-->
-                            <div class="col-5"> <input type="text" class="form-control" name="camara_obs_1" id="camara_obs_1" placeholder="observaciones"> </div> <!--end::Col-->
+                        <div class="row d-flex align-items-center"> <!--begin::Col-->
+                            <div class="col-12"> Seleccione una Planta </div> <!--end::Col--> <!--begin::Col-->
                         </div> <!--end::Row-->
                     </div>
                 </div>
@@ -169,7 +164,6 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                console.log(data);
                 var $plantaSelect = $('#planta');
                 $plantaSelect.empty();
                 $plantaSelect.append('<option value="">-Seleccione-</option>');
@@ -183,6 +177,36 @@ $(document).ready(function() {
         });
     });
 
+    function getTurnos() {
+    
+        var id_plantas = $('#planta').val();
+        var id_jornada = $('#jornada').val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'formularioreporteback.php',
+            data: {id_plantas: id_plantas,
+                id_jornada: id_jornada,
+                acciones: 'get_turnos'
+            },
+            dataType: 'json',
+            success: function(data) {
+                var $turnoSelect = $('#turno');
+                $turnoSelect.empty();
+                $turnoSelect.append('<option value="">-Seleccione-</option>');
+                $.each(data, function(index, turno) {
+                    $turnoSelect.append('<option value="' + turno.id + '">' + turno.nombre + '</option>');
+                });
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error en AJAX:', textStatus, errorThrown);
+            }
+        });
+    };
+
+    $('#planta').change(getTurnos);
+    $('#jornada').change(getTurnos);
+
     //funcion para obtener camaras
     $('#planta').change(function() {
         var id_plantas = $(this).val();
@@ -195,18 +219,19 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                console.log(data);
                 var $plantaCamarasSelect = $('#plantaCamaras');
                 var $camaraConcatenado = '';
                 $plantaCamarasSelect.empty();
                 
                 $.each(data, function(index, planta) {
                         $camaraConcatenado = '';
-                        $camaraConcatenado = $camaraConcatenado + '<div class="row">'; 
+                        $camaraConcatenado = $camaraConcatenado + '<div class="row d-flex align-items-center p-2">'; 
                         $camaraConcatenado = $camaraConcatenado + '<div class="col-3"> ' + planta.nombre + ' </div>';
-                        $camaraConcatenado = $camaraConcatenado + '<div class="col-4"> <input type="checkbox" class="form-check-input" name="checkbox_' + planta.id + '" id="checkbox_' + planta.id + '" placeholder=".col-4">';
-                        $camaraConcatenado = $camaraConcatenado + '<label class="form-check-label" for="gridCheck1">Habilitada?</label> </div>';
-                        $camaraConcatenado = $camaraConcatenado + '<div class="col-5"> <input type="text" class="form-control" name="camara_obs_' + planta.id + '" id="camara_obs_' + planta.id + '" placeholder="observaciones"></div>';
+                        $camaraConcatenado = $camaraConcatenado + '<div class="col-3">';
+                        $camaraConcatenado = $camaraConcatenado + '<label class="form-check-label">Habilitada: ';
+                        $camaraConcatenado = $camaraConcatenado + '<input type="checkbox" class="form-check-input" name="checkbox_' + planta.id + '" id="checkbox_' + planta.id + '" placeholder=".col-4">';
+                        $camaraConcatenado = $camaraConcatenado + '</label></div>';
+                        $camaraConcatenado = $camaraConcatenado + '<div class="col-6"> <input type="text" class="form-control" name="camara_obs_' + planta.id + '" id="camara_obs_' + planta.id + '" placeholder="observaciones"></div>';
                         $camaraConcatenado = $camaraConcatenado + '</div>';
                         $plantaCamarasSelect.append($camaraConcatenado);
                 });
@@ -221,24 +246,6 @@ $(document).ready(function() {
 });
 </script>
 <script>
-    function buscarturno(idJornada){
-        document.getElementById('acciones').value = 'buscarturnos';
-        document.getElementById('id_aux').value = idJornada;
-
-        $.ajax({
-            url: 'formularioreporteback.php',
-            type: 'POST',
-            data: { 
-                id_aux: document.getElementById('id_aux').value,
-                id_planta: document.getElementById('planta').value,
-                acciones: document.getElementById('acciones').value
-            },
-            success: function(response) {
-                // Asumiendo que el PHP retorna una lista de opciones en formato HTML
-                $('#turno').html(response);
-            }
-        });
-    }
     function buscarresponsables(){
         document.getElementById('acciones').value = 'buscarresponsables';
 
@@ -285,7 +292,7 @@ $(document).ready(function() {
                 $('#submitBtn').attr("disabled", false);
                 $("#submitBtn").attr("value", 'Enviar Reporte');
                 $('#mensaje').html(response).fadeIn('slow');
-                $('#mensaje').delay(5000).fadeOut('slow');
+                $('#mensaje').delay(500).fadeOut('slow');
                 document.getElementById("dataForm").reset();
             },
             error: function (response) {
@@ -293,7 +300,7 @@ $(document).ready(function() {
                 $('#submitBtn').attr("disabled", false);
                 $("#submitBtn").attr("value", 'Enviar Reporte');
                 $('#mensaje').html(response).fadeIn('slow');
-                $('#mensaje').delay(5000).fadeOut('slow');
+                $('#mensaje').delay(500).fadeOut('slow');
             },
         });
     });
