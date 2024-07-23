@@ -147,6 +147,18 @@
 
                 echo json_encode($response);
                 break;
+            
+            case 'get_plantas_camaras':
+                $id_plantas = $_POST['id_plantas'];
+                $database = new Database();
+                $conn = $database->getConnection();
+                $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id_plantas = :id_plantas');
+                $stmt->bindParam(':id_plantas', $id_plantas);
+                $stmt->execute();
+                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                echo json_encode($response);
+                break;
 
             default:
                 echo 'Fail';

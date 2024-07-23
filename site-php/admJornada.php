@@ -2,35 +2,45 @@
 include("./includes/Database.class.php");
 
 ?>
-
+<style>
+    @media (max-width: 768px) {
+  .specifictd {
+    min-width: 600px; /* adjust to desired wrapping */
+    display: table;
+    word-wrap: break-word;
+  }
+}
+</style>
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
-        <div class="card mb-4">
-            <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="add">Agregar Jornada<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
-            </div> <!-- /.card-header -->
-            <div class="card-body p-0">
-                <table class="table table-striped table-hover" id="tabla">
-                    <thead>
-                        <tr>
-                            <th>
-                                ID
-                            </th>
-                            <th>
-                                Nombre
-                            </th>
-                            <th>
-                                Estado
-                            </th>
-                            <th class="text-center">
-                                Opciones
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>      
+        <div class="col-md-12">
+            <div class="card mb-2">
+                <div class="card-header p-3 d-flex justify-content-between align-items-center">
+                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="add">Agregar Jornada<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                </div> <!-- /.card-header -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="tabla">
+                        <thead>
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th class="text-center">
+                                    Opciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>      
+            </div>
         </div> <!-- /.card -->
         <!-- begin::Modal -->
 
@@ -229,6 +239,6 @@ include("./includes/Database.class.php");
         });
 </script>
 <!-- end::Script -->
-    
+
 </body>
 </html>

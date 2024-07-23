@@ -34,11 +34,11 @@ $clientes = Clientes::get_all_clients();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="row g-2 p-4"> 
-            <div class="col-md-12 col-xs-6"> <!--begin::Quick Example-->
+            <div class="col-md-6 col-xs-4"> <!--begin::Quick Example-->
                 <div class="card card-primary card-outline mb-2"> <!--begin::Header-->
                     <div class="card-header d-flex gap-5 justify-content-start align-items-center">
                         <div class="card-title">Ingreso Reporte Turno</div>
-                        <div class="card-title d-flex align-items-center gap-1">Cliente:
+                        <div class="card-title d-flex align-items-center gap-1">Cliente:&nbsp;
                             <select class="form-select" name="id_cliente" id="id_cliente">
                                 <option value="">Seleccione</option>
                                 <?php foreach ($clientes as $cliente): ?>
@@ -115,10 +115,7 @@ $clientes = Clientes::get_all_clients();
                                 <label for="exampleInputPassword1" class="form-label">Observaciones Turno</label> 
                                 <input type="text" class="form-control" name="obs_turno" id="obs_turno" required> 
                             </div>
-                            <div class="mb-3"> 
-                                <label for="exampleInputPassword1" class="form-label">Observaciones Semana</label> 
-                                <input type="text" class="form-control" name="obs_semana" id="obs_semana"> 
-                            </div>
+                            
 
                             
                         </div> <!--end::Body--> <!--begin::Footer-->
@@ -135,9 +132,26 @@ $clientes = Clientes::get_all_clients();
                 
             </div> <!--end::Col--> <!--begin::Col-->
             <div class="col-md-6"> 
-                
+                <div class="card card-danger card-outline mb-4"> 
+                    <div class="card-header">
+                        <div class="card-title">Gestión Camaras</div>
+                    </div>
+                    <div class="card-body" name="plantaCamaras" id="plantaCamaras"> <!--begin::Row-->
+                        <div class="row"> <!--begin::Col-->
+                            <div class="col-3"> Camara 1 </div> <!--end::Col--> <!--begin::Col-->
+                            <div class="col-4"> <input type="checkbox" class="form-check-input" name="checkbox_1" id="checkbox_1" placeholder=".col-4"> 
+                                                    <label class="form-check-label" for="gridCheck1">
+                                                        Habilitada?
+                                                    </label> </div> <!--end::Col--> <!--begin::Col-->
+                            <div class="col-5"> <input type="text" class="form-control" name="camara_obs_1" id="camara_obs_1" placeholder="observaciones"> </div> <!--end::Col-->
+                        </div> <!--end::Row-->
+                    </div>
+                </div>
             </div> <!--end::Col-->
         </div> <!--end::Row-->
+        <div class="row g-2 p-4">
+            
+        </div>
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -158,6 +172,7 @@ $(document).ready(function() {
                 console.log(data);
                 var $plantaSelect = $('#planta');
                 $plantaSelect.empty();
+                $plantaSelect.append('<option value="">-Seleccione-</option>');
                 $.each(data, function(index, planta) {
                     $plantaSelect.append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
                 });
@@ -167,6 +182,42 @@ $(document).ready(function() {
             }
         });
     });
+
+    //funcion para obtener camaras
+    $('#planta').change(function() {
+        var id_plantas = $(this).val();
+
+        $.ajax({
+            type: 'POST',
+            url: 'formularioreporteback.php',
+            data: {id_plantas: id_plantas,
+                acciones: 'get_plantas_camaras'
+            },
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                var $plantaCamarasSelect = $('#plantaCamaras');
+                var $camaraConcatenado = '';
+                $plantaCamarasSelect.empty();
+                
+                $.each(data, function(index, planta) {
+                        $camaraConcatenado = '';
+                        $camaraConcatenado = $camaraConcatenado + '<div class="row">'; 
+                        $camaraConcatenado = $camaraConcatenado + '<div class="col-3"> ' + planta.nombre + ' </div>';
+                        $camaraConcatenado = $camaraConcatenado + '<div class="col-4"> <input type="checkbox" class="form-check-input" name="checkbox_' + planta.id + '" id="checkbox_' + planta.id + '" placeholder=".col-4">';
+                        $camaraConcatenado = $camaraConcatenado + '<label class="form-check-label" for="gridCheck1">Habilitada?</label> </div>';
+                        $camaraConcatenado = $camaraConcatenado + '<div class="col-5"> <input type="text" class="form-control" name="camara_obs_' + planta.id + '" id="camara_obs_' + planta.id + '" placeholder="observaciones"></div>';
+                        $camaraConcatenado = $camaraConcatenado + '</div>';
+                        $plantaCamarasSelect.append($camaraConcatenado);
+                });
+                
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error en AJAX:', textStatus, errorThrown);
+            }
+        });
+    });
+
 });
 </script>
 <script>
@@ -230,7 +281,7 @@ $(document).ready(function() {
             cache: false,
             async: true,
             success: function (response) {
-                alert(response);
+                //alert(response);
                 $('#submitBtn').attr("disabled", false);
                 $("#submitBtn").attr("value", 'Enviar Reporte');
                 $('#mensaje').html(response).fadeIn('slow');
@@ -238,7 +289,7 @@ $(document).ready(function() {
                 document.getElementById("dataForm").reset();
             },
             error: function (response) {
-                alert(response);
+                //alert(response);
                 $('#submitBtn').attr("disabled", false);
                 $("#submitBtn").attr("value", 'Enviar Reporte');
                 $('#mensaje').html(response).fadeIn('slow');
