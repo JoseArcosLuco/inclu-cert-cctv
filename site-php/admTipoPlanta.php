@@ -9,7 +9,7 @@ include("./includes/Database.class.php");
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="add">Agregar Tipo Planta<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
-            <div class="card-body p-0">
+            <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover" id="tabla">
                     <thead>
                         <tr>
@@ -45,16 +45,14 @@ include("./includes/Database.class.php");
                     <form id="formTipoPlanta" name="formTipoPlanta">    
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre:
                                             <input type="text" class="form-control" id="nombres">
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">    
+                                <div class="col-md-6 mb-3">    
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
@@ -63,7 +61,7 @@ include("./includes/Database.class.php");
                                             </select>
                                         </label>
                                     </div>           
-                                </div>    
+                                </div>
                             </div>                
                         </div>
                         <div class="modal-footer">
@@ -138,6 +136,7 @@ include("./includes/Database.class.php");
 <script>
     $(document).ready( function(){
         tabla =  $('#tabla').DataTable({
+            responsive: true,
             "ajax": {            
                 "url": "./ajax_handler/tipoplanta.php",
                 "type": 'POST',
@@ -167,6 +166,9 @@ include("./includes/Database.class.php");
             ],
             "createdRow": function(row, data, dataIndex) {
             $(row).attr('data-id', data.id); // Añadir atributo data-id
+            },
+            "language": {
+                "url": "./assets/json/español.json"
             }
 
         });
