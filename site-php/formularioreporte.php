@@ -33,6 +33,7 @@ $clientes = Clientes::get_all_clients();
 
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
+        <form id="dataForm" name="dataForm"> <!--begin::Body-->
         <div class="row g-2 p-4"> 
             <div class="col-md-6 col-xs-4"> <!--begin::Quick Example-->
                 <div class="card card-primary card-outline mb-2"> <!--begin::Header-->
@@ -47,7 +48,7 @@ $clientes = Clientes::get_all_clients();
                             </select>
                         </div>
                     </div> <!--end::Header--> <!--begin::Form-->
-                    <form id="dataForm" name="dataForm"> <!--begin::Body-->
+                    
                         <input type="hidden" id="id_aux" name="id_aux">
                         <input type="hidden" id="acciones" name="acciones">
                         <div class="card-body">
@@ -94,7 +95,7 @@ $clientes = Clientes::get_all_clients();
                                 </div>
                                 <div class="col-4">
                                     <label class="form-label">Camaras Totales</label>
-                                    <input type="number" class="form-control" id="camarastotales" name="camarastotales" required>  
+                                    <input type="number" class="form-control" id="camarastotales" name="camarastotales" readonly>  
                                 </div>
                             </div>
                             <div class="mb-3"> 
@@ -125,7 +126,7 @@ $clientes = Clientes::get_all_clients();
                         <div class="col-md-6" id="mensaje" name="mensaje"> 
                 
                         </div>
-                    </form> <!--end::Form-->
+                    
                 </div> <!--end::Quick Example--> <!--begin::Input Group-->
                 
                 <!--begin::Horizontal Form-->
@@ -143,10 +144,9 @@ $clientes = Clientes::get_all_clients();
                     </div>
                 </div>
             </div> <!--end::Col-->
-        </div> <!--end::Row-->
-        <div class="row g-2 p-4">
             
-        </div>
+        </div> <!--end::Row-->
+    </form> <!--end::Form-->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -221,12 +221,13 @@ $(document).ready(function() {
             success: function(data) {
                 var $plantaCamarasSelect = $('#plantaCamaras');
                 var $camaraConcatenado = '';
+                var $cantidadcamaras = 0;
                 $plantaCamarasSelect.empty();
                 
                 $.each(data, function(index, planta) {
                         $camaraConcatenado = '';
                         $camaraConcatenado = $camaraConcatenado + '<div class="row d-flex align-items-center p-2">'; 
-                        $camaraConcatenado = $camaraConcatenado + '<div class="col-3"> ' + planta.nombre + ' </div>';
+                        $camaraConcatenado = $camaraConcatenado + '<input type="hidden" name="idcamaras_' + planta.id + '" id="idcamaras_' + planta.id + '" value="' + planta.id + '"><div class="col-3"> ' + planta.nombre + ' </div>';
                         $camaraConcatenado = $camaraConcatenado + '<div class="col-3">';
                         $camaraConcatenado = $camaraConcatenado + '<label class="form-check-label">Habilitada: ';
                         $camaraConcatenado = $camaraConcatenado + '<input type="checkbox" class="form-check-input" name="checkbox_' + planta.id + '" id="checkbox_' + planta.id + '" placeholder=".col-4">';
@@ -234,8 +235,9 @@ $(document).ready(function() {
                         $camaraConcatenado = $camaraConcatenado + '<div class="col-6"> <input type="text" class="form-control" name="camara_obs_' + planta.id + '" id="camara_obs_' + planta.id + '" placeholder="observaciones"></div>';
                         $camaraConcatenado = $camaraConcatenado + '</div>';
                         $plantaCamarasSelect.append($camaraConcatenado);
+                        $cantidadcamaras ++;
                 });
-                
+                document.getElementById('camarastotales').value = $cantidadcamaras;
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log('Error en AJAX:', textStatus, errorThrown);
@@ -292,7 +294,7 @@ $(document).ready(function() {
                 $('#submitBtn').attr("disabled", false);
                 $("#submitBtn").attr("value", 'Enviar Reporte');
                 $('#mensaje').html(response).fadeIn('slow');
-                $('#mensaje').delay(500).fadeOut('slow');
+                $('#mensaje').delay(5000).fadeOut('slow');
                 document.getElementById("dataForm").reset();
             },
             error: function (response) {
@@ -300,7 +302,7 @@ $(document).ready(function() {
                 $('#submitBtn').attr("disabled", false);
                 $("#submitBtn").attr("value", 'Enviar Reporte');
                 $('#mensaje').html(response).fadeIn('slow');
-                $('#mensaje').delay(500).fadeOut('slow');
+                $('#mensaje').delay(5000).fadeOut('slow');
             },
         });
     });

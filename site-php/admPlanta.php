@@ -443,7 +443,7 @@ $clientes = Clientes::get_all_clients();
             $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
             "language": {
-                "url": "./assets/json/español.json"
+                "url": "./assets/json/espanol.json"
             }
 
         });

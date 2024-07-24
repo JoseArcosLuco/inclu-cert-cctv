@@ -59,6 +59,26 @@
                         
                         if($stmt->execute()){
                             $idInsertado = $conn->lastInsertId();
+                            
+                            for ($i=1; $i <= $camarastotales; $i++) { 
+                                
+                                $idcamaras_ = "";
+                                $check_ = '0';
+                                $camara_obs_ = "";
+                                # code...
+                                isset($_POST['idcamaras_'.$i]) ? $idcamaras_ = trim($_POST['idcamaras_'.$i]) : $idcamaras_ = 0;
+                                //isset($_POST['checkbox_'.$i]) ? $check_ = trim($_POST['checkbox_'.$i]) : $check_ = 0;
+                                $check_ = (isset($_POST['checkbox_'.$i])) ? '1' : '0';
+                                isset($_POST['camara_obs_'.$i]) ? $camara_obs_ = trim($_POST['camara_obs_'.$i]) : $camara_obs_ = '';
+
+                                $stmt = $conn->prepare('INSERT INTO cctv_gestion_plantas_camaras (id_camaras,id_gestion_plantas,observacion,estado) VALUES (:idcamaras,:idgestion,:observacion,:estado)');
+                                $stmt->bindParam(':idcamaras',$idcamaras_);
+                                $stmt->bindParam(':idgestion',$idInsertado);
+                                $stmt->bindParam(':observacion',$camara_obs_);
+                                $stmt->bindParam(':estado',$check_);
+                                $stmt->execute();
+                            }
+
                             $salida = '<div class="alert alert-success">Reporte Ingresado Exitosamente! Su numero reporte es: '.$idInsertado.'</div>';
                         }
 
