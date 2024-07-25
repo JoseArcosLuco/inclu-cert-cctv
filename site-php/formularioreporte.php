@@ -35,12 +35,12 @@ $clientes = Clientes::get_all_clients();
     <div class="container-fluid"> <!--begin::Row-->
         <form id="dataForm" name="dataForm"> <!--begin::Body-->
         <div class="row g-2 p-4"> 
-            <div class="col-md-6 col-xs-4"> <!--begin::Quick Example-->
+            <div class="col-md-6 col-xs-4 "> <!--begin::Quick Example-->
                 <div class="card card-primary card-outline mb-2"> <!--begin::Header-->
-                    <div class="card-header d-flex gap-5 justify-content-start align-items-center">
-                        <div class="card-title">Ingreso Reporte Turno</div>
-                        <div class="card-title d-flex align-items-center gap-1">Cliente:&nbsp;
-                            <select class="form-select" name="id_cliente" id="id_cliente">
+                    <div class="card-header d-flex justify-content-start align-items-center">
+                        <div class="card-title col-4 col-md-6">Ingreso Reporte Turno</div>
+                        <div class="card-title d-flex align-items-center gap-1 col-8 col-md-6">Cliente:&nbsp;
+                            <select class="form-select form-select-sm" style="min-width: min-content !important;" name="id_cliente" id="id_cliente">
                                 <option value="">Seleccione</option>
                                 <?php foreach ($clientes as $cliente): ?>
                                 <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
