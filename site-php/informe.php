@@ -2,7 +2,7 @@
     <div class="container-fluid"> <!--begin::Row-->
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h3 class="card-title">Bordered Table</h3>
+                                    <h3 class="card-title">Puedes buscar por planta, fecha, nombre usuario </h3>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body">
                                     <table id="datatable" class="display" style="width:100%">
@@ -22,8 +22,13 @@
                                                 <th>Fecha Gestion</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Estado Reporte</th>
+                                                <th class="text-center">
+                                                    Opciones
+                                                </th>
                                             </tr>
                                         </thead>
+                                        <tbody>
+                                        </tbody>
                                     </table>
                                 </div> 
                                 
@@ -38,9 +43,10 @@
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#datatable').DataTable({
+        tablaInforme = $('#datatable').DataTable({
             "processing": true,
             "serverSide": true,
+            "responsive": true,
             "ajax": "informedatos.php",
             "columns": [
                 { "data": "id" },
@@ -55,8 +61,32 @@
                 { "data": "observaciones" },
                 { "data": "fecha_gestion" },
                 { "data": "fecha_registro" },
-                { "data": "estadoreporte" }
-            ]
+                { "data": "estadoreporte" },
+                {"defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>assignment</i></button></div></div>"}
+            ],
+            "createdRow": function(row, data, dataIndex) {
+            $(row).attr('data-id', data.id); // Añadir atributo data-id
+            },
+            "language": {
+                "url": "./assets/json/espanol.json"
+            }
         });
+    });
+
+
+    //Editar Turnos
+    $('#datatable tbody').on('click', '.btnEditar', function() {
+        var data = tablaInforme.row($(this).parents('tr')).data();
+        var id = $(this).attr('id') || null;
+        alert(id);
+        window.open("reportetest.php?id_gestion_plantas=");
+        //$('#formTurno').attr('data-action', 'edit_turno');
+        //$('#formTurno').attr('data-id', data.id);
+        //$('#nombre').val(data.nombre);
+        //$('#id_plantas').val(data.id_plantas);
+        //$('#id_jornada').val(data.id_jornada);
+        //$('#estado').val(data.estado);
+
+        //$('#modalCRUD').modal('show');
     });
 </script>
