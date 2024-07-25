@@ -1,16 +1,26 @@
 <?php
 require('fpdf.php');
+require_once('includes/Informes.class.php');
+require_once('includes/Camaras.class.php');
+$id = isset($_GET['id_gestion_plantas']);
+$datosCliente = Informes::get_client_by_plant_id($id);
+$planta = Informes::get_plantas_by_informe_id($id);
+$informe = Informes::get_informe($id);
+$camaras = Camaras::get_all_camaras($planta['id']);
+$arrayCamaras = [];
+foreach ($camaras as $camara) {
+    $arrayCamaras[] = [
+        'id' => $camara['nombre'],
+        'operatividad' => $camara['estado'] ? 'Operativa' : 'No Operativa',
+    ];
+}
 
 // Datos de ejemplo para un cliente
 $cliente = [
-    'nombre' => 'Cliente A',
-    'planta' => 'Planta 1',
-    'fecha_registro' => '2024-07-20',
-    'camaras' => [
-        ['id' => 1, 'operatividad' => 'Operativa'],
-        ['id' => 2, 'operatividad' => 'No Operativa'],
-        ['id' => 3, 'operatividad' => 'Operativa']
-    ]
+    'nombre' => $datosCliente['nombre'],
+    'planta' => $planta['nombre'],
+    'fecha_registro' => $informe['fecha_registro'],
+    'camaras' => $arrayCamaras
 ];
 
 class PDF extends FPDF
@@ -123,7 +133,7 @@ $pdf->Ln(10);
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->Cell(0, 10, 'Observaciones:', 0, 1, 'L');
 $pdf->SetFont('Arial', '', 12);
-$pdf->MultiCell(0, 10, 'Este es un informe detallado de las camaras CCTV por planta. Los datos presentados muestran el estado de operatividad de cada camara en cada planta del cliente registrado.');
+$pdf->MultiCell(0, 10, $informe['observaciones']);
 
 // Salida del PDF
 $pdf->Output();

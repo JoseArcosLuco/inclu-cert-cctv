@@ -72,10 +72,9 @@
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
-                echo json_encode($result);
-                header('HTTP/1.1 201 OK');
+                return $result;
             } else {
-                header('HTTP/1.1 404 No se ha podido consultar las plantas');
+                return [];
             }
         }
 
