@@ -2,6 +2,8 @@
 error_reporting( E_ALL );
 session_start();
 $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
+
+$perfilUsuario = isset($_SESSION["nombreperfil"]) ? $_SESSION["nombreperfil"] : '';
 ?>
 
 <!DOCTYPE html>
