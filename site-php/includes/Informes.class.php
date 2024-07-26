@@ -6,40 +6,31 @@
         public static function get_client_by_plant_id($id){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT id_clientes FROM cctv_plantas WHERE id = :id');
+
+            $sql = "select gp.id,c.nombre as nombrecliente,p.nombre as planta,concat(u.nombres,' ',u.apellidos) as nombreusuario,t.nombre as turno,gp.horario,";
+            $sql .= "(case when gp.planta_en_linea=1 Then 'Si' else 'No' end) as planta_en_linea, ";
+            $sql .= "gp.con_intermitencia as camarasintermitencia,gp.camaras_sin_conexion,gp.camaras_totales,gp.observaciones, gp.fecha_gestion,gp.fecha_registro, ";
+            $sql .= "(case when gp.estado=1 Then 'Aprobado' else 'Por Aprobar' end) as estadoreporte ";
+            $sql .= "from cctv_gestion_plantas as gp ";
+            $sql .= "inner join cctv_plantas as p on (p.id = gp.id_plantas) ";
+            $sql .= "inner join cctv_clientes as c on (c.id = p.id_clientes) ";
+            $sql .= "inner join cctv_users as u on (u.id = gp.id_users) ";
+            $sql .= "inner join cctv_turnos as t on (t.id = gp.id_turno) WHERE gp.id = :id";
+            
+            $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $id_cliente = $result['id_clientes'];
-            $stmt = $conn->prepare('SELECT * FROM cctv_clientes WHERE id = :id_cliente');
-            $stmt->bindParam(':id_cliente', $id_cliente);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result;
         }
 
-        public static function get_plantas_by_informe_id($id){
+        public static function get_informe_camaras($id){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT id_plantas FROM cctv_gestion_plantas WHERE id = :id');
+            $stmt = $conn->prepare('SELECT c.nombre as nombrecamara,(case when gpc.estado=1 Then "Habilitado" else "No Activa" end) as estadocamara,gpc.observacion  FROM cctv_camaras as c inner join cctv_gestion_plantas_camaras as gpc on (gpc.id_camaras = c.id) WHERE gpc.id_gestion_plantas = :id');
             $stmt->bindParam(':id', $id);
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $id_planta = $result['id_plantas'];
-            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id = :id_planta');
-            $stmt->bindParam(':id_planta', $id_planta);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result;
-        }
-
-        public static function get_informe($id){
-            $database = new Database();
-            $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_gestion_plantas WHERE id = :id');
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         }
     }
