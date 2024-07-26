@@ -44,8 +44,8 @@
 <script>
     $(document).ready(function() {
 
-        var perfil = '<?php echo $perfilUsuario; ?>';
-
+        var perfil = '<?php if(isset($idPerfil)){echo $idPerfil;}?>';
+        console.log('perfil',perfil);
         tablaInforme = $('#datatable').DataTable({
             "processing": true,
             "serverSide": true,
@@ -69,12 +69,12 @@
             ],
             "createdRow": function(row, data, dataIndex) {
                 $(row).attr('data-id', data.id); // Añadir atributo data-id
-
+                
                 if (data.estadoreporte !== 'Aprobado') {
                     $(row).find('button.btnEditar').prop('disabled', true);
                 }
-
-                if(perfil === 'Admin' || perfil === 'Supervisor'){
+                
+                if(perfil === '1' || perfil === '2'){
                     $(row).find('.btn-group').append('<button class="btn btn-success btn-sm"><i class="material-icons">check</i></button><button class="btn btn-danger btn-sm"><i class="material-icons">remove_done</i></button>');
                     if(data.estadoreporte === 'Aprobado'){
                         $(row).find('button.btn-success').prop('disabled', true);
