@@ -80,9 +80,9 @@ class PDF extends FPDF
         $this->SetTextColor(255);
         $this->SetDrawColor(128, 0, 0);
         $this->SetLineWidth(.3);
-        $this->SetFont('', 'B');
+        $this->SetFont('Arial', 'B');
         // Cabecera
-        $w = [45, 45, 45, 45, 50, 45]; // Anchuras de las columnas
+        $w = [45, 65, 35, 35, 50, 45]; // Anchuras de las columnas
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 7, utf8_decode($header[$i]), 1, 0, 'C', true);
         }
