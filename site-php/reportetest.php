@@ -6,7 +6,10 @@ $id = isset($_GET['id_gestion_plantas']) ? $_GET['id_gestion_plantas'] : 1;
 $datosCliente = Informes::get_client_by_plant_id($id);
 $camaras = Informes::get_informe_camaras($id);
 
+$fecha = date('d-m-Y',strtotime($datosCliente['fecha_gestion']));
+
 $arrayCamaras = [];
+
 
 foreach ($camaras as $camara) {
     $arrayCamaras[] = [
@@ -23,7 +26,8 @@ $cliente = [
     'nombreusuario' => $datosCliente['nombreusuario'],
     'turno' => $datosCliente['turno'],
     'horario' => $datosCliente['horario'],
-    'fecha_registro' => $datosCliente['fecha_gestion'],
+    // 'fecha_registro' => $datosCliente['fecha_gestion'],
+    'fecha_registro' => $fecha,
     'observaciones' => $datosCliente['observaciones'],
     'camaras' => $arrayCamaras
 ];
@@ -34,7 +38,8 @@ $datosAdicionales = [
     'camarasintermitencia' => $datosCliente['camarasintermitencia'],
     'camaras_sin_conexion' => $datosCliente['camaras_sin_conexion'],
     'camaras_totales' => $datosCliente['camaras_totales'],
-    'fecha_registro' => $datosCliente['fecha_gestion'],
+    // 'fecha_registro' => $datosCliente['fecha_gestion'],
+    'fecha_registro' => $fecha,
     'observaciones' => $datosCliente['observaciones']
 ];
 
@@ -77,7 +82,7 @@ class PDF extends FPDF
         $this->SetLineWidth(.3);
         $this->SetFont('', 'B');
         // Cabecera
-        $w = [45, 45, 45, 45, 45, 45]; // Anchuras de las columnas
+        $w = [45, 45, 45, 45, 50, 45]; // Anchuras de las columnas
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 7, utf8_decode($header[$i]), 1, 0, 'C', true);
         }
@@ -92,7 +97,7 @@ class PDF extends FPDF
         $this->Cell($w[2], 6, utf8_decode($cliente['nombreusuario']), 'LR', 0, 'L');
         $this->Cell($w[3], 6, utf8_decode($cliente['turno']), 'LR', 0, 'L');
         $this->Cell($w[4], 6, utf8_decode($cliente['horario']), 'LR', 0, 'L');
-        $this->Cell($w[5], 6, utf8_decode($cliente['fecha_registro']), 'LR', 0, 'L');
+        $this->Cell($w[5], 6, utf8_decode($cliente['fecha_registro']), 'LR', 0, 'C');
         $this->Ln();
         $this->Cell(array_sum($w), 0, '', 'T');
     }
@@ -107,7 +112,7 @@ class PDF extends FPDF
         $this->SetLineWidth(.3);
         $this->SetFont('', 'B');
         // Cabecera
-        $w = [55, 55, 55, 55, 55, 55]; // Anchuras de las columnas
+        $w = [55, 60, 60, 55, 45]; // Anchuras de las columnas
         for ($i = 0; $i < count($header); $i++) {
             $this->Cell($w[$i], 7, utf8_decode($header[$i]), 1, 0, 'C', true);
         }
@@ -121,10 +126,31 @@ class PDF extends FPDF
         $this->Cell($w[1], 6, utf8_decode($datosAdicionales['camarasintermitencia']), 'LR', 0, 'L');
         $this->Cell($w[2], 6, utf8_decode($datosAdicionales['camaras_sin_conexion']), 'LR', 0, 'L');
         $this->Cell($w[3], 6, utf8_decode($datosAdicionales['camaras_totales']), 'LR', 0, 'L');
-        $this->Cell($w[4], 6, utf8_decode($datosAdicionales['fecha_registro']), 'LR', 0, 'L');
-        $this->Cell($w[5], 6, utf8_decode($datosAdicionales['observaciones']), 'LR', 0, 'L');
+        $this->Cell($w[4], 6, utf8_decode($datosAdicionales['fecha_registro']), 'LR', 0, 'C');
         $this->Ln();
         $this->Cell(array_sum($w), 0, '', 'T');
+    }
+
+    function Observaciones($header, $datosAdicionales){
+        {
+            // Colores, ancho de línea y fuente en negrita
+            $this->SetFillColor(0, 128, 0);
+            $this->SetTextColor(255, 255, 255);
+            $this->SetDrawColor(0, 100, 0);
+            $this->SetLineWidth(.3);
+            $this->SetFont('', 'B');
+            // Cabecera
+            $w = 275; // Anchuras de las columnas
+            $this->Cell($w, 10, utf8_decode($header[0]), 1, 0, 'C', true);
+            $this->Ln();
+            // Restauración de colores y fuentes
+            $this->SetFillColor(224, 235, 255);
+            $this->SetTextColor(0);
+            $this->SetFont('');
+            // Datos adicionales del cliente
+            $this->MultiCell($w, 6, utf8_decode($datosAdicionales['observaciones']), 'LR','L', false);
+            $this->Cell($w, 0, '', 'T');
+        }
     }
 
     // Tabla de cámaras
@@ -173,8 +199,11 @@ $pdf->TablaCliente($headerCliente, $cliente);
 $pdf->Ln(10);
 
 // Tabla de datos adicionales
-$headerDatosAdicionales = ['Planta en Línea', 'Cámaras Intermitencia', 'Cámaras sin Conexión', 'Cámaras Totales', 'Fecha Registro', 'Observaciones'];
+$headerDatosAdicionales = ['Planta en Línea', 'Cámaras Intermitencia', 'Cámaras sin Conexión', 'Cámaras Totales', 'Fecha Registro'];
 $pdf->TablaDatosAdicionales($headerDatosAdicionales, $datosAdicionales);
+$pdf->Ln();
+$headerObservaciones = ['Observaciones'];
+$pdf->Observaciones($headerObservaciones, $datosAdicionales);
 
 // Salto de línea
 $pdf->Ln(10);
