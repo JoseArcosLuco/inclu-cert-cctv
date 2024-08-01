@@ -43,6 +43,22 @@
             }
         }
 
+        public static function get_all_operadores_without_turno(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT CONCAT(u.nombres, " ", u.apellidos) AS nombre,
+                                    o.id as id
+                                    FROM cctv_operadores o
+                                    JOIN cctv_users u ON o.id_users = u.id
+                                    WHERE o.estado = 1;');
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
+            }
+        }
+
         public static function get_operadores_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();

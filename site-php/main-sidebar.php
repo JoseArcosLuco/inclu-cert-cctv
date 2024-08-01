@@ -19,6 +19,7 @@ $menuActiveCam = '';
 $menuActivePerfil = '';
 $menuActiveClientes = '';
 $menuActiveTurnos = '';
+$menuActivePeriodico = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -64,6 +65,9 @@ if (isset($_GET['form'])) {
         case "turnos":
             $menuActiveTurnos = 'active';
             break;
+        case "periodico":
+            $menuActivePeriodico = 'active';
+            break;
     }
 }
 
@@ -74,7 +78,7 @@ if (isset($_GET['form'])) {
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
+                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Dashboard
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -90,6 +94,12 @@ if (isset($_GET['form'])) {
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveFr;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes CCTV</p>
                                     </a> </li>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Reporte Periódico</p>
+                                    </a> 
+                                </li>
                             </ul>
                         </li>
                         <li class="nav-item <?php if($menuActiveClientes!='' || $menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''|| $menuActivePerfil!=''|| $menuActiveTurnos!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
