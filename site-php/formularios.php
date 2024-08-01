@@ -90,6 +90,9 @@ $perfilUsuario = isset($_SESSION["nombreperfil"]) ? $_SESSION["nombreperfil"] : 
                 case "periodico":
                     include "reportePeriodico.php";
                     break;
+                case "informeperiodico":
+                    include "formularioReportePeriodico.php";
+                    break;
             }
             
             

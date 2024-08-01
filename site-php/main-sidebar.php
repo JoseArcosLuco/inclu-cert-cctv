@@ -68,6 +68,9 @@ if (isset($_GET['form'])) {
         case "periodico":
             $menuActivePeriodico = 'active';
             break;
+        case "informeperiodico":
+            $menuActivePeriodico = 'active';
+            break;
     }
 }
 
@@ -97,7 +100,7 @@ if (isset($_GET['form'])) {
                                 <li class="nav-item"> 
                                     <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
-                                        <p>Reporte Periódico</p>
+                                        <p>Informes Periódicos</p>
                                     </a> 
                                 </li>
                             </ul>

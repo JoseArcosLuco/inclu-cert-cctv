@@ -78,6 +78,23 @@
             }
         }
 
+        public static function get_plantas_by_cliente_id($id){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT  COUNT(c.id) as camaras, p.*
+                                    FROM cctv_plantas p 
+                                    LEFT JOIN cctv_camaras c ON p.id = c.id_plantas
+                                    WHERE id_clientes=:id
+                                    GROUP BY p.id');
+            $stmt->bindParam(':id',$id);
+            if($stmt->execute()){
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $result;
+            } else {
+                return [];
+            }
+        }
+
         public static function update_plantas($id, $idcomuna, $idcomisarias, $idtipoplanta,$idcliente,$nombre, $grupo, $ubicacion, $encargadocontacto, $encargadoemail, $encargadotelefono, $mapa, $estado){
             $database = new Database();
             $conn = $database->getConnection();

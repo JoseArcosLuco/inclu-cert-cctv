@@ -38,6 +38,9 @@ switch( $formAccion ) {
     case "periodico":
         $tituloFormulario = 'Registro Periódico';
         break;
+    case "informeperiodico":
+        $tituloFormulario = 'Formulario Reporte Periódico';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;
