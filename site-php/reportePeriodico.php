@@ -73,7 +73,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         <!-- begin::Modal -->
 
         <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between align-items-center">
                         <h5 class="modal-title" id="exampleModalLabel">Agregar Reporte</h5>
@@ -95,7 +95,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <!-- <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Planta:
@@ -105,54 +105,58 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                             </label>
                                         </div>
                                     </div>               
-                                </div>
+                                </div> -->
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
+                            
+
+                            <!-- <div class="row">
+                                <div class="col-md-2 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">N° de Cámaras en Línea:
                                             <input class="form-control" type="number" name="camaras_online" id="camaras_online" required>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">N° de Cámaras:
                                             <input class="form-control" type="number" name="camaras" id="camaras" disabled required>
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Operador:
-                                            <select class="form-select" name="id_operador" id="id_operador" required>
-                                                <option value="">Seleccione</option>
-                                                <?php foreach ($operadores as $operador): ?>
-                                                <option value="<?php echo $operador['id']?>" id="id_operador"><?php echo htmlspecialchars($operador['nombre']);?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-2 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Canal de Visualización:
                                             <input class="form-control" type="number" name="canal" id="canal" required>
                                         </label>
                                     </div>
                                 </div>
-                            </div> 
-                            <div class="row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <div class="form-group">
-                                        <label class="col-form-label w-100">Observación:
-                                            <textarea class="form-control" name="observacion" id="observacion" required maxlength="255" rows="4"></textarea>
+                                        <label class="col-form-label w-100">Operador:
+                                            <select class="form-select" name="id_operador" id="id_operador" required>
+                                                <option value="">Seleccione</option>
+                                                <?php //foreach ($operadores as $operador): ?>
+                                                <option value="<?php //echo $operador['id']?>" id="id_operador"><?php //echo htmlspecialchars($operador['nombre']);?></option>
+                                                <?php //endforeach; ?>
+                                            </select>
                                         </label>
                                     </div>
                                 </div>
-                            </div>   
+                            </div> -->
+                                <div class="row" id="rows_plantas">
+                                    
+                                </div> 
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Observación:
+                                                <textarea class="form-control" name="observacion" id="observacion" required maxlength="255" rows="4"></textarea>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>  
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
@@ -233,11 +237,23 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 dataType: 'json',
                 success: function(data) {
-                    var $plantaSelect = $('#id_planta');
-                    $plantaSelect.empty();
-                    $plantaSelect.append('<option value=""> Seleccione </option>');
+                    // var $plantaSelect = $('#id_planta');
+                    // $plantaSelect.empty();
+                    // $plantaSelect.append('<option value=""> Seleccione </option>');
+                    // $.each(data, function(index, planta) {
+                    //     $plantaSelect.append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                    // });
+                    
+                    var $rowsplantas = $('#rows_plantas');
+                    $rowsplantas.empty();
                     $.each(data, function(index, planta) {
-                        $plantaSelect.append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                        $rowsplantas.append('<div class="row">');
+                        $rowsplantas.append('<div class="col-md-2"><div class="form-group"><label class="col-form-label w-100">Nombre:' + planta.nombre + '<input class="form-control" type="hidden" name="planta" id="planta_' + planta.id + '"></label></div></div>');
+                        $rowsplantas.append('<div class="col-md-2"><div class="form-group"><label class="col-form-label w-100">N° de Cámaras en Línea:<input class="form-control" type="number" name="camaras_online" id="camaras_online_' + planta.id + '" required></label></div></div>');
+                        $rowsplantas.append('<div class="col-md-2"><div class="form-group"><label class="col-form-label w-100">N° de Cámaras:<input class="form-control" type="number" name="camaras" id="camaras_' + planta.id + '" disabled required></label></div></div>');
+                        $rowsplantas.append('<div class="col-md-2"><div class="form-group"><label class="col-form-label w-100">Canal de Visualización:<input class="form-control" type="number" name="canal" id="canal_' + planta.id + '" required></label></div></div>');
+                        $rowsplantas.append('<div class="col-md-2"><div class="form-group"><label class="col-form-label w-100">Operador:<select class="form-select" name="id_operador" id="id_operador_' + planta.id + '" required><option value="">Seleccione</option></select></label></div></div>');
+                        $rowsplantas.append('</div>');
                     });
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
