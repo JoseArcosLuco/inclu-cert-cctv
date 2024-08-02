@@ -90,6 +90,22 @@
             }
         }
 
+        public static function get_cliente_by_id($id){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT * FROM cctv_clientes WHERE id = :id');
+            $stmt->bindParam(':id', $id);
+            if($stmt->execute()){
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $result;
+            } else {
+                return [
+                    'status' => false,
+                    'message' => 'No se ha podido leer la tabla clientes.'
+                ];
+            }
+        }
+
         public static function update_cliente($id, $nombre ,$email, $fecha_contrato, $contacto, $estado){
             $database = new Database();
             $conn = $database->getConnection();
