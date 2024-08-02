@@ -20,6 +20,8 @@ $menuActivePerfil = '';
 $menuActiveClientes = '';
 $menuActiveTurnos = '';
 $menuActivePeriodico = '';
+$menuActiveCorteEnergia = '';
+$menuActiveRobo = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -71,6 +73,12 @@ if (isset($_GET['form'])) {
         case "informeperiodico":
             $menuActivePeriodico = 'active';
             break;
+        case "robo":
+            $menuActiveRobo = 'active';
+            break;
+        case "corte_energia":
+            $menuActiveCorteEnergia = 'active';
+            break;
     }
 }
 
@@ -81,7 +89,7 @@ if (isset($_GET['form'])) {
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
+                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''|| $menuActiveRobo != ''|| $menuActiveCorteEnergia != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Dashboard
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -101,6 +109,18 @@ if (isset($_GET['form'])) {
                                     <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Informes Periódicos</p>
+                                    </a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=robo&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveRobo;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Reportes Robos</p>
+                                    </a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=corte_energia&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteEnergia;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Reportes Corte Energía</p>
                                     </a> 
                                 </li>
                             </ul>
