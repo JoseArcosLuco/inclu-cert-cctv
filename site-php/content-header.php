@@ -41,6 +41,12 @@ switch( $formAccion ) {
     case "informeperiodico":
         $tituloFormulario = 'Formulario Reporte Periódico';
         break;
+    case "robo":
+        $tituloFormulario = 'Registro de Robos';
+        break;
+    case "corte_energia":
+        $tituloFormulario = 'Registro de Cortes de Energía';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;
