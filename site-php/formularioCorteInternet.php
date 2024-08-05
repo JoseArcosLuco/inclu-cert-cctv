@@ -180,7 +180,7 @@ $clientes = Clientes::get_all_clients();
     if (confirm('¿Estás seguro de que deseas eliminar esta cámara?')) {
         $.ajax({
             type: "POST",
-            url: "./ajax_handler/cortesEnergia.php",
+            url: "./ajax_handler/cortesInternet.php",
             data: { action: 'delete_reporte', id: reporteId },
             datatype: "json",
             encode: true,
@@ -224,7 +224,7 @@ $clientes = Clientes::get_all_clients();
             
             $.ajax({
                 type: "POST",
-                url: "./ajax_handler/cortesEnergia.php",
+                url: "./ajax_handler/cortesInternet.php",
                 data: { action: 'get_plantas', id: id },
                 datatype: "json",
                 success: function(data) {
@@ -240,7 +240,7 @@ $clientes = Clientes::get_all_clients();
         tablaReporte =  $('#tabla').DataTable({
             responsive: true,
             "ajax": {            
-                "url": "./ajax_handler/cortesEnergia.php",
+                "url": "./ajax_handler/cortesInternet.php",
                 "type": 'POST',
                 "data": {action: 'get_reporte'},
                 "dataSrc": ""
@@ -319,7 +319,7 @@ $clientes = Clientes::get_all_clients();
         console.log(formData);
         $.ajax({
             type: "POST",
-            url: "./ajax_handler/cortesEnergia.php",
+            url: "./ajax_handler/cortesInternet.php",
             data: formData,
             datatype: "json",
             encode: true,
