@@ -135,6 +135,18 @@ $clientes = Clientes::get_all_clients();
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -143,10 +155,25 @@ $clientes = Clientes::get_all_clients();
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
 
+    var clientes = <?php echo json_encode($clientes); ?>;
+    var clienteMap = {};
+
+    clientes.forEach(function(cliente) {
+        clienteMap[cliente.id] = cliente.nombre;
+    });
+
+    var plantas = <?php echo json_encode($plantas); ?>;
+    var plantasMap = {};
+
+    plantas.forEach(function(planta) {
+        plantasMap[planta.id] = planta.nombre;
+    });
+
     //Crear Reporte
     $("#addUser").click(function(){
         $('#formReporte').attr('data-action', 'create_reporte');
         $('#formReporte')[0].reset();
+        $('#id_cliente').prop('disabled', false);
         $('#modalCRUD').modal('show');
     });
 
@@ -171,49 +198,55 @@ $clientes = Clientes::get_all_clients();
         $('#modalCRUD').modal('show');
     });
 
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {    
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
+
     //Eliminar Reporte
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tablaReporte.row($row).data();
-    var reporteId = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar esta cámara?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/cortesEnergia.php",
-            data: { action: 'delete_reporte', id: reporteId },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tablaReporte.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
+        var $row = $(this).closest('tr');  // Capturamos la fila correctamente
+        var data = tablaReporte.row($row).data();
+        var reporteId = data.id;
+        var fecha = moment(data.fecha).format('DD-MM-YYYY');
+        var hora = moment(data.fecha).format('HH:mm');
+        var modal = $('#warningModal .modal-dialog .modal-content');
+
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p class="col-6">Cliente: '+clienteMap[data.id_cliente]+'</p>');
+        modal.find('.modal-body').append('<p class="col-6">Planta: '+plantasMap[data.id_planta]+'</p>');
+        modal.find('.modal-body').append('<p>Fecha: '+fecha+'</p>');
+        modal.find('.modal-body').append('<p>Hora: '+hora+'</p>');
+        modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function(){
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/cortesEnergia.php",
+                data: { action: 'delete_reporte', id: reporteId },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tablaReporte.row($row).remove().draw()  ;
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
-            }
+            });
         });
-    }
-    });
-</script>
-<script>
-    var clientes = <?php echo json_encode($clientes); ?>;
-    var clienteMap = {};
-
-    clientes.forEach(function(cliente) {
-        clienteMap[cliente.id] = cliente.nombre;
-    });
-
-    var plantas = <?php echo json_encode($plantas); ?>;
-    var plantasMap = {};
-
-    plantas.forEach(function(planta) {
-        plantasMap[planta.id] = planta.nombre;
     });
     
     $(document).ready( function(){
