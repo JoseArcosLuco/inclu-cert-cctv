@@ -47,6 +47,9 @@ switch( $formAccion ) {
     case "corte_energia":
         $tituloFormulario = 'Registro de Cortes de Energía';
         break;
+    case "corte_internet":
+        $tituloFormulario = 'Registro de Cortes de Internet';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;

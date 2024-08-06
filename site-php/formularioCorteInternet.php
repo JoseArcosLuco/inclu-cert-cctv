@@ -7,8 +7,6 @@ require_once('./includes/Clientes.class.php');
 $plantas = Plantas::get_all_plantas();
 $clientes = Clientes::get_all_clients();
 
-
-
 ?>
 
 <div class="app-content"> <!--begin::Container-->
@@ -135,6 +133,7 @@ $clientes = Clientes::get_all_clients();
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -194,6 +193,7 @@ $clientes = Clientes::get_all_clients();
         $('#hora').val(moment(data.fecha).format('HH:mm'));
         $('#observacion').val(data.observacion);
         $('#estado').val(data.estado);
+        $('#modalCRUD .modal-title').val('Editar Reporte');
 
         $('#modalCRUD').modal('show');
     });
@@ -228,7 +228,7 @@ $clientes = Clientes::get_all_clients();
         $('#warningModal').on('click', '.btnBorrar', function(){
             $.ajax({
                 type: "POST",
-                url: "./ajax_handler/cortesEnergia.php",
+                url: "./ajax_handler/cortesInternet.php",
                 data: { action: 'delete_reporte', id: reporteId },
                 datatype: "json",
                 encode: true,
@@ -257,7 +257,7 @@ $clientes = Clientes::get_all_clients();
             
             $.ajax({
                 type: "POST",
-                url: "./ajax_handler/cortesEnergia.php",
+                url: "./ajax_handler/cortesInternet.php",
                 data: { action: 'get_plantas', id: id },
                 datatype: "json",
                 success: function(data) {
@@ -273,7 +273,7 @@ $clientes = Clientes::get_all_clients();
         tablaReporte =  $('#tabla').DataTable({
             responsive: true,
             "ajax": {            
-                "url": "./ajax_handler/cortesEnergia.php",
+                "url": "./ajax_handler/cortesInternet.php",
                 "type": 'POST',
                 "data": {action: 'get_reporte'},
                 "dataSrc": ""
@@ -352,7 +352,7 @@ $clientes = Clientes::get_all_clients();
         console.log(formData);
         $.ajax({
             type: "POST",
-            url: "./ajax_handler/cortesEnergia.php",
+            url: "./ajax_handler/cortesInternet.php",
             data: formData,
             datatype: "json",
             encode: true,

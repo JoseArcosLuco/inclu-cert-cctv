@@ -22,6 +22,7 @@ $menuActiveTurnos = '';
 $menuActivePeriodico = '';
 $menuActiveCorteEnergia = '';
 $menuActiveRobo = '';
+$menuActiveCorteInternet = '';
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -79,6 +80,9 @@ if (isset($_GET['form'])) {
         case "corte_energia":
             $menuActiveCorteEnergia = 'active';
             break;
+        case "corte_internet":
+            $menuActiveCorteInternet = 'active';
+            break;
     }
 }
 
@@ -89,7 +93,7 @@ if (isset($_GET['form'])) {
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''|| $menuActiveRobo != ''|| $menuActiveCorteEnergia != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
+                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''|| $menuActiveRobo != ''|| $menuActiveCorteEnergia != ''|| $menuActiveCorteInternet != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Dashboard
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -121,6 +125,12 @@ if (isset($_GET['form'])) {
                                     <a href="<?php echo $base_url?>/formularios.php?form=corte_energia&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteEnergia;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Corte Energía</p>
+                                    </a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=corte_internet&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteInternet;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Reportes Corte Internet</p>
                                     </a> 
                                 </li>
                             </ul>
