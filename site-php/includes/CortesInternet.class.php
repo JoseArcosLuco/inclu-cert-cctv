@@ -2,12 +2,13 @@
     require_once('Database.class.php');
 
     class CortesInternet{
-        public static function create_corteInternet($id_planta, $id_cliente, $fecha, $observacion,$estado){
+        public static function create_corteInternet($id_planta, $id_cliente, $fecha, $observacion,$estado ,$id_usuario){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_reporte_corte_internet (id_planta,id_cliente,fecha,observacion,estado)
-                                    VALUES(:id_planta ,:id_cliente, :fecha , :observacion, :estado)');
+            $stmt = $conn->prepare('INSERT INTO cctv_reporte_corte_internet (id_planta,id_cliente,fecha,observacion,estado,id_usuario)
+                                    VALUES(:id_planta ,:id_cliente, :fecha , :observacion, :estado, :id_usuario)');
 
+            $stmt->bindParam(':id_usuario',$id_usuario);
             $stmt->bindParam(':id_planta',$id_planta);
             $stmt->bindParam(':id_cliente',$id_cliente);
             $stmt->bindParam(':fecha',$fecha);

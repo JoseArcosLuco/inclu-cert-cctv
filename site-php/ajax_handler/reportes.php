@@ -71,20 +71,21 @@ if (isset($_POST)) {
 
         case 'edit_reporte':
             $id = $_POST['id'];
-            $idPlanta = $_POST['id_planta'];
-            $nombre = $_POST['nombre'];
-            $estado = $_POST['estado'];
+            $camarasOnline = $_POST['camaras_online'];
+            $canal = $_POST['canal'];
+            $observacion = $_POST['observacion'];
+            $fecha = $_POST['fecha'];
 
-            $response = Camaras::update_camaras($id,$idPlanta, $nombre, $estado);
+            $response = Reportes::update_reporte($id, $camarasOnline, $canal, $observacion, $fecha);
             
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
-                $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id = :id');
+                $stmt = $conn->prepare('SELECT * FROM cctv_reporte_diario WHERE id = :id');
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
                 $updatedCamara = $stmt->fetch(PDO::FETCH_ASSOC);
-                $response['camara'] = $updatedCamara;
+                $response['reporte'] = $updatedCamara;
             }
 
             echo json_encode($response);
@@ -92,7 +93,7 @@ if (isset($_POST)) {
 
         case 'delete_reporte':
             $id = $_POST['id'];
-            $response = Camaras::delete_camaras_by_id($id);
+            $response = Reportes::delete_reporte_by_id($id);
             echo json_encode($response);
             break;
 

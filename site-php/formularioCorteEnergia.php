@@ -3,12 +3,11 @@ include("./includes/Database.class.php");
 
 require_once('./includes/Plantas.class.php');
 require_once('./includes/Clientes.class.php');
+require_once('./includes/Users.class.php');
 
 $plantas = Plantas::get_all_plantas();
 $clientes = Clientes::get_all_clients();
-
-
-
+$usuarios = Users::get_all_users();
 ?>
 
 <div class="app-content"> <!--begin::Container-->
@@ -36,8 +35,11 @@ $clientes = Clientes::get_all_clients();
                             <th>
                                 Hora
                             </th>
-                            <th>
+                            <th style="max-width: 450px;">
                                 Observación
+                            </th>
+                            <th>
+                                Autor Reporte
                             </th>
                             <th>
                                 Estado
@@ -169,6 +171,15 @@ $clientes = Clientes::get_all_clients();
         plantasMap[planta.id] = planta.nombre;
     });
 
+    var id_usuario = '<?php if(isset($id_usuario)){echo $id_usuario;}?>';
+
+    var usuarios = <?php echo json_encode($usuarios); ?>;
+    var usuariosMap = {};
+
+    usuarios.forEach(function(usuario) {
+        usuariosMap[usuario.id] = usuario.nombres + ' ' + usuario.apellidos;
+    });
+
     //Crear Reporte
     $("#addUser").click(function(){
         $('#formReporte').attr('data-action', 'create_reporte');
@@ -182,6 +193,7 @@ $clientes = Clientes::get_all_clients();
         var data = tablaReporte.row($(this).parents('tr')).data();
         console.log(data);
         $('#id_cliente').prop('disabled', true);
+        $('#id_planta').prop('disabled', true);
         $('#formReporte').attr('data-action', 'edit_reporte');
         $('#formReporte').attr('data-id', data.id);
         $('#id_cliente').val(data.id_cliente);
@@ -221,6 +233,7 @@ $clientes = Clientes::get_all_clients();
         modal.find('.modal-body').append('<p class="col-6">Planta: '+plantasMap[data.id_planta]+'</p>');
         modal.find('.modal-body').append('<p>Fecha: '+fecha+'</p>');
         modal.find('.modal-body').append('<p>Hora: '+hora+'</p>');
+        modal.find('.modal-body').append('<p>Autor Reporte: '+usuariosMap[data.id_usuario]+'</p>');
         modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
@@ -311,6 +324,16 @@ $clientes = Clientes::get_all_clients();
                 },
                 {   
                     "data": "observacion",
+                    "render": function(data, type, row) {
+                        var text = data || '';
+                        return '<p style="max-width: 450px; margin: 0; padding: 0">' + text + '</p>';
+                    }
+                },
+                {   
+                    "data": "id_usuario",
+                    "render": function(data) {
+                        return usuariosMap[data] || 'Desconocido';
+                    }
                 },
                 {
                     "data": "estado",
@@ -342,6 +365,7 @@ $clientes = Clientes::get_all_clients();
         var formData = {
             action: action,
             id:id,
+            id_usuario: $.trim(id_usuario),
             id_planta: $.trim($("#id_planta").val()),
             id_cliente: $.trim($("#id_cliente").val()),
             fecha: $.trim($("#fecha").val()),
@@ -368,6 +392,7 @@ $clientes = Clientes::get_all_clients();
                                 "fecha": formData.fecha,
                                 "hora": hora,
                                 "observacion": data.reporte.observacion,
+                                "id_usuario": data.reporte.id_usuario,
                                 "estado": data.reporte.estado,
                             }).draw().node();
                             $(newRow).attr('data-id', data.reporte.id);
@@ -375,7 +400,6 @@ $clientes = Clientes::get_all_clients();
 
                     }else if (action === 'edit_reporte'){
                         var row = tablaReporte.row($('[data-id="' + id + '"]'));
-                        console.log(row.data());
                         row.data({
                             "id": id,
                             "id_cliente": formData.id_cliente,
@@ -383,6 +407,7 @@ $clientes = Clientes::get_all_clients();
                             "fecha": formData.fecha,
                             "hora": formData.hora,
                             "observacion": formData.observacion,
+                            "id_usuario": formData.id_usuario,
                             "estado": formData.estado,
                         }).draw();
                         $('#modalCRUD').modal('hide');

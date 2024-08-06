@@ -10,11 +10,12 @@ if (isset($_POST)) {
         case 'create_reporte':
             $idPlanta = $_POST['id_planta'];
             $idCliente = $_POST['id_cliente'];
+            $idUsuario = $_POST['id_usuario'];
             $fecha = $_POST['fecha'] . ' ' . $_POST['hora'];
             $observacion = $_POST['observacion'];
             $estado = $_POST['estado'];
 
-            $response = Robos::create_robo($idPlanta, $idCliente,$fecha, $observacion, $estado);
+            $response = Robos::create_robo($idPlanta, $idCliente,$fecha, $observacion, $estado, $idUsuario);
             
             if ($response['status']) {
                 $database = new Database();

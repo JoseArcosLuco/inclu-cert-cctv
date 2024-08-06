@@ -59,11 +59,13 @@
             }
         }
 
-        public static function update_reporte($id, $camarasOnline, $canal, $observacion){
+        public static function update_reporte($id, $camarasOnline, $canal, $observacion, $fecha){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_reporte_diario SET camaras_online=:camarasOnline, canal=:canal, observacion=:observacion WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_reporte_diario SET camaras_online=:camarasOnline, canal=:canal, observacion=:observacion, fecha=:fecha WHERE id=:id');
+
+            $stmt->bindParam(':fecha',$fecha);
             $stmt->bindParam(':camarasOnline',$camarasOnline);
             $stmt->bindParam(':canal',$canal);
             $stmt->bindParam(':observacion',$observacion);

@@ -81,21 +81,186 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 </table>
             </div>      
         </div> <!-- /.card -->
+
+        <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-between align-items-center">
+                        <h5 class="modal-title" id="exampleModalLabel">Agregar Reporte</h5>
+                        <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="formReporte" name="formReporte">    
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Cliente:
+                                            <select class="form-select" name="id_cliente" id="id_cliente">
+                                                <option value="">Seleccione</option>
+                                                <?php foreach ($clientes as $cliente): ?>
+                                                    <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Planta:
+                                                <select class="form-select" name="id_planta" id="id_planta" disabled requiere>
+                                                    <option value="">Seleccione Cliente</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>               
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Fecha:
+                                            <input type="date" class="form-control" name="fecha" id="fecha" requiered>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Canal:
+                                                <input type="number" class="form-control" name="canal" id="canal" requiered>
+                                            </label>
+                                        </div>
+                                    </div>               
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">N° de Cámaras:
+                                            <input type="number" class="form-control" name="camaras" id="camaras" requiered>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">N° de Cámaras en Linea:
+                                                <input type="number" class="form-control" name="camaras_online" id="camaras_online" requiered>
+                                            </label>
+                                        </div>
+                                    </div>               
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Observación:
+                                            <textarea name="observacion" id="observacion" class="form-control" rows="3" requiered></textarea>
+                                        </label>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
+                        </div>
+                    </form>    
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
     //Editar Reporte
     $('#tabla tbody').on('click', '.btnEditar', function() {
-        var data = tablaReporte.row($(this).parents('tr')).data();
+        var $data = tablaReporte.row($(this).parents('tr')).data();
+        $('#id_cliente').prop('disabled', true);
+        $('#id_planta').prop('disabled', true);
+        $('#camaras').prop('disabled', true);
+        $('#camaras').val($data.camaras);
         $('#formReporte').attr('data-action', 'edit_reporte');
-        $('#formReporte').attr('data-id', data.id);
-        $('#id_planta').val(data.id_plantas);
-        $('#nombre').val(data.nombre);
-        $('#estado').val(data.estado);
+        $('#formReporte').attr('data-id', $data.id);
+        $('#id_cliente').val($data.id_cliente);
+        $('#id_planta').append('<?php foreach ($plantas as $planta): ?>');
+        $('#id_planta').append('<option value="<?php echo $planta['id']?>" ><?php echo htmlspecialchars($planta['nombre']);?></option>');
+        $('#id_planta').append('<?php endforeach; ?>');
+        $('#id_planta').val($data.id_planta);
+        $('#fecha').val($data.fecha);
+        $('#camaras_online').val($data.camaras_online);
+        $('#canal').val($data.canal);
+        $('#observacion').val($data.observacion);
+        $('#estado').val($data.estado);
 
         $('#modalCRUD').modal('show');
+
+        $("#formReporte").submit(function(e) {
+            e.preventDefault();
+            console.log($data);
+            var formData = {
+                action: 'edit_reporte',
+                id : $data.id,
+                fecha: $.trim($('#fecha').val()),
+                canal: $.trim($('#canal').val()),
+                camaras_online: $.trim($('#camaras_online').val()),
+                observacion: $.trim($('#observacion').val()),
+            };
+            $.ajax({
+                url: "./ajax_handler/reportes.php",
+                type: 'POST',
+                data: formData,
+                success: function(data) {
+                    if (data.status) {
+                        var row = tablaReporte.row($('[data-id="' + data.reporte.id + '"]'));
+                        row.data({
+                            id: data.reporte.id,
+                            fecha: data.reporte.fecha,
+                            id_operador: data.reporte.id_operador,
+                            id_planta: data.reporte.id_planta,
+                            camaras: data.reporte.camaras,
+                            camaras_online: data.reporte.camaras_online,
+                            canal: data.reporte.canal,
+                            observacion: data.reporte.observacion,
+                            visualizacion: '%' + Math.round(data.reporte.camaras_online / data.reporte.camaras * 100)
+                        }).draw();
+                        $('#modalCRUD').modal('hide');
+
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                }
+            });
+        });
+
+    });
+
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {    
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
     });
 
     //Eliminar Reporte
@@ -103,48 +268,60 @@ $operadores = Operadores::get_all_operadores_without_turno();
     var $row = $(this).closest('tr');  // Capturamos la fila correctamente
     var data = tablaReporte.row($row).data();
     var reporteId = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar esta cámara?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/reportes.php",
-            data: { action: 'delete_reporte', id: reporteId },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tablaCamaras.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
+    var modal = $('#warningModal .modal-dialog .modal-content');
+    console.log(data);
+
+    modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+    modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+    modal.find('.modal-body').append('<p>ID: '+data.id+'</p>');
+    modal.find('.modal-body').append('<p>Operador: '+operadoresMap[data.id_operador]+'</p>');
+    modal.find('.modal-body').append('<p>Planta: '+plantasMap[data.id_planta]+'</p>');
+    modal.find('.modal-body').append('<p>Fecha: '+moment(data.fecha).format('DD/MM/YYYY') || 'Fecha no válida' +'</p>');
+    modal.find('.modal-body').append('<p>N° de Cámaras: '+data.camaras+'</p>');
+    modal.find('.modal-body').append('<p>N° de Cámaras en Lína: '+data.camaras_online+'</p>');
+    modal.find('.modal-body').append('<p>Canal: '+data.canal+'</p>');
+    modal.find('.modal-footer').append('<button type="button" class="btn |btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+    modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+    $('#warningModal').modal('show');
+    $('#warningModal').on('click', '.btnBorrar', function(){
+    $.ajax({
+        type: "POST",
+        url: "./ajax_handler/reportes.php",
+        data: { action: 'delete_reporte', id: reporteId },
+        datatype: "json",
+        encode: true,
+        success: function(response) {
+            if (response.status) {
+                // Remover la fila de la tabla
+                tablaReporte.row($row).remove().draw()  ;
+            } else {
+                alert(response.message);
             }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            // Manejar errores de AJAX
+            console.log("Error en AJAX: " + textStatus, errorThrown);
+            alert("Error en la solicitud: " + textStatus);
+        }
         });
-    }
     });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script>
-    $(document).ready( function(){
-        var plantas = <?php echo json_encode($plantas); ?>;
-        var plantasMap = {};
+    });
 
-        plantas.forEach(function(planta) {
-            plantasMap[planta.id] = planta.nombre;
-        });
+    var plantas = <?php echo json_encode($plantas); ?>;
+    var plantasMap = {};
 
-        var operadores = <?php echo json_encode($operadores); ?>;
-        var operadoresMap = {};
+    plantas.forEach(function(planta) {
+        plantasMap[planta.id] = planta.nombre;
+    });
 
-        operadores.forEach(function(operador) {
-            operadoresMap[operador.id] = operador.nombre;
-        });
+    var operadores = <?php echo json_encode($operadores); ?>;
+    var operadoresMap = {};
 
+    operadores.forEach(function(operador) {
+        operadoresMap[operador.id] = operador.nombre;
+    });
+
+        $(document).ready( function(){
         tablaReporte =  $('#tabla').DataTable({
             responsive: true,
             "ajax": {            
