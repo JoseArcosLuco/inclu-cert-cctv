@@ -84,7 +84,7 @@ $usuarios = Users::get_all_users();
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Planta:
                                                 <select class="form-select" name="id_planta" id="id_planta" disabled requiere>
-                                                    <option value="">Seleccione Cliente</option>
+                                                    <option value="">Seleccione Planta</option>
                                                 </select>
                                             </label>
                                         </div>
