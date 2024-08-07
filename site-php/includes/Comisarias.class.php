@@ -49,17 +49,30 @@
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('DELETE FROM cctv_comisarias WHERE id=:id');
-            $stmt->bindParam(':id',$id);
-            if($stmt->execute()){
-                return [
-                    'status' => true,
-                    'message' => 'comisaria eliminada correctamente'
-                ];
+            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_comisarias = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $plantasTipoPlanta = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($plantasTipoPlanta)) {
+
+                $stmt = $conn->prepare('DELETE FROM cctv_comisarias WHERE id=:id');
+                $stmt->bindParam(':id',$id);
+                if($stmt->execute()){
+                    return [
+                        'status' => true,
+                        'message' => 'comisaria eliminada correctamente'
+                    ];
+                } else {
+                    return [
+                        'status' => false,
+                        'message' => 'error al eliminar comisaria correctamente'
+                    ];
+                }
             } else {
                 return [
                     'status' => false,
-                    'message' => 'error al eliminar comisaria correctamente'
+                    'plantas' => $plantasTipoPlanta
                 ];
             }
         }

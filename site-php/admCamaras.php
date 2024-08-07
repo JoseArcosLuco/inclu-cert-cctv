@@ -14,7 +14,7 @@ $plantas = Plantas::get_all_plantas();
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Cámara<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
-                <table class="table table-striped table-hover" id="tabla">
+                <table class="table table-striped table-hover w-100" id="tabla">
                     <thead>
                         <tr>
                             <th class="text-center">
@@ -26,7 +26,7 @@ $plantas = Plantas::get_all_plantas();
                             <th>
                                 Nombre
                             </th>
-                            <th>
+                            <th class="text-center">
                                 Estado
                             </th>
                             <th class="text-center">
@@ -37,7 +37,7 @@ $plantas = Plantas::get_all_plantas();
                     <tbody>
                     </tbody>
                 </table>
-            </div>      
+            </div>
         </div> <!-- /.card -->
         <!-- begin::Modal -->
 
@@ -49,7 +49,7 @@ $plantas = Plantas::get_all_plantas();
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="formCamara" name="formCamara">    
+                    <form id="formCamara" name="formCamara">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12 mb-3">
@@ -58,39 +58,52 @@ $plantas = Plantas::get_all_plantas();
                                             <input type="text" class="form-control" id="nombre" name="nombre">
                                         </label>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
-                            <div class="row"> 
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
-                                <div class="form-group">
                                     <div class="form-group">
-                                        <label class="col-form-label w-100">Planta:
-                                            <select class="form-select" name="id_planta" id="id_planta">
-                                                <?php foreach ($plantas as $planta): ?>
-                                                    <option value="<?php echo $planta['id']?>" ><?php echo htmlspecialchars($planta['nombre']);?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </label>
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Planta:
+                                                <select class="form-select" name="id_planta" id="id_planta">
+                                                    <?php foreach ($plantas as $planta) : ?>
+                                                        <option value="<?php echo $planta['id'] ?>"><?php echo htmlspecialchars($planta['nombre']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>               
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
-                                                    <option value="1" >Activa</option>
-                                                    <option value="0" >Inactiva</option>
+                                                <option value="1">Activa</option>
+                                                <option value="0">Inactiva</option>
                                             </select>
                                         </label>
                                     </div>
-                                </div>  
-                            </div>         
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
                         </div>
-                    </form>    
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,9 +113,8 @@ $plantas = Plantas::get_all_plantas();
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-
     //Crear Camara
-    $("#addUser").click(function(){
+    $("#addUser").click(function() {
         $('#formCamara').attr('data-action', 'create_camara');
         $('#formCamara')[0].reset();
         $('#modalCRUD').modal('show');
@@ -120,37 +132,57 @@ $plantas = Plantas::get_all_plantas();
         $('#modalCRUD').modal('show');
     });
 
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
     //Eliminar Camara
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tablaCamaras.row($row).data();
-    var camaraId = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar esta cámara?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/camaras.php",
-            data: { action: 'delete_camara', id: camaraId },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tablaCamaras.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
+        var $row = $(this).closest('tr'); // Capturamos la fila correctamente
+        var data = tablaCamaras.row($row).data();
+        var camaraId = data.id;
+
+        var modal = $('#warningModal .modal-dialog .modal-content');
+
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
+        modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_plantas] + '</p>');
+        modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function() {
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/camaras.php",
+                data: {
+                    action: 'delete_camara',
+                    id: camaraId
+                },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tablaCamaras.row($row).remove().draw();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
-            }
+            });
         });
-    }
     });
-</script>
-<script>
+
     var plantas = <?php echo json_encode($plantas); ?>;
     var plantasMap = {};
 
@@ -158,18 +190,19 @@ $plantas = Plantas::get_all_plantas();
     plantas.forEach(function(planta) {
         plantasMap[planta.id] = planta.nombre;
     });
-    
-    $(document).ready( function(){
-        tablaCamaras =  $('#tabla').DataTable({
+
+    $(document).ready(function() {
+        tablaCamaras = $('#tabla').DataTable({
             responsive: true,
-            "ajax": {            
+            "ajax": {
                 "url": "./ajax_handler/camaras.php",
                 "type": 'POST',
-                "data": {action: 'get_camaras'},
+                "data": {
+                    action: 'get_camaras'
+                },
                 "dataSrc": ""
             },
-            "columns":[
-                {   
+            "columns": [{
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
@@ -181,7 +214,7 @@ $plantas = Plantas::get_all_plantas();
                         return plantasMap[data] || 'Desconocido';
                     }
                 },
-                {   
+                {
                     "data": "nombre",
                     "createdCell": function(td) {
                         $(td).addClass('text-capitalize');
@@ -191,12 +224,17 @@ $plantas = Plantas::get_all_plantas();
                     "data": "estado",
                     "render": function(data) {
                         return data == 1 ? 'Activo' : 'Inactivo';
-                    } 
+                    },
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
                 },
-                {"defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                {
+                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                }
             ],
             "createdRow": function(row, data, dataIndex) {
-            $(row).attr('data-id', data.id); // Añadir atributo data-id
+                $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
             "language": {
                 "url": "./assets/json/espanol.json"
@@ -208,7 +246,7 @@ $plantas = Plantas::get_all_plantas();
 <script>
     // fomrulario Subir/Editar cámaras
 
-    $("#formCamara"). submit(function(e) {
+    $("#formCamara").submit(function(e) {
         e.preventDefault();
 
         var action = $(this).attr('data-action');
@@ -216,7 +254,7 @@ $plantas = Plantas::get_all_plantas();
 
         var formData = {
             action: action,
-            id:id,
+            id: id,
             id_planta: $.trim($("#id_planta").val()),
             nombre: $.trim($("#nombre").val()),
             estado: $.trim($("#estado").val())
@@ -231,17 +269,17 @@ $plantas = Plantas::get_all_plantas();
             success: function(data) {
                 if (data.status) {
 
-                    if (action === 'create_camara'){
+                    if (action === 'create_camara') {
                         var newRow = tablaCamaras.row.add({
-                                "id": data.camara.id,
-                                "id_plantas": data.camara.id_plantas,
-                                "nombre": data.camara.nombre,
-                                "estado": data.camara.estado,
-                            }).draw().node();
-                            $(newRow).attr('data-id', data.camara.id);
-                            $('#modalCRUD').modal('hide');
+                            "id": data.camara.id,
+                            "id_plantas": data.camara.id_plantas,
+                            "nombre": data.camara.nombre,
+                            "estado": data.camara.estado,
+                        }).draw().node();
+                        $(newRow).attr('data-id', data.camara.id);
+                        $('#modalCRUD').modal('hide');
 
-                    }else if (action === 'edit_camara'){
+                    } else if (action === 'edit_camara') {
                         var row = tablaCamaras.row($('[data-id="' + id + '"]'));
                         console.log(row.data());
                         row.data({
@@ -253,20 +291,22 @@ $plantas = Plantas::get_all_plantas();
                         $('#modalCRUD').modal('hide');
 
                     }
-                    
+
                 } else {
                     alert(data.message);
                     // console.log("nofunkopapito")
-                } },
-            error:function(jqXHR, textStatus, errorThrown) {
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
                 // Manejar errores de AJAX
                 console.log("Error en AJAX: " + textStatus, errorThrown);
                 alert("Error en la solicitud: " + textStatus);
-            } 
+            }
         });
-        });
+    });
 </script>
 <!-- end::Script -->
-    
+
 </body>
+
 </html>

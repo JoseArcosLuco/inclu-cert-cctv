@@ -23,7 +23,7 @@ $clientes = Clientes::get_all_clients();
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addPlanta">Agregar Planta<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
-                <table class="table table-striped table-hover" id="tabla">
+                <table class="table table-striped table-hover w-100" id="tabla">
                     <thead>
                         <tr>
                             <th class="text-start">
@@ -73,7 +73,7 @@ $clientes = Clientes::get_all_clients();
                     <tbody>
                     </tbody>
                 </table>
-            </div>      
+            </div>
         </div> <!-- /.card -->
         <!-- begin::Modal -->
 
@@ -85,7 +85,7 @@ $clientes = Clientes::get_all_clients();
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="formPlantas" name="formPlantas">    
+                    <form id="formPlantas" name="formPlantas">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6 mb-2">
@@ -99,13 +99,13 @@ $clientes = Clientes::get_all_clients();
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Cliente:
                                             <select class="form-select" name="id_clientes" id="id_clientes" required>
-                                                <?php foreach ($clientes as $cliente): ?>
-                                                    <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
+                                                <?php foreach ($clientes as $cliente) : ?>
+                                                    <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </label>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 mb-2">
@@ -114,55 +114,55 @@ $clientes = Clientes::get_all_clients();
                                             <input type="text" class="form-control" id="direccion" required>
                                         </label>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
-                            <div class="row"> 
+                            <div class="row">
                                 <div class="col-md-6 mb-2">
-                                <div class="form-group">
                                     <div class="form-group">
-                                        <label class="col-form-label w-100">Ciudad:
-                                            <select class="form-select" name="id_ciudad" id="id_ciudad" required>
-                                                <?php foreach ($ciudades as $ciudad): ?>
-                                                    <option value="<?php echo $ciudad['id']?>" ><?php echo htmlspecialchars($ciudad['nombre']);?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </label>
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Ciudad:
+                                                <select class="form-select" name="id_ciudad" id="id_ciudad" required>
+                                                    <?php foreach ($ciudades as $ciudad) : ?>
+                                                        <option value="<?php echo $ciudad['id'] ?>"><?php echo htmlspecialchars($ciudad['nombre']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>               
                                 </div>
                                 <div class="col-md-6 mb-2">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Comuna:
                                             <select class="form-select" name="id_comuna" id="id_comuna" required>
-                                                    <option value="">Seleccione una Ciudad</option>
+                                                <option value="">Seleccione una Ciudad</option>
                                             </select>
                                         </label>
                                     </div>
-                                </div>  
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-2">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Comisaria:
                                             <select class="form-select" name="id_comisaria" id="id_comisaria" required>
-                                                <?php foreach ($comisarias as $comisaria): ?>
-                                                    <option value="<?php echo $comisaria['id']?>" ><?php echo htmlspecialchars($comisaria['nombre']);?></option>
+                                                <?php foreach ($comisarias as $comisaria) : ?>
+                                                    <option value="<?php echo $comisaria['id'] ?>"><?php echo htmlspecialchars($comisaria['nombre']); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </label>
                                     </div>
-                                </div>    
-                                <div class="col-md-6 mb-2">    
+                                </div>
+                                <div class="col-md-6 mb-2">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Tipo de Planta:
                                             <select class="form-select" name="id_tipoPlanta" id="id_tipoPlanta" required>
-                                                <?php foreach ($tiposPlanta as $tipoPlanta): ?>
-                                                    <option value="<?php echo $tipoPlanta['id']?>" ><?php echo htmlspecialchars($tipoPlanta['nombre']);?></option>
+                                                <?php foreach ($tiposPlanta as $tipoPlanta) : ?>
+                                                    <option value="<?php echo $tipoPlanta['id'] ?>"><?php echo htmlspecialchars($tipoPlanta['nombre']); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </label>
-                                    </div>           
-                                </div>    
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-2">
@@ -171,14 +171,14 @@ $clientes = Clientes::get_all_clients();
                                             <input class="form-control" type="text" id="grupo" name="grupo" required>
                                         </label>
                                     </div>
-                                </div>    
-                                <div class="col-md-6 mb-2">    
+                                </div>
+                                <div class="col-md-6 mb-2">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Email Encargado:
                                             <input class="form-control" type="email" id="emailEncargado" name="emailEncargado" required>
                                         </label>
-                                    </div>           
-                                </div>    
+                                    </div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-4 mb-2">
@@ -188,22 +188,22 @@ $clientes = Clientes::get_all_clients();
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-2">    
+                                <div class="col-md-4 mb-2">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Telefono Encargado:
                                             <input class="form-control" type="tel" id="telEncargado" name="telEncargado" required>
                                         </label>
-                                    </div>           
-                                </div> 
-                                <div class="col-md-4 mb-2">    
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado" required>
-                                                    <option value="1" >Activo</option>
-                                                    <option value="0" >Inactivo</option>
+                                                <option value="1">Activo</option>
+                                                <option value="0">Inactivo</option>
                                             </select>
                                         </label>
-                                    </div>           
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -214,13 +214,26 @@ $clientes = Clientes::get_all_clients();
                                         </label>
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
                         </div>
-                    </form>    
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
                 </div>
             </div>
         </div>
@@ -230,7 +243,6 @@ $clientes = Clientes::get_all_clients();
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    
     //ver las comunas según la ciudad ingresada en el formulario
     $(document).ready(function() {
         $('#id_ciudad').change(function() {
@@ -239,7 +251,8 @@ $clientes = Clientes::get_all_clients();
             $.ajax({
                 type: 'POST',
                 url: './ajax_handler/plantas.php',
-                data: {id_ciudad: id_ciudad,
+                data: {
+                    id_ciudad: id_ciudad,
                     action: 'get_comuna'
                 },
                 dataType: 'json',
@@ -259,9 +272,8 @@ $clientes = Clientes::get_all_clients();
     });
 </script>
 <script>
-
     //Crear Planta
-    $("#addPlanta").click(function(){
+    $("#addPlanta").click(function() {
         $('#formPlantas').attr('data-action', 'create_planta');
         $('#formPlantas')[0].reset();
         $('#modalCRUD').modal('show');
@@ -284,42 +296,72 @@ $clientes = Clientes::get_all_clients();
         $('#emailEncargado').val(data.encargado_email);
         $('#mapa').val(data.mapa);
         $('#estado').val(data.estado);
-        
+
 
         $('#modalCRUD').modal('show');
     });
 
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
+
     //Eliminar Planta
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');
-    var data = tablaPlantas.row($row).data();
-    var plantaId = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar esta Planta?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/plantas.php",
-            data: { action: 'delete_planta', id: plantaId },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tablaPlantas.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
+        var $row = $(this).closest('tr');
+        var data = tablaPlantas.row($row).data();
+        var plantaId = data.id;
+
+        var modal = $('#warningModal .modal-dialog .modal-content');
+
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
+        modal.find('.modal-body').append('<p>Cliente: ' + clientesMap[data.id_clientes] + '</p>');
+        modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
+        modal.find('.modal-body').append('<p>Comuna: ' + comunasMap[data.id_comuna] + '</p>');
+        modal.find('.modal-body').append('<p>Comisaria: ' + comisariasMap[data.id_comisarias] + '</p>');
+        modal.find('.modal-body').append('<p>Tipo de Planta: ' + tipoPlantaMap[data.id_tipo_planta] + '</p>');
+        modal.find('.modal-body').append('<p>Grupo: ' + data.grupo + '</p>');
+        modal.find('.modal-body').append('<p>Ubicación: ' + data.ubicacion + '</p>');
+        modal.find('.modal-body').append('<p>Nombre Encargado: ' + data.encargado_contacto + '</p>');
+        modal.find('.modal-body').append('<p>Email Encargado: ' + data.encargado_email + '</p>');
+        modal.find('.modal-body').append('<p>Telefono Encargado: ' + data.encargado_telefono + '</p>');
+        modal.find('.modal-body').append('<p>Mapa: ' + data.mapa + '</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function() {
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/plantas.php",
+                data: {
+                    action: 'delete_planta',
+                    id: plantaId
+                },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tablaPlantas.row($row).remove().draw();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
-            }
+            });
         });
-    }
     });
-</script>
-<script>
+
     //ver clientes en tabla
     var clientes = <?php echo json_encode($clientes); ?>;
     var clientesMap = {};
@@ -352,17 +394,18 @@ $clientes = Clientes::get_all_clients();
         tipoPlantaMap[tp.id] = tp.nombre;
     });
 
-    $(document).ready( function(){
-        tablaPlantas =  $('#tabla').DataTable({
+    $(document).ready(function() {
+        tablaPlantas = $('#tabla').DataTable({
             responsive: true,
-            "ajax": {            
+            "ajax": {
                 "url": "./ajax_handler/plantas.php",
                 "type": 'POST',
-                "data": {action: 'get_plantas'},
+                "data": {
+                    action: 'get_plantas'
+                },
                 "dataSrc": ""
             },
-            "columns":[
-                {   
+            "columns": [{
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-start');
@@ -392,7 +435,7 @@ $clientes = Clientes::get_all_clients();
                         $(td).addClass('text-start');
                     }
                 },
-                {   
+                {
                     "data": "id_comisarias",
                     "render": function(data) {
                         return comisariasMap[data] || 'Desconocido';
@@ -401,7 +444,7 @@ $clientes = Clientes::get_all_clients();
                         $(td).addClass('text-capitalize');
                     }
                 },
-                {   
+                {
                     "data": "id_tipo_planta",
                     "render": function(data) {
                         return tipoPlantaMap[data] || 'Desconocido';
@@ -416,7 +459,9 @@ $clientes = Clientes::get_all_clients();
                         $(td).addClass('text-start');
                     }
                 },
-                {"data": "ubicacion"},
+                {
+                    "data": "ubicacion"
+                },
                 {
                     "data": "encargado_contacto",
                     "createdCell": function(td) {
@@ -429,18 +474,27 @@ $clientes = Clientes::get_all_clients();
                         $(td).addClass('text-start');
                     }
                 },
-                {"data": "encargado_telefono"},
-                {"data": "mapa"},
+                {
+                    "data": "encargado_telefono",
+                    "createdCell": function(td) {
+                        $(td).addClass('text-start');
+                    }
+                },
+                {
+                    "data": "mapa"
+                },
                 {
                     "data": "estado",
                     "render": function(data) {
                         return data == 1 ? 'Activo' : 'Inactivo';
-                    } 
+                    }
                 },
-                {"defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                {
+                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                }
             ],
             "createdRow": function(row, data, dataIndex) {
-            $(row).attr('data-id', data.id); // Añadir atributo data-id
+                $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
             "language": {
                 "url": "./assets/json/espanol.json"
@@ -452,7 +506,7 @@ $clientes = Clientes::get_all_clients();
 <script>
     // fomrulario Subir/Editar usuarios
 
-    $("#formPlantas"). submit(function(e) {
+    $("#formPlantas").submit(function(e) {
         e.preventDefault();
 
         var action = $(this).attr('data-action');
@@ -460,7 +514,7 @@ $clientes = Clientes::get_all_clients();
 
         var formData = {
             action: action,
-            id:id,
+            id: id,
             id_comuna: $.trim($("#id_comuna").val()),
             id_comisarias: $.trim($("#id_comisaria").val()),
             id_tipo_planta: $.trim($("#id_tipoPlanta").val()),
@@ -484,7 +538,7 @@ $clientes = Clientes::get_all_clients();
             success: function(data) {
                 console.log(data)
                 if (data.status) {
-                    if (action === 'create_planta'){
+                    if (action === 'create_planta') {
                         var newRow = tablaPlantas.row.add({
                             "id": data.planta.id,
                             "nombre": data.planta.nombre,
@@ -503,13 +557,13 @@ $clientes = Clientes::get_all_clients();
                         $(newRow).attr('data-id', data.planta.id);
                         $('#modalCRUD').modal('hide');
 
-                    }else if (action === 'edit_planta'){
+                    } else if (action === 'edit_planta') {
                         var row = tablaPlantas.row($('[data-id="' + id + '"]'));
                         console.log(row.data());
                         row.data({
                             "id": id,
-                            "nombre":formData.nombre,
-                            "id_clientes":formData.id_clientes,
+                            "nombre": formData.nombre,
+                            "id_clientes": formData.id_clientes,
                             "id_comuna": formData.id_comuna,
                             "id_comisarias": formData.id_comisarias,
                             "id_tipo_planta": formData.id_tipo_planta,
@@ -524,20 +578,22 @@ $clientes = Clientes::get_all_clients();
                         $('#modalCRUD').modal('hide');
 
                     }
-                    
+
                 } else {
                     alert(data.message);
                     // console.log("nofunkopapito")
-                } },
-            error:function(jqXHR, textStatus, errorThrown) {
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
                 // Manejar errores de AJAX
                 console.log("Error en AJAX: " + textStatus, errorThrown);
                 alert("Error en la solicitud: " + textStatus);
-            } 
+            }
         });
-        });
+    });
 </script>
 <!-- end::Script -->
-    
+
 </body>
+
 </html>
