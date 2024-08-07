@@ -4,6 +4,7 @@ session_start();
 $formAccion = isset($_GET["form"]) ? $_GET["form"] : '';
 $idPerfil = isset($_SESSION["idperfil"]) ? $_SESSION["idperfil"] : '';
 $perfilUsuario = isset($_SESSION["nombreperfil"]) ? $_SESSION["nombreperfil"] : '';
+$id_usuario = isset($_SESSION["iduser"]) ? $_SESSION["iduser"] : '';
 ?>
 
 <!DOCTYPE html>

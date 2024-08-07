@@ -3,12 +3,11 @@ include("./includes/Database.class.php");
 
 require_once('./includes/Plantas.class.php');
 require_once('./includes/Clientes.class.php');
+require_once('./includes/Users.class.php');
 
 $plantas = Plantas::get_all_plantas();
 $clientes = Clientes::get_all_clients();
-
-
-
+$usuarios = Users::get_all_users();
 ?>
 
 <div class="app-content"> <!--begin::Container-->
@@ -36,8 +35,11 @@ $clientes = Clientes::get_all_clients();
                             <th>
                                 Hora
                             </th>
-                            <th>
+                            <th style="max-width: 450px;">
                                 Observación
+                            </th>
+                            <th>
+                                Autor Reporte
                             </th>
                             <th>
                                 Estado
@@ -135,6 +137,19 @@ $clientes = Clientes::get_all_clients();
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -142,11 +157,35 @@ $clientes = Clientes::get_all_clients();
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
+    var clientes = <?php echo json_encode($clientes); ?>;
+    var clienteMap = {};
+
+    clientes.forEach(function(cliente) {
+        clienteMap[cliente.id] = cliente.nombre;
+    });
+
+    var plantas = <?php echo json_encode($plantas); ?>;
+    var plantasMap = {};
+
+    plantas.forEach(function(planta) {
+        plantasMap[planta.id] = planta.nombre;
+    });
+
+    var id_usuario = '<?php if(isset($id_usuario)){echo $id_usuario;}?>';
+
+    var usuarios = <?php echo json_encode($usuarios); ?>;
+    var usuariosMap = {};
+
+    usuarios.forEach(function(usuario) {
+        usuariosMap[usuario.id] = usuario.nombres + ' ' + usuario.apellidos;
+    });
+
 
     //Crear Camara
     $("#addUser").click(function(){
         $('#formReporte').attr('data-action', 'create_reporte');
         $('#formReporte')[0].reset();
+        $('#id_cliente').prop('disabled', false);
         $('#modalCRUD').modal('show');
     });
 
@@ -155,6 +194,7 @@ $clientes = Clientes::get_all_clients();
         var data = tablaReporte.row($(this).parents('tr')).data();
         console.log(data);
         $('#id_cliente').prop('disabled', true);
+        $('#id_planta').prop('disabled', true);
         $('#formReporte').attr('data-action', 'edit_reporte');
         $('#formReporte').attr('data-id', data.id);
         $('#id_cliente').val(data.id_cliente);
@@ -171,49 +211,55 @@ $clientes = Clientes::get_all_clients();
         $('#modalCRUD').modal('show');
     });
 
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {    
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
     //Eliminar Camara
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tablaReporte.row($row).data();
-    var reporteId = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar esta cámara?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/robos.php",
-            data: { action: 'delete_reporte', id: reporteId },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tablaReporte.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
+        var $row = $(this).closest('tr');  // Capturamos la fila correctamente
+        var data = tablaReporte.row($row).data();
+        var reporteId = data.id;
+        var fecha = moment(data.fecha).format('DD-MM-YYYY');
+        var hora = moment(data.fecha).format('HH:mm');
+        var modal = $('#warningModal .modal-dialog .modal-content');
+
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p class="col-6">Cliente: '+clienteMap[data.id_cliente]+'</p>');
+        modal.find('.modal-body').append('<p class="col-6">Planta: '+plantasMap[data.id_planta]+'</p>');
+        modal.find('.modal-body').append('<p>Fecha: '+fecha+'</p>');
+        modal.find('.modal-body').append('<p>Hora: '+hora+'</p>');
+        modal.find('.modal-body').append('<p>Autor Reporte: '+usuariosMap[data.id_usuario]+'</p>');
+        modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function(){
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/robos.php",
+                data: { action: 'delete_reporte', id: reporteId },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tablaReporte.row($row).remove().draw()  ;
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
-            }
+            });
         });
-    }
-    });
-</script>
-<script>
-    var clientes = <?php echo json_encode($clientes); ?>;
-    var clienteMap = {};
-
-    clientes.forEach(function(cliente) {
-        clienteMap[cliente.id] = cliente.nombre;
-    });
-
-    var plantas = <?php echo json_encode($plantas); ?>;
-    var plantasMap = {};
-
-    plantas.forEach(function(planta) {
-        plantasMap[planta.id] = planta.nombre;
     });
     
     $(document).ready( function(){
@@ -278,6 +324,16 @@ $clientes = Clientes::get_all_clients();
                 },
                 {   
                     "data": "observacion",
+                    "render": function(data, type, row) {
+                        var text = data || '';
+                        return '<p style="max-width: 450px; margin: 0; padding: 0">' + text + '</p>';
+                    }
+                },
+                {   
+                    "data": "id_usuario",
+                    "render": function(data) {
+                        return usuariosMap[data] || 'Desconocido';
+                    }
                 },
                 {
                     "data": "estado",
@@ -309,6 +365,7 @@ $clientes = Clientes::get_all_clients();
         var formData = {
             action: action,
             id:id,
+            id_usuario: $.trim(id_usuario),
             id_planta: $.trim($("#id_planta").val()),
             id_cliente: $.trim($("#id_cliente").val()),
             fecha: $.trim($("#fecha").val()),
@@ -335,6 +392,7 @@ $clientes = Clientes::get_all_clients();
                                 "fecha": formData.fecha,
                                 "hora": hora,
                                 "observacion": data.reporte.observacion,
+                                "id_usuario": data.reporte.id_usuario,
                                 "estado": data.reporte.estado,
                             }).draw().node();
                             $(newRow).attr('data-id', data.reporte.id);
@@ -350,6 +408,7 @@ $clientes = Clientes::get_all_clients();
                             "fecha": formData.fecha,
                             "hora": formData.hora,
                             "observacion": formData.observacion,
+                            "id_usuario": formData.id_usuario,
                             "estado": formData.estado,
                         }).draw();
                         $('#modalCRUD').modal('hide');

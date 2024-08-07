@@ -16,7 +16,7 @@ $perfiles = Perfil::get_all_perfiles();
                 <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Usuario<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
-                <table class="table table-striped table-hover" id="tabla">
+                <table class="table table-striped table-hover w-100" id="tabla">
                     <thead>
                         <tr>
                             <th class="text-center">
@@ -128,6 +128,19 @@ $perfiles = Perfil::get_all_perfiles();
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -157,37 +170,55 @@ $perfiles = Perfil::get_all_perfiles();
         $('#modalCRUD').modal('show');
     });
 
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {    
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
     //Eliminar Usuario
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tablaUsuarios.row($row).data();
-    var userId = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar este usuario?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/users.php",
-            data: { action: 'delete_user', id: userId },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tablaUsuarios.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
+        var $row = $(this).closest('tr');  // Capturamos la fila correctamente
+        var data = tablaUsuarios.row($row).data();
+        var userId = data.id;
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p>ID: '+data.id+'</p>');
+        modal.find('.modal-body').append('<p>Usuario: '+data.nombres +' '+data.apellidos+'</p>');
+        modal.find('.modal-body').append('<p>Perfil: '+perfilesMap[data.id_perfil]+'</p>');
+        modal.find('.modal-body').append('<p>Email: '+data.email+'</p>');
+        modal.find('.modal-body').append('<p>Fecha de Creación: '+data.fecha_creacion+'</p>');
+        modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function(){
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/users.php",
+                data: { action: 'delete_user', id: userId },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tablaUsuarios.row($row).remove().draw()  ;
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
-            }
+            });
         });
-    }
     });
-</script>
-<script>
+
     var perfiles = <?php echo json_encode($perfiles); ?>;
     var perfilesMap = {};
 

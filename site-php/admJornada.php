@@ -22,7 +22,7 @@ include("./includes/Database.class.php");
                     <table class="table table-striped table-hover" id="tabla">
                         <thead>
                             <tr>
-                                <th>
+                                <th class="text-center">
                                     ID
                                 </th>
                                 <th>
@@ -82,6 +82,19 @@ include("./includes/Database.class.php");
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body col-12">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -113,34 +126,52 @@ include("./includes/Database.class.php");
         $('#modalCRUD').modal('show');
     });
 
+    //Formatear Modal
+    $('#warningModal').on('hidden.bs.modal', function() {    
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
+
     //Eliminar
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tabla.row($row).data();
-    var u_Id = data.id;
-    
-    if (confirm('¿Estás seguro de que deseas eliminar esta jornada?')) {
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/jornada.php",
-            data: { action: 'delete_', id: u_Id },
-            datatype: "json",
-            encode: true,
-            success: function(response) {
-                if (response.status) {
-                    // Remover la fila de la tabla
-                    tabla.row($row).remove().draw()  ;
-                } else {
-                    alert(response.message);
+        var $row = $(this).closest('tr');  // Capturamos la fila correctamente
+        var data = tabla.row($row).data();
+        var u_Id = data.id;
+        
+        var modal = $('#warningModal .modal-dialog .modal-content');
+                    
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p>ID: '+data.id+'</p>');
+        modal.find('.modal-body').append('<p>Nombre: '+data.nombre+'</p>');
+        modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function(){
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/jornada.php",
+                data: { action: 'delete_', id: u_Id },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tabla.row($row).remove().draw()  ;
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // Manejar errores de AJAX
-                console.log("Error en AJAX: " + textStatus, errorThrown);
-                alert("Error en la solicitud: " + textStatus);
-            }
+            });
         });
-    }
     });
 </script>
 <script>
