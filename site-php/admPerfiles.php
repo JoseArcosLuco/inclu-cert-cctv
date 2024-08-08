@@ -34,7 +34,7 @@ $plantas = Plantas::get_all_plantas();
                     <tbody>
                     </tbody>
                 </table>
-            </div>      
+            </div>
         </div> <!-- /.card -->
         <!-- begin::Modal -->
 
@@ -46,7 +46,7 @@ $plantas = Plantas::get_all_plantas();
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="formPerfil" name="formPerfil">    
+                    <form id="formPerfil" name="formPerfil">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -55,24 +55,24 @@ $plantas = Plantas::get_all_plantas();
                                             <input type="text" class="form-control" id="nombre" name="nombre">
                                         </label>
                                     </div>
-                                </div>  
+                                </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
-                                                    <option value="1" >Activo</option>
-                                                    <option value="0" >Inactivo</option>
+                                                <option value="1">Activo</option>
+                                                <option value="0">Inactivo</option>
                                             </select>
                                         </label>
                                     </div>
-                                </div>  
-                            </div>           
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
                         </div>
-                    </form>    
+                    </form>
                 </div>
             </div>
         </div>
@@ -88,15 +88,29 @@ $plantas = Plantas::get_all_plantas();
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="cantDeleteModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hubo un Problema</h5>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <a class="btn btn-primary">Ir al Registro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-
     //Crear Camara
-    $("#addUser").click(function(){
+    $("#addUser").click(function() {
         $('#formPerfil').attr('data-action', 'create_perfil');
         $('#formPerfil')[0].reset();
         $('#modalCRUD').modal('show');
@@ -114,48 +128,54 @@ $plantas = Plantas::get_all_plantas();
     });
 
     //Formatear Modal
-    $('#warningModal').on('hidden.bs.modal', function() {    
+    $('#warningModal').on('hidden.bs.modal', function() {
         var modal = $('#warningModal .modal-dialog .modal-content');
         modal.find('.modal-header h5').remove();
         modal.find('.modal-body p').remove();
         modal.find('.modal-footer button').remove();
     });
+
     //Eliminar Perfil
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-        var $row = $(this).closest('tr');  // Capturamos la fila correctamente
+        var $row = $(this).closest('tr'); // Capturamos la fila correctamente
         var data = tablaPerfil.row($row).data();
         var perfilId = data.id;
         var modal = $('#warningModal .modal-dialog .modal-content');
-                
+
         modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
         modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
-        modal.find('.modal-body').append('<p>ID: '+data.id+'</p>');
-        modal.find('.modal-body').append('<p>Nombre: '+data.nombre+'</p>');
-        modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
+        modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
+        modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
         $('#warningModal').modal('show');
-        $('#warningModal').on('click', '.btnBorrar', function(){
+        $('#warningModal').on('click', '.btnBorrar', function() {
             $.ajax({
                 type: "POST",
                 url: "./ajax_handler/perfiles.php",
-                data: { action: 'delete_perfil', id: perfilId },
+                data: {
+                    action: 'delete_perfil',
+                    id: perfilId
+                },
                 datatype: "json",
                 encode: true,
                 success: function(response) {
                     if (response.status) {
                         // Remover la fila de la tabla
-                        tablaPerfil.row($row).remove().draw()  ;
-                    }
-                    else if(response.usuarios){
+                        tablaPerfil.row($row).remove().draw();
+                    } else if (response.usuarios) {
+                        let modalDelete = $('#cantDeleteModal .modal-dialog .modal-content');
                         let usuarios = response.usuarios
                         let listaUsuarios = '';
-                        for (let i = 0; i < usuarios.length; i++) {
-                            listaUsuarios += 'ID: '+ usuarios[i].id +' - Nombres: ' + usuarios[i].nombres + ' ' + usuarios[i].apellidos + '\n';
+                        for (let i in usuarios) {
+                            listaUsuarios += '<p class="mb-1 p-1 border-bottom">ID: ' + usuarios[i].id + ' - Nombre: ' + usuarios[i].nombres + ' ' + usuarios[i].apellidos + '</p>';
                         }
-                        alert(response.message + '\n\n' + listaUsuarios);
-                    } else {
-                        alert(response.message);
+                        let mensaje = '<p class="bg-danger p-2 border rounded text-white">No se puede eliminar el perfil porque tiene los siguientes Usuarios asociados:' + listaUsuarios + '</p>';
+
+                        modalDelete.find('.modal-body').html(mensaje);
+                        modalDelete.find('.modal-footer a').prop("href", "<?php echo $base_url ?>/formularios.php?form=usuarios&token=<?php echo $token; ?>");
+                        $('#cantDeleteModal').modal('show');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -168,23 +188,24 @@ $plantas = Plantas::get_all_plantas();
     });
 </script>
 <script>
-    $(document).ready( function(){
-        tablaPerfil =  $('#tabla').DataTable({
+    $(document).ready(function() {
+        tablaPerfil = $('#tabla').DataTable({
             responsive: true,
-            "ajax": {            
+            "ajax": {
                 "url": "./ajax_handler/perfiles.php",
                 "type": 'POST',
-                "data": {action: 'get_perfiles'},
+                "data": {
+                    action: 'get_perfiles'
+                },
                 "dataSrc": ""
             },
-            "columns":[
-                {   
+            "columns": [{
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
                 },
-                {   
+                {
                     "data": "nombre",
                     "createdCell": function(td) {
                         $(td).addClass('text-capitalize');
@@ -194,12 +215,14 @@ $plantas = Plantas::get_all_plantas();
                     "data": "estado",
                     "render": function(data) {
                         return data == 1 ? 'Activo' : 'Inactivo';
-                    } 
+                    }
                 },
-                {"defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                {
+                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                }
             ],
             "createdRow": function(row, data, dataIndex) {
-            $(row).attr('data-id', data.id); // Añadir atributo data-id
+                $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
             "language": {
                 "url": "./assets/json/espanol.json"
@@ -211,7 +234,7 @@ $plantas = Plantas::get_all_plantas();
 <script>
     // fomrulario Subir/Editar cámaras
 
-    $("#formPerfil"). submit(function(e) {
+    $("#formPerfil").submit(function(e) {
         e.preventDefault();
 
         var action = $(this).attr('data-action');
@@ -219,7 +242,7 @@ $plantas = Plantas::get_all_plantas();
 
         var formData = {
             action: action,
-            id:id,
+            id: id,
             nombre: $.trim($("#nombre").val()),
             estado: $.trim($("#estado").val())
         };
@@ -233,7 +256,7 @@ $plantas = Plantas::get_all_plantas();
             success: function(data) {
                 if (data.status) {
 
-                    if (action === 'create_perfil'){
+                    if (action === 'create_perfil') {
                         var newRow = tablaPerfil.row.add({
                             "id": data.perfil.id,
                             "nombre": data.perfil.nombre,
@@ -242,7 +265,7 @@ $plantas = Plantas::get_all_plantas();
                         $(newRow).attr('data-id', data.perfil.id);
                         $('#modalCRUD').modal('hide');
 
-                    }else if (action === 'edit_perfil'){
+                    } else if (action === 'edit_perfil') {
                         var row = tablaPerfil.row($('[data-id="' + id + '"]'));
                         console.log(row.data());
                         row.data({
@@ -253,20 +276,22 @@ $plantas = Plantas::get_all_plantas();
                         $('#modalCRUD').modal('hide');
 
                     }
-                    
+
                 } else {
                     alert(data.message);
                     // console.log("nofunkopapito")
-                } },
-            error:function(jqXHR, textStatus, errorThrown) {
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
                 // Manejar errores de AJAX
                 console.log("Error en AJAX: " + textStatus, errorThrown);
                 alert("Error en la solicitud: " + textStatus);
-            } 
+            }
         });
-        });
+    });
 </script>
 <!-- end::Script -->
-    
+
 </body>
+
 </html>

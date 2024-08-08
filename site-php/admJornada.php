@@ -95,6 +95,21 @@ include("./includes/Database.class.php");
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="cantDeleteModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hubo un Problema</h5>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <a class="btn btn-primary">Ir al Registro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -161,8 +176,18 @@ include("./includes/Database.class.php");
                     if (response.status) {
                         // Remover la fila de la tabla
                         tabla.row($row).remove().draw()  ;
-                    } else {
-                        alert(response.message);
+                    } else if (response.turnos) {
+                        let modalDelete = $('#cantDeleteModal .modal-dialog .modal-content');
+                        let turnos = response.turnos
+                        let listaTurnos = '';
+                        for (let i in turnos) {
+                            listaTurnos += '<p class="mb-1 p-1 border-bottom">ID: ' + turnos[i].id + ' - Nombre: ' + turnos[i].nombre + '</p>';
+                        }
+                        let mensaje = '<p class="bg-danger p-2 border rounded text-white">No se puede eliminar esta Jornada porque tiene los siguientes Turnos asociados:' + listaTurnos + '</p>';
+
+                        modalDelete.find('.modal-body').html(mensaje);
+                        modalDelete.find('.modal-footer a').prop("href", "<?php echo $base_url ?>/formularios.php?form=turnos&token=<?php echo $token; ?>");
+                        $('#cantDeleteModal').modal('show');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

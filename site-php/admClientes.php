@@ -121,6 +121,21 @@ include("./includes/Database.class.php");
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="cantDeleteModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Hubo un Problema</h5>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                        <a class="btn btn-primary">Ir al Registro</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -188,16 +203,18 @@ include("./includes/Database.class.php");
                         // Remover la fila de la tabla
                         tablaClientes.row($row).remove().draw()  ;
 
-                    } else if(response.clientes) {
+                    } else if (response.clientes) {
+                        let modalDelete = $('#cantDeleteModal .modal-dialog .modal-content');
                         let clientes = response.clientes
-                        let listaClientes = '';
-                        for (let i = 0; i < clientes.length; i++) {
-                            listaClientes += 'ID: '+ clientes[i].id +' - Nombre: ' + clientes[i].nombre + '\n';
+                        let listaPlantas = '';
+                        for (let i in clientes) {
+                            listaPlantas += '<p class="mb-1 p-1 border-bottom">ID: ' + clientes[i].id + ' - Nombre: ' + clientes[i].nombre + '</p>';
                         }
-                        alert(response.message + '\n\n' + listaClientes);
+                        let mensaje = '<p class="bg-danger p-2 border rounded text-white">No se puede eliminar este Cliente porque tiene las siguientes Plantas asociadas:' + listaPlantas + '</p>';
 
-                    } else {
-                        alert(response.message);
+                        modalDelete.find('.modal-body').html(mensaje);
+                        modalDelete.find('.modal-footer a').prop("href", "<?php echo $base_url ?>/formularios.php?form=plantas&token=<?php echo $token; ?>");
+                        $('#cantDeleteModal').modal('show');
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

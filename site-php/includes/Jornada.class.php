@@ -44,17 +44,29 @@
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('DELETE FROM cctv_jornada WHERE id=:id');
-            $stmt->bindParam(':id',$id);
-            if($stmt->execute()){
-                return [
-                    'status' => true,
-                    'message' => 'Jornada borrado correctamente.'
-                ];
+            $stmt = $conn->prepare('SELECT * FROM cctv_turnos WHERE id_jornada = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $turnoJornadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($turnoJornadas)) {
+                $stmt = $conn->prepare('DELETE FROM cctv_jornada WHERE id=:id');
+                $stmt->bindParam(':id',$id);
+                if($stmt->execute()){
+                    return [
+                        'status' => true,
+                        'message' => 'Jornada borrado correctamente.'
+                    ];
+                } else {
+                    return [
+                        'status' => false,
+                        'message' => 'No se ha podido borrar el registro revisar.'
+                    ];
+                }
             } else {
                 return [
                     'status' => false,
-                    'message' => 'No se ha podido borrar el registro revisar.'
+                    'turnos' => $turnoJornadas
                 ];
             }
         }

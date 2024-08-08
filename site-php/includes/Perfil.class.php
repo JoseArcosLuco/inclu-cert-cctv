@@ -67,7 +67,6 @@
             } else {
                 return [
                     'status' => false,
-                    'message' => 'No se puede eliminar el perfil '.$id.' porque tiene los siguientes usuarios asociados: ',
                     'usuarios' => $usuariosPerfil
                 ];
             }

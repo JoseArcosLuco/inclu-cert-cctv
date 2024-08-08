@@ -60,6 +60,11 @@ if (isset($_POST)) {
         case 'delete_':
             $id = $_POST['id'];
             $response = Comisarias::delete_comisarias_by_id($id);
+
+            if (!$response['status'] && isset($response['plantas'])) {
+                $response['plantas'] = $response['plantas'];
+            }
+            
             echo json_encode($response);
             break;
         // Otros casos para update, delete, etc.

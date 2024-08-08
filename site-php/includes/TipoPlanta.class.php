@@ -43,7 +43,13 @@
         public static function delete_tipo_planta_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
-            if (TipoPlanta::get_tipo_planta_by_id_exist($id)){
+
+            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_tipo_planta = :id');
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            $plantasTipoPlanta = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($plantasTipoPlanta)) {
                 $stmt = $conn->prepare('DELETE FROM cctv_tipo_planta WHERE id=:id');
                 $stmt->bindParam(':id',$id);
                 if($stmt->execute()){
@@ -58,7 +64,10 @@
                     ];
                 }
             }else{
-                return false;
+                return [
+                    'status' => false,
+                    'plantas' => $plantasTipoPlanta
+                ];
             }
             
         }

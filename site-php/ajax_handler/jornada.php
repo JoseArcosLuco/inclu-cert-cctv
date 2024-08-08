@@ -54,6 +54,11 @@ if (isset($_POST)) {
         case 'delete_':
             $id = $_POST['id'];
             $response = Jornada::delete_jornada_by_id($id);
+
+            if (!$response['status'] && isset($response['turnos'])) {
+                $response['turnos'] = $response['turnos'];
+            }
+
             echo json_encode($response);
             break;
         // Otros casos para update, delete, etc.
