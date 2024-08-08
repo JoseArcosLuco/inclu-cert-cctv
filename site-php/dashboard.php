@@ -1,15 +1,15 @@
-<?php 
+<?php
 
-error_reporting( E_ALL );
+error_reporting(E_ALL);
 session_start();
 
 
-if ( isset( $_SESSION["token"] ) ) {
+if (isset($_SESSION["token"])) {
     $token = $_SESSION["token"];
-}else{
+} else {
     $token = "";
 }
-if ( empty( $token ) ) {
+if (empty($token)) {
     echo "<meta http-equiv='refresh' content='2; url=index.php?cod=1' />";
 }
 ?>
@@ -35,23 +35,23 @@ if ( empty( $token ) ) {
 </head> <!--end::Head--> <!--begin::Body-->
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
-    <div class="app-wrapper"> 
-         <!--begin::Header-->
-         <?php include_once("header.php");?>
-         <!--end::Header--> 
-         
-         <!--begin::Sidebar-->
-         <?php include_once("main-sidebar.php");?>
-         <!--end::Sidebar--> 
-        
+    <div class="app-wrapper">
+        <!--begin::Header-->
+        <?php include_once("header.php"); ?>
+        <!--end::Header-->
+
+        <!--begin::Sidebar-->
+        <?php include_once("main-sidebar.php"); ?>
+        <!--end::Sidebar-->
+
         <!--begin::App Main-->
-        <main class="app-main"> 
-            
+        <main class="app-main">
+
             <!--begin::App Content Header-->
-            <?php include_once("content-header.php");?>
-            <!--end::App Content Header--> 
-             
-            
+            <?php include_once("content-header.php"); ?>
+            <!--end::App Content Header-->
+
+
             <!--begin::App Content-->
             <div class="app-content"> <!--begin::Container-->
                 <div class="container-fluid"> <!--begin::Row-->
@@ -103,7 +103,7 @@ if ( empty( $token ) ) {
                         </div> <!--end::Col-->
                     </div> <!--end::Row--> <!--begin::Row-->
                     <div class="row"> <!-- Start col -->
-                        <div class="col-lg-7 connectedSortable">
+                        <div class="col-lg-6 connectedSortable">
                             <div class="card mb-4">
                                 <div class="card-header">
                                     <h3 class="card-title">Operatividad por clientes</h3>
@@ -227,8 +227,8 @@ if ( empty( $token ) ) {
                                     </form>
                                 </div> <!-- /.card-footer-->
                             </div> <!-- /.direct-chat -->
-                        </div> <!-- /.Start col --> <!-- Start col -->
-                        <div class="col-lg-5 connectedSortable">
+                        </div>
+                        <div class="col-lg-6 connectedSortable">
                             <div class="card text-white bg-primary bg-gradient border-primary mb-4">
                                 <div class="card-header border-0">
                                     <h3 class="card-title">Sales Value</h3>
@@ -253,15 +253,55 @@ if ( empty( $token ) ) {
                                         </div>
                                     </div> <!--end::Row-->
                                 </div>
+                            </div><!-- /.Start col -->
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico de Torta</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="pie-chart"></div>
+                                        </div> <!-- /.col -->
+                                    </div> <!--end::Row-->
+                                </div> <!-- /.card-body -->
+                            </div> <!-- /.footer --><!-- /.card -->
+                        </div> <!-- /.row (main row) -->
+                        <div class="col-lg-6 connectedSortable">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico Donut</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="donut-chart"></div>
+                                        </div> <!-- /.col -->
+                                    </div> <!--end::Row-->
+                                </div> <!-- /.card-body -->
                             </div>
-                        </div> <!-- /.Start col -->
-                    </div> <!-- /.row (main row) -->
-                </div> <!--end::Container-->
-            </div> <!--end::App Content-->
-        </main> <!--end::App Main--> 
-        
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico De Calor</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="heat-chart"></div>
+                                        </div> <!-- /.col -->
+                                    </div> <!--end::Row-->
+                                </div> <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div> <!--end::Container-->
+                </div> <!--end::App Content-->
+        </main> <!--end::App Main-->
+
         <!--begin::Footer-->
-        <?php include_once("footer.php");?>
+        <?php include_once("footer.php"); ?>
         <!--end::Footer-->
     </div> <!--end::App Wrapper--> <!--begin::Script--> <!--begin::Third Party Plugin(OverlayScrollbars)-->
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js" integrity="sha256-H2VM7BKda+v2Z4+DRy69uknwxjyDRhszjXFhsL4gD3w=" crossorigin="anonymous"></script> <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
@@ -317,12 +357,28 @@ if ( empty( $token ) ) {
 
         const sales_chart_options = {
             series: [{
-                    name: "Digital Goods",
+                    name: "Cliente 1",
                     data: [28, 48, 40, 19, 86, 27, 90],
                 },
                 {
-                    name: "Electronics",
+                    name: "Cliente 2",
                     data: [65, 59, 80, 81, 56, 55, 40],
+                },
+                {
+                    name: "Cliente 3",
+                    data: [98, 23, 43, 65, 54, 43, 23],
+                },
+                {
+                    name: "Cliente 4",
+                    data: [76, 65, 45, 34, 23, 65, 78],
+                },
+                {
+                    name: "Cliente 5",
+                    data: [68, 48, 12, 32, 45, 98, 35],
+                },
+                {
+                    name: "Cliente 6",
+                    data: [98, 78, 65, 48, 87, 98, 78],
                 },
             ],
             chart: {
@@ -333,9 +389,16 @@ if ( empty( $token ) ) {
                 },
             },
             legend: {
-                show: false,
+                show: true,
+                position: 'bottom',
+                labels: {
+                    colors: ["#fff", "#222936"],
+                },
+                fontSize: '18px'
             },
-            colors: ["#0d6efd", "#20c997"],
+            theme: {
+                palette: 'palette4'
+            },
             dataLabels: {
                 enabled: false,
             },
@@ -343,6 +406,13 @@ if ( empty( $token ) ) {
                 curve: "smooth",
             },
             xaxis: {
+                labels: {
+                    show: true,
+                    style: {
+                        colors: ['#fff', '#222936'],
+                        fontSize: '14px'
+                    }
+                },
                 type: "datetime",
                 categories: [
                     "2024-01-01",
@@ -354,10 +424,22 @@ if ( empty( $token ) ) {
                     "2024-07-01",
                 ],
             },
+            yaxis: {
+                show: true,
+                min: 0,
+                max: 100,
+                labels: {
+                    show: true,
+                    style: {
+                        colors: ['#fff', '#222936'],
+                        fontSize: '14px'
+                    }
+                },
+            },
             tooltip: {
                 x: {
                     format: "MMMM yyyy",
-                },
+                }
             },
         };
 
@@ -366,6 +448,212 @@ if ( empty( $token ) ) {
             sales_chart_options,
         );
         sales_chart.render();
+
+        //PIE CHART
+
+        const pie_chart_options = {
+            series: [900, 500, 400, 600, 300, 100],
+            chart: {
+                type: "pie",
+            },
+            labels: ["Cliente 1", "Cliente 2", "Cliente 3", "Cliente 4", "Cliente 5", "Cliente 6"],
+            dataLabels: {
+                style: {
+                    colors: ["#fff"],
+                }
+            },
+            theme: {
+                palette: 'palette4'
+            },
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#fff', '#222936'],
+                },
+                fontSize: '18px'
+            }
+        };
+
+        const pie_chart = new ApexCharts(
+            document.querySelector("#pie-chart"),
+            pie_chart_options,
+        );
+        pie_chart.render();
+
+        //DONUT CHART
+
+        const donut_chart_options = {
+            series: [900, 500, 400, 600, 300, 100],
+            chart: {
+                type: "donut",
+            },
+            labels: ["Cliente 1", "Cliente 2", "Cliente 3", "Cliente 4", "Cliente 5", "Cliente 6"],
+            dataLabels: {
+                style: {
+                    colors: ["#fff"],
+                }
+            },
+            theme: {
+                palette: 'palette4'
+            },
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#fff', '#222936'],
+                },
+                fontSize: '18px'
+            }
+        };
+
+        const donut_chart = new ApexCharts(
+            document.querySelector("#donut-chart"),
+            donut_chart_options,
+        );
+        donut_chart.render();
+
+        //HEAT CHART
+
+        const heat_chart_options = {
+            chart: {
+                type: 'heatmap',
+                zoom: {
+                    enabled: true
+                }
+            },
+            theme: {
+                palette: 'palette4'
+            },
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#fff', '#222936'],
+                },
+                fontSize: '18px'
+            },
+            series: [{
+                    name: "Series 1",
+                    data: [{
+                        x: 'W1',
+                        y: 0
+                    }, {
+                        x: 'W2',
+                        y: 29
+                    }, {
+                        x: 'W3',
+                        y: 13
+                    }, {
+                        x: 'W4',
+                        y: 32
+                    }]
+                },
+                {
+                    name: "Series 2",
+                    data: [{
+                        x: 'W1',
+                        y: 43
+                    }, {
+                        x: 'W2',
+                        y: 43
+                    }, {
+                        x: 'W3',
+                        y: 43
+                    }, {
+                        x: 'W4',
+                        y: 43
+                    }]
+                },
+                {
+                    name: "Series 3",
+                    data: [{
+                        x: 'W1',
+                        y: 32
+                    }, {
+                        x: 'W2',
+                        y: 12
+                    }, {
+                        x: 'W3',
+                        y: 4
+                    }, {
+                        x: 'W4',
+                        y: 50
+                    }]
+                },
+                {
+                    name: "Series 4",
+                    data: [{
+                        x: 'W1',
+                        y: 32
+                    }, {
+                        x: 'W2',
+                        y: 54
+                    }, {
+                        x: 'W3',
+                        y: 9
+                    }, {
+                        x: 'W4',
+                        y: 2
+                    }]
+                },
+            ],
+            yaxis: {
+                show: true,
+                labels: {
+                    show: true,
+                    style: {
+                        colors: ['#fff', '#222936'],
+                        fontSize: '14px'
+                    }
+                },
+            },
+            xaxis: {
+                show: true,
+                labels: {
+                    show: true,
+                    style: {
+                        colors: ['#fff', '#222936'],
+                        fontSize: '14px'
+                    }
+                },
+            },
+            plotOptions: {
+                heatmap: {
+                    radius: 3,
+                    colorScale: {
+                        ranges: [{
+                                from: -30,
+                                to: 5,
+                                color: '#00A100',
+                                name: 'Bajo',
+                            },
+                            {
+                                from: 6,
+                                to: 20,
+                                color: '#128FD9',
+                                name: 'Medio',
+                            },
+                            {
+                                from: 21,
+                                to: 45,
+                                color: '#FFB200',
+                                name: 'Alto',
+                            },
+                            {
+                                from: 46,
+                                to: 100,
+                                color: '#db4444',
+                                name: 'Extremo',
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const heat_chart = new ApexCharts(
+            document.querySelector("#heat-chart"),
+            heat_chart_options,
+        );
+        heat_chart.render();
     </script> <!-- jsvectormap -->
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
@@ -477,88 +765,88 @@ if ( empty( $token ) ) {
             option_sparkline3,
         );
         sparkline3.render();
-    </script> 
-    
+    </script>
+
     <script>
         (() => {
-                "use strict";
+            "use strict";
 
-                const storedTheme = localStorage.getItem("theme");
+            const storedTheme = localStorage.getItem("theme");
 
-                const getPreferredTheme = () => {
-                    if (storedTheme) {
+            const getPreferredTheme = () => {
+                if (storedTheme) {
                     return storedTheme;
-                    }
+                }
 
-                    return window.matchMedia("(prefers-color-scheme: dark)").matches
-                    ? "dark"
-                    : "light";
-                };
+                return window.matchMedia("(prefers-color-scheme: dark)").matches ?
+                    "dark" :
+                    "light";
+            };
 
-                const setTheme = function (theme) {
-                    if (
+            const setTheme = function(theme) {
+                if (
                     theme === "auto" &&
                     window.matchMedia("(prefers-color-scheme: dark)").matches
-                    ) {
+                ) {
                     document.documentElement.setAttribute("data-bs-theme", "dark");
-                    } else {
+                } else {
                     document.documentElement.setAttribute("data-bs-theme", theme);
-                    }
-                };
+                }
+            };
 
-                setTheme(getPreferredTheme());
+            setTheme(getPreferredTheme());
 
-                const showActiveTheme = (theme, focus = false) => {
-                    const themeSwitcher = document.querySelector("#bd-theme");
+            const showActiveTheme = (theme, focus = false) => {
+                const themeSwitcher = document.querySelector("#bd-theme");
 
-                    if (!themeSwitcher) {
+                if (!themeSwitcher) {
                     return;
-                    }
+                }
 
-                    const themeSwitcherText = document.querySelector("#bd-theme-text");
-                    const activeThemeIcon = document.querySelector(".theme-icon-active i");
-                    const btnToActive = document.querySelector(
+                const themeSwitcherText = document.querySelector("#bd-theme-text");
+                const activeThemeIcon = document.querySelector(".theme-icon-active i");
+                const btnToActive = document.querySelector(
                     `[data-bs-theme-value="${theme}"]`
-                    );
-                    const svgOfActiveBtn = btnToActive.querySelector("i").getAttribute("class");
+                );
+                const svgOfActiveBtn = btnToActive.querySelector("i").getAttribute("class");
 
-                    for (const element of document.querySelectorAll("[data-bs-theme-value]")) {
+                for (const element of document.querySelectorAll("[data-bs-theme-value]")) {
                     element.classList.remove("active");
                     element.setAttribute("aria-pressed", "false");
-                    }
+                }
 
-                    btnToActive.classList.add("active");
-                    btnToActive.setAttribute("aria-pressed", "true");
-                    activeThemeIcon.setAttribute("class", svgOfActiveBtn);
-                    const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`;
-                    themeSwitcher.setAttribute("aria-label", themeSwitcherLabel);
+                btnToActive.classList.add("active");
+                btnToActive.setAttribute("aria-pressed", "true");
+                activeThemeIcon.setAttribute("class", svgOfActiveBtn);
+                const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`;
+                themeSwitcher.setAttribute("aria-label", themeSwitcherLabel);
 
-                    if (focus) {
+                if (focus) {
                     themeSwitcher.focus();
-                    }
-                };
+                }
+            };
 
-                window
-                    .matchMedia("(prefers-color-scheme: dark)")
-                    .addEventListener("change", () => {
+            window
+                .matchMedia("(prefers-color-scheme: dark)")
+                .addEventListener("change", () => {
                     if (storedTheme !== "light" || storedTheme !== "dark") {
                         setTheme(getPreferredTheme());
                     }
-                    });
+                });
 
-                window.addEventListener("DOMContentLoaded", () => {
-                    showActiveTheme(getPreferredTheme());
+            window.addEventListener("DOMContentLoaded", () => {
+                showActiveTheme(getPreferredTheme());
 
-                    for (const toggle of document.querySelectorAll("[data-bs-theme-value]")) {
+                for (const toggle of document.querySelectorAll("[data-bs-theme-value]")) {
                     toggle.addEventListener("click", () => {
                         const theme = toggle.getAttribute("data-bs-theme-value");
                         localStorage.setItem("theme", theme);
                         setTheme(theme);
                         showActiveTheme(theme, true);
                     });
-                    }
-                });
-                })();
+                }
+            });
+        })();
     </script>
     <!--end::Script-->
 </body><!--end::Body-->
