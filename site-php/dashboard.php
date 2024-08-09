@@ -12,6 +12,10 @@ if (isset($_SESSION["token"])) {
 if (empty($token)) {
     echo "<meta http-equiv='refresh' content='2; url=index.php?cod=1' />";
 }
+
+require_once("./includes/Clientes.class.php");
+
+$clientes = Clientes::get_all_clients();
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +53,32 @@ if (empty($token)) {
 
             <!--begin::App Content Header-->
             <?php include_once("content-header.php"); ?>
-            <!--end::App Content Header-->
+            <!--end::App Content Header--> <!--begin::Row-->
+            <div class="row ms-2 mb-3 justify-content-start">
+                <div class="col-sm-2">
+                    <p class="m-0">Cliente:</p>
+                    <select class="form-select" name="id_cliente" id="id_cliente" required>
+                        <option value="">Seleccione</option>
+                        <?php foreach ($clientes as $cliente): ?>
+                            <option value="<?php echo $cliente['id'] ?>"><?php echo $cliente['nombre']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <p class="m-0">Planta:</p>
+                    <select class="form-select" name="id_planta" id="id_planta" disabled required>
+                        <option value="">Seleccione</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <p class="m-0">Fecha inicio:</p>
+                    <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" required disabled>
+                </div>
+                <div class="col-sm-2">
+                    <p class="m-0">Fecha fin:</p>
+                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" required disabled>
+                </div>
+            </div>
 
 
             <!--begin::App Content-->
@@ -112,6 +141,83 @@ if (empty($token)) {
                                     <div id="revenue-chart"></div>
                                 </div>
                             </div> <!-- /.card --> <!-- DIRECT CHAT -->
+                            <!-- /.direct-chat -->
+                        </div>
+                        <div class="col-lg-6 connectedSortable">
+                            <div class="card text-white bg-primary bg-gradient border-primary mb-4">
+                                <div class="card-header border-0">
+                                    <h3 class="card-title">Sales Value</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-primary btn-sm" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> </div>
+                                </div>
+                                <div class="card-body">
+                                    <div id="world-map" style="height: 220px"></div>
+                                </div>
+                                <div class="card-footer border-0"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-4 text-center">
+                                            <div id="sparkline-1" class="text-dark"></div>
+                                            <div class="text-white">Visitors</div>
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <div id="sparkline-2" class="text-dark"></div>
+                                            <div class="text-white">Online</div>
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            <div id="sparkline-3" class="text-dark"></div>
+                                            <div class="text-white">Sales</div>
+                                        </div>
+                                    </div> <!--end::Row-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 connectedSortable">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico de Torta</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="pie-chart"></div>
+                                        </div> <!-- /.col -->
+                                    </div> <!--end::Row-->
+                                </div> <!-- /.card-body -->
+                            </div>
+                        </div>
+                        <div class="col-lg-4 connectedSortable">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico Donut</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="donut-chart"></div>
+                                        </div> <!-- /.col -->
+                                    </div> <!--end::Row-->
+                                </div> <!-- /.card-body -->
+                            </div>
+                        </div>
+                        <div class="col-lg-4 connectedSortable">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Gráfico De Calor</h3>
+                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!--begin::Row-->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div id="heat-chart"></div>
+                                        </div> <!-- /.col -->
+                                    </div> <!--end::Row-->
+                                </div> <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 connectedSortable">
                             <div class="card direct-chat direct-chat-primary mb-4">
                                 <div class="card-header">
                                     <h3 class="card-title">Direct Chat</h3>
@@ -226,78 +332,11 @@ if (empty($token)) {
                                                 </button> </span> </div>
                                     </form>
                                 </div> <!-- /.card-footer-->
-                            </div> <!-- /.direct-chat -->
-                        </div>
-                        <div class="col-lg-6 connectedSortable">
-                            <div class="card text-white bg-primary bg-gradient border-primary mb-4">
-                                <div class="card-header border-0">
-                                    <h3 class="card-title">Sales Value</h3>
-                                    <div class="card-tools"> <button type="button" class="btn btn-primary btn-sm" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> </div>
-                                </div>
-                                <div class="card-body">
-                                    <div id="world-map" style="height: 220px"></div>
-                                </div>
-                                <div class="card-footer border-0"> <!--begin::Row-->
-                                    <div class="row">
-                                        <div class="col-4 text-center">
-                                            <div id="sparkline-1" class="text-dark"></div>
-                                            <div class="text-white">Visitors</div>
-                                        </div>
-                                        <div class="col-4 text-center">
-                                            <div id="sparkline-2" class="text-dark"></div>
-                                            <div class="text-white">Online</div>
-                                        </div>
-                                        <div class="col-4 text-center">
-                                            <div id="sparkline-3" class="text-dark"></div>
-                                            <div class="text-white">Sales</div>
-                                        </div>
-                                    </div> <!--end::Row-->
-                                </div>
-                            </div><!-- /.Start col -->
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h3 class="card-title">Gráfico de Torta</h3>
-                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
-                                </div> <!-- /.card-header -->
-                                <div class="card-body"> <!--begin::Row-->
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div id="pie-chart"></div>
-                                        </div> <!-- /.col -->
-                                    </div> <!--end::Row-->
-                                </div> <!-- /.card-body -->
-                            </div> <!-- /.footer --><!-- /.card -->
-                        </div> <!-- /.row (main row) -->
-                        <div class="col-lg-6 connectedSortable">
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h3 class="card-title">Gráfico Donut</h3>
-                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
-                                </div> <!-- /.card-header -->
-                                <div class="card-body"> <!--begin::Row-->
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div id="donut-chart"></div>
-                                        </div> <!-- /.col -->
-                                    </div> <!--end::Row-->
-                                </div> <!-- /.card-body -->
-                            </div>
-                            <div class="card mb-4">
-                                <div class="card-header">
-                                    <h3 class="card-title">Gráfico De Calor</h3>
-                                    <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
-                                </div> <!-- /.card-header -->
-                                <div class="card-body"> <!--begin::Row-->
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div id="heat-chart"></div>
-                                        </div> <!-- /.col -->
-                                    </div> <!--end::Row-->
-                                </div> <!-- /.card-body -->
                             </div>
                         </div>
-                    </div> <!--end::Container-->
-                </div> <!--end::App Content-->
+                    </div>
+                </div> <!--end::Container-->
+            </div> <!--end::App Content-->
         </main> <!--end::App Main-->
 
         <!--begin::Footer-->
@@ -358,27 +397,27 @@ if (empty($token)) {
         const sales_chart_options = {
             series: [{
                     name: "Cliente 1",
-                    data: [28, 48, 40, 19, 86, 27, 90],
+                    data: [28, 48, 40, 19, 1, 27, 9],
                 },
                 {
                     name: "Cliente 2",
-                    data: [65, 59, 80, 81, 56, 55, 40],
+                    data: [6, 5, 8, 8, 5, 5, 40],
                 },
                 {
                     name: "Cliente 3",
-                    data: [98, 23, 43, 65, 54, 43, 23],
+                    data: [9, 2, 4, 6, 5, 4, 2],
                 },
                 {
                     name: "Cliente 4",
-                    data: [76, 65, 45, 34, 23, 65, 78],
+                    data: [7, 6, 45, 3, 23, 6, 7],
                 },
                 {
                     name: "Cliente 5",
-                    data: [68, 48, 12, 32, 45, 98, 35],
+                    data: [8, 48, 12, 3, 45, 9, 35],
                 },
                 {
                     name: "Cliente 6",
-                    data: [98, 78, 65, 48, 87, 98, 78],
+                    data: [9, 7, 6, 48, 8, 9, 7],
                 },
             ],
             chart: {
@@ -427,7 +466,7 @@ if (empty($token)) {
             yaxis: {
                 show: true,
                 min: 0,
-                max: 100,
+                max: 50,
                 labels: {
                     show: true,
                     style: {
@@ -452,11 +491,11 @@ if (empty($token)) {
         //PIE CHART
 
         const pie_chart_options = {
-            series: [900, 500, 400, 600, 300, 100],
+            series: [44, 55, 41],
             chart: {
                 type: "pie",
             },
-            labels: ["Cliente 1", "Cliente 2", "Cliente 3", "Cliente 4", "Cliente 5", "Cliente 6"],
+            labels: ["Cliente 1", "Cliente 2", "Cliente 3"],
             dataLabels: {
                 style: {
                     colors: ["#fff"],
@@ -657,6 +696,97 @@ if (empty($token)) {
     </script> <!-- jsvectormap -->
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $('#id_cliente').change(function() {
+            var id = $(this).val();
+            $('#id_planta').prop('disabled', false);
+
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/cortesEnergia.php",
+                data: {
+                    action: 'get_plantas',
+                    id: id
+                },
+                datatype: "json",
+                success: function(data) {
+                    $('#id_planta').empty();
+                    $('#id_planta').append('<option value="">Seleccionar</option>');
+                    data.forEach(function(planta) {
+                        $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                    });
+                }
+            })
+        })
+        $('#id_planta').on('change', function() {
+            let id_planta = $('#id_planta').val();
+            $('#fecha_inicio, #fecha_fin').prop('disabled', false);
+
+            $.ajax({
+                url: "./ajax_handler/dashboard.php",
+                method: "POST",
+                data: {
+                    id_planta: id_planta,
+                    action: 'updateChartWithoutFecha'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    let robos = data[0].robos;
+                    let internet = data[0].cortes_internet;
+                    let energia = data[0].cortes_energia;
+                    let newData = [robos, internet, energia];
+
+                    pie_chart.updateOptions({
+                        series: newData,
+                        labels: ["Robos", "Cortes Internet", "Cortes Energía"]
+                    });
+                    donut_chart.updateOptions({
+                        series: newData,
+                        labels: ["Robos", "Cortes Internet", "Cortes Energía"]
+                    });
+                    sales_chart.updateOptions({
+                        series: [{
+                            name: ['Robos', 'Cortes Internet', 'Cortes Energía'],
+                            data: newData
+                        }]
+                    });
+                }
+            })
+        });
+
+        $('#fecha_inicio, #fecha_fin').on('change', function() {
+            let id_planta = $('#id_planta').val();
+            let fecha_inicio = $('#fecha_inicio').val() + ' 00:00:00';
+            let fecha_fin = $('#fecha_fin').val() + ' 23:59:59';
+
+            console.log('fecha inicio:', fecha_inicio, 'fecha fin:', fecha_fin);
+
+            $.ajax({
+                url: "./ajax_handler/dashboard.php",
+                method: "POST",
+                data: {
+                    id_planta: id_planta,
+                    fecha_inicio: fecha_inicio,
+                    fecha_fin: fecha_fin,
+                    action: 'updateChartWithFecha'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data)
+                    let robos = data[0].robos;
+                    let internet = data[0].cortes_internet;
+                    let energia = data[0].cortes_energia;
+                    let newData = [robos, internet, energia];
+
+                    pie_chart.updateOptions({
+                        series: newData,
+                        labels: ["Robos", "Cortes Internet", "Cortes Energía"]
+                    });
+                }
+            })
+        });
+    </script>
     <script>
         const visitorsData = {
             US: 398, // USA
