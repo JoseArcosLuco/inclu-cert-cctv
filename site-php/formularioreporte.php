@@ -100,13 +100,13 @@ $clientes = Clientes::get_all_clients();
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Responsable</label> 
-                                <select class="form-control" name="responsable" id="responsable" required>
+                                <select class="form-control" name="responsable" id="responsable">
                                     <option value="">Seleccione</option>
                                 </select> 
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Planta En Linea</label> 
-                                <select class="form-control" name="planta_sin_conexion" id="planta_sin_conexion" required>
+                                <select class="form-control" name="planta_sin_conexion" id="planta_sin_conexion">
                                     <option value="">Seleccione</option>
                                     <option value="1">Si</option>
                                     <option value="2">No</option>
@@ -225,17 +225,18 @@ $(document).ready(function() {
                 $plantaCamarasSelect.empty();
                 
                 $.each(data, function(index, planta) {
+                        $cantidadcamaras ++;
                         $camaraConcatenado = '';
                         $camaraConcatenado = $camaraConcatenado + '<div class="row d-flex align-items-center p-2">'; 
-                        $camaraConcatenado = $camaraConcatenado + '<input type="hidden" name="idcamaras_' + planta.id + '" id="idcamaras_' + planta.id + '" value="' + planta.id + '"><div class="col-3"> ' + planta.nombre + ' </div>';
+                        $camaraConcatenado = $camaraConcatenado + '<input type="hidden" name="idcamaras_' + $cantidadcamaras + '" id="idcamaras_' + $cantidadcamaras + '" value="' + planta.id + '"><div class="col-3"> ' + planta.nombre + ' </div>';
                         $camaraConcatenado = $camaraConcatenado + '<div class="col-3">';
                         $camaraConcatenado = $camaraConcatenado + '<label class="form-check-label">Habilitada: ';
-                        $camaraConcatenado = $camaraConcatenado + '<input type="checkbox" class="form-check-input" name="checkbox_' + planta.id + '" id="checkbox_' + planta.id + '" placeholder=".col-4">';
+                        $camaraConcatenado = $camaraConcatenado + '<input type="checkbox" class="form-check-input" name="checkbox_' + $cantidadcamaras + '" id="checkbox_' + $cantidadcamaras + '" placeholder=".col-4">';
                         $camaraConcatenado = $camaraConcatenado + '</label></div>';
-                        $camaraConcatenado = $camaraConcatenado + '<div class="col-6"> <input type="text" class="form-control" name="camara_obs_' + planta.id + '" id="camara_obs_' + planta.id + '" placeholder="observaciones"></div>';
+                        $camaraConcatenado = $camaraConcatenado + '<div class="col-6"> <input type="text" class="form-control" name="camara_obs_' + $cantidadcamaras + '" id="camara_obs_' + $cantidadcamaras + '" placeholder="observaciones"></div>';
                         $camaraConcatenado = $camaraConcatenado + '</div>';
                         $plantaCamarasSelect.append($camaraConcatenado);
-                        $cantidadcamaras ++;
+                        
                 });
                 document.getElementById('camarastotales').value = $cantidadcamaras;
             },

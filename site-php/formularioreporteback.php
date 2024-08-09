@@ -61,11 +61,12 @@
                             $idInsertado = $conn->lastInsertId();
                             
                             for ($i=1; $i <= $camarastotales; $i++) { 
-                                
+                                $idcamaras_value = "";
                                 $idcamaras_ = "";
                                 $check_ = '0';
                                 $camara_obs_ = "";
                                 # code...
+
                                 isset($_POST['idcamaras_'.$i]) ? $idcamaras_ = trim($_POST['idcamaras_'.$i]) : $idcamaras_ = 0;
                                 //isset($_POST['checkbox_'.$i]) ? $check_ = trim($_POST['checkbox_'.$i]) : $check_ = 0;
                                 $check_ = (isset($_POST['checkbox_'.$i])) ? '1' : '0';
