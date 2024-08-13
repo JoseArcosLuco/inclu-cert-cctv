@@ -188,13 +188,13 @@ $clientes = Clientes::get_all_clients();
                         <div class="col-lg-4 connectedSortable">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h3 class="card-title">Gráfico Donut</h3>
+                                    <h3 class="card-title">Gráfico De Lineas</h3>
                                     <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!--begin::Row-->
                                     <div class="row">
                                         <div class="col-12">
-                                            <div id="donut-chart"></div>
+                                            <div id="chart-line"></div>
                                         </div> <!-- /.col -->
                                     </div> <!--end::Row-->
                                 </div> <!-- /.card-body -->
@@ -203,13 +203,13 @@ $clientes = Clientes::get_all_clients();
                         <div class="col-lg-4 connectedSortable">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h3 class="card-title">Gráfico De Calor</h3>
+                                    <h3 class="card-title">Gráfico De Barra</h3>
                                     <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!--begin::Row-->
                                     <div class="row">
                                         <div class="col-12">
-                                            <div id="heat-chart"></div>
+                                            <div id="chart-bar"></div>
                                         </div> <!-- /.col -->
                                     </div> <!--end::Row-->
                                 </div> <!-- /.card-body -->
@@ -478,6 +478,11 @@ $clientes = Clientes::get_all_clients();
             tooltip: {
                 x: {
                     format: "MMMM yyyy",
+                },
+                y: {
+                    formatter: function(val) {
+                        return val + " eventos"
+                    }
                 }
             },
         };
@@ -519,180 +524,110 @@ $clientes = Clientes::get_all_clients();
         );
         pie_chart.render();
 
-        //DONUT CHART
+        //BAR CHART
 
-        const donut_chart_options = {
-            series: [900, 500, 400, 600, 300, 100],
+        var fechasUnicas = ['2024-08-01', '2024-08-02', '2024-08-03', '2024-08-04', '2024-08-05'];
+        var seriesRobos = [3, 4, 2, 5, 6];
+        var seriesInternet = [1, 2, 3, 4, 5];
+        var seriesEnergia = [2, 1, 4, 3, 2];
+
+        var optionsBar = {
             chart: {
-                type: "donut",
-            },
-            labels: ["Cliente 1", "Cliente 2", "Cliente 3", "Cliente 4", "Cliente 5", "Cliente 6"],
-            dataLabels: {
-                style: {
-                    colors: ["#fff"],
-                }
-            },
-            theme: {
-                palette: 'palette4'
-            },
-            legend: {
-                position: 'bottom',
-                labels: {
-                    colors: ['#fff', '#222936'],
-                },
-                fontSize: '18px'
-            }
-        };
-
-        const donut_chart = new ApexCharts(
-            document.querySelector("#donut-chart"),
-            donut_chart_options,
-        );
-        donut_chart.render();
-
-        //HEAT CHART
-
-        const heat_chart_options = {
-            chart: {
-                type: 'heatmap',
-                zoom: {
-                    enabled: true
-                }
-            },
-            theme: {
-                palette: 'palette4'
-            },
-            legend: {
-                position: 'bottom',
-                labels: {
-                    colors: ['#fff', '#222936'],
-                },
-                fontSize: '18px'
+                type: 'bar',
+                stacked: true,
+                height: 350
             },
             series: [{
-                    name: "Series 1",
-                    data: [{
-                        x: 'W1',
-                        y: 0
-                    }, {
-                        x: 'W2',
-                        y: 29
-                    }, {
-                        x: 'W3',
-                        y: 13
-                    }, {
-                        x: 'W4',
-                        y: 32
-                    }]
+                    name: 'Robos',
+                    data: seriesRobos
                 },
                 {
-                    name: "Series 2",
-                    data: [{
-                        x: 'W1',
-                        y: 43
-                    }, {
-                        x: 'W2',
-                        y: 43
-                    }, {
-                        x: 'W3',
-                        y: 43
-                    }, {
-                        x: 'W4',
-                        y: 43
-                    }]
+                    name: 'Cortes Internet',
+                    data: seriesInternet
                 },
                 {
-                    name: "Series 3",
-                    data: [{
-                        x: 'W1',
-                        y: 32
-                    }, {
-                        x: 'W2',
-                        y: 12
-                    }, {
-                        x: 'W3',
-                        y: 4
-                    }, {
-                        x: 'W4',
-                        y: 50
-                    }]
-                },
-                {
-                    name: "Series 4",
-                    data: [{
-                        x: 'W1',
-                        y: 32
-                    }, {
-                        x: 'W2',
-                        y: 54
-                    }, {
-                        x: 'W3',
-                        y: 9
-                    }, {
-                        x: 'W4',
-                        y: 2
-                    }]
-                },
+                    name: 'Cortes Energía',
+                    data: seriesEnergia
+                }
             ],
-            yaxis: {
-                show: true,
-                labels: {
-                    show: true,
-                    style: {
-                        colors: ['#fff', '#222936'],
-                        fontSize: '14px'
-                    }
-                },
-            },
             xaxis: {
-                show: true,
+                categories: fechasUnicas
+            },
+            yaxis: {
+                title: {
+                    text: 'Eventos',
+                }
+            },
+            legend: {
+                position: 'bottom',
                 labels: {
-                    show: true,
-                    style: {
-                        colors: ['#fff', '#222936'],
-                        fontSize: '14px'
-                    }
+                    colors: ['#fff', '#222936'],
                 },
+                fontSize: '18px'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " eventos"
+                    }
+                }
             },
             plotOptions: {
-                heatmap: {
-                    radius: 3,
-                    colorScale: {
-                        ranges: [{
-                                from: -30,
-                                to: 5,
-                                color: '#00A100',
-                                name: 'Bajo',
-                            },
-                            {
-                                from: 6,
-                                to: 20,
-                                color: '#128FD9',
-                                name: 'Medio',
-                            },
-                            {
-                                from: 21,
-                                to: 45,
-                                color: '#FFB200',
-                                name: 'Alto',
-                            },
-                            {
-                                from: 46,
-                                to: 100,
-                                color: '#db4444',
-                                name: 'Extremo',
-                            }
-                        ]
+                bar: {
+                    horizontal: false
+                }
+            }
+        };
+
+        var chartBar = new ApexCharts(document.querySelector("#chart-bar"), optionsBar);
+        chartBar.render();
+
+        //LINE CHART
+
+        var optionsLine = {
+            chart: {
+                type: 'line',
+                height: 350
+            },
+            series: [{
+                    name: 'Robos',
+                    data: seriesRobos
+                },
+                {
+                    name: 'Cortes Internet',
+                    data: seriesInternet
+                },
+                {
+                    name: 'Cortes Energía',
+                    data: seriesEnergia
+                }
+            ],
+            xaxis: {
+                categories: fechasUnicas,
+            },
+            yaxis: {
+                title: {
+                    text: 'Eventos'
+                }
+            },
+            legend: {
+                position: 'bottom',
+                labels: {
+                    colors: ['#fff', '#222936'],
+                },
+                fontSize: '18px'
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + " eventos";
                     }
                 }
             }
         };
 
-        const heat_chart = new ApexCharts(
-            document.querySelector("#heat-chart"),
-            heat_chart_options,
-        );
-        heat_chart.render();
+        var chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
+        chartLine.render();
     </script> <!-- jsvectormap -->
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
@@ -741,10 +676,7 @@ $clientes = Clientes::get_all_clients();
                         series: newData,
                         labels: ["Robos", "Cortes Internet", "Cortes Energía"]
                     });
-                    donut_chart.updateOptions({
-                        series: newData,
-                        labels: ["Robos", "Cortes Internet", "Cortes Energía"]
-                    });
+
                     sales_chart.updateOptions({
                         series: [{
                             name: ['Robos', 'Cortes Internet', 'Cortes Energía'],
@@ -755,12 +687,10 @@ $clientes = Clientes::get_all_clients();
             })
         });
 
-        $('#fecha_inicio, #fecha_fin').on('change', function() {
+        $('#id_planta, #fecha_inicio, #fecha_fin').on('change', function() {
             let id_planta = $('#id_planta').val();
             let fecha_inicio = $('#fecha_inicio').val() + ' 00:00:00';
             let fecha_fin = $('#fecha_fin').val() + ' 23:59:59';
-
-            console.log('fecha inicio:', fecha_inicio, 'fecha fin:', fecha_fin);
 
             $.ajax({
                 url: "./ajax_handler/dashboard.php",
@@ -773,18 +703,98 @@ $clientes = Clientes::get_all_clients();
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data)
-                    let robos = data[0].robos;
-                    let internet = data[0].cortes_internet;
-                    let energia = data[0].cortes_energia;
-                    let newData = [robos, internet, energia];
+                    let fechasRobos = data[0].fechas_robos ? data[0].fechas_robos.split(',') : [];
+                    let fechasCortesInternet = data[0].fechas_internet ? data[0].fechas_internet.split(',') : [];
+                    let fechasCortesEnergia = data[0].fechas_energia ? data[0].fechas_energia.split(',') : [];
 
-                    pie_chart.updateOptions({
-                        series: newData,
-                        labels: ["Robos", "Cortes Internet", "Cortes Energía"]
+                    let contarPorFecha = function(fechas) {
+                        let contador = {};
+                        fechas.forEach(function(fecha) {
+                            let fechaSimple = fecha.slice(0, 10);
+                            if (contador[fechaSimple]) {
+                                contador[fechaSimple]++;
+                            } else {
+                                contador[fechaSimple] = 1;
+                            }
+                        });
+                        return contador;
+                    };
+
+                    let robosPorFecha = contarPorFecha(fechasRobos);
+                    let internetPorFecha = contarPorFecha(fechasCortesInternet);
+                    let energiaPorFecha = contarPorFecha(fechasCortesEnergia);
+
+                    let fechasUnicas = [...new Set([...Object.keys(robosPorFecha), ...Object.keys(internetPorFecha), ...Object.keys(energiaPorFecha)])].sort();
+
+                    let seriesRobos = fechasUnicas.map(fecha => robosPorFecha[fecha] || 0);
+                    let seriesInternet = fechasUnicas.map(fecha => internetPorFecha[fecha] || 0);
+                    let seriesEnergia = fechasUnicas.map(fecha => energiaPorFecha[fecha] || 0);
+
+                    sales_chart.updateOptions({
+                        series: [{
+                                name: 'Robos',
+                                data: seriesRobos
+                            },
+                            {
+                                name: 'Cortes Internet',
+                                data: seriesInternet
+                            },
+                            {
+                                name: 'Cortes Energía',
+                                data: seriesEnergia
+                            }
+                        ],
+                        xaxis: {
+                            categories: fechasUnicas
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Eventos'
+                            },
+                            min: 0,
+                            max: Math.max(...seriesRobos, ...seriesInternet, ...seriesEnergia)
+                        }
+                    });
+
+                    chartBar.updateOptions({
+                        series: [{
+                                name: 'Robos',
+                                data: seriesRobos
+                            },
+                            {
+                                name: 'Cortes Internet',
+                                data: seriesInternet
+                            },
+                            {
+                                name: 'Cortes Energía',
+                                data: seriesEnergia
+                            }
+                        ],
+                        xaxis: {
+                            categories: fechasUnicas
+                        }
+                    });
+
+                    chartLine.updateOptions({
+                        series: [{
+                                name: 'Robos',
+                                data: seriesRobos
+                            },
+                            {
+                                name: 'Cortes Internet',
+                                data: seriesInternet
+                            },
+                            {
+                                name: 'Cortes Energía',
+                                data: seriesEnergia
+                            }
+                        ],
+                        xaxis: {
+                            categories: fechasUnicas
+                        }
                     });
                 }
-            })
+            });
         });
     </script>
     <script>
