@@ -2,16 +2,17 @@
     require_once('Database.class.php');
 
     class Robos{
-        public static function create_robo($id_planta, $id_cliente, $fecha, $observacion,$estado, $id_usuario){
+        public static function create_robo($id_planta, $id_cliente, $fecha,$fecha_fin, $observacion,$estado, $id_usuario){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_reporte_robo (id_planta,id_cliente,fecha,observacion,estado, id_usuario)
-                                    VALUES(:id_planta ,:id_cliente, :fecha , :observacion, :estado, :id_usuario)');
+            $stmt = $conn->prepare('INSERT INTO cctv_reporte_robo (id_planta,id_cliente,fecha,fecha_fin,observacion,estado, id_usuario)
+                                    VALUES(:id_planta ,:id_cliente, :fecha , :fecha_fin,:observacion, :estado, :id_usuario)');
 
             $stmt->bindParam(':id_usuario',$id_usuario);
             $stmt->bindParam(':id_planta',$id_planta);
             $stmt->bindParam(':id_cliente',$id_cliente);
             $stmt->bindParam(':fecha',$fecha);
+            $stmt->bindParam(':fecha_fin',$fecha_fin);
             $stmt->bindParam(':observacion',$observacion);
             $stmt->bindParam(':estado',$estado);
             if ($stmt->execute()) {
@@ -71,12 +72,13 @@
             }
         }
 
-        public static function update_robos($id, $fecha, $observacion,$estado){
+        public static function update_robos($id, $fecha,$fecha_fin, $observacion,$estado){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_reporte_robo SET fecha=:fecha, observacion=:observacion, estado=:estado WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_reporte_robo SET fecha=:fecha,fecha_fin=:fecha_fin, observacion=:observacion, estado=:estado WHERE id=:id');
             $stmt->bindParam(':fecha',$fecha);
+            $stmt->bindParam(':fecha_fin',$fecha_fin);
             $stmt->bindParam(':observacion',$observacion);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
