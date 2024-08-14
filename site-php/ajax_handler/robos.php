@@ -12,10 +12,11 @@ if (isset($_POST)) {
             $idCliente = $_POST['id_cliente'];
             $idUsuario = $_POST['id_usuario'];
             $fecha = $_POST['fecha'] . ' ' . $_POST['hora'];
+            $fecha_fin = isset($_POST['fecha_fin']) ? $_POST['fecha_fin'] . ' ' . $_POST['hora_fin'] : null;
             $observacion = $_POST['observacion'];
             $estado = $_POST['estado'];
 
-            $response = Robos::create_robo($idPlanta, $idCliente,$fecha, $observacion, $estado, $idUsuario);
+            $response = Robos::create_robo($idPlanta, $idCliente,$fecha, $fecha_fin, $observacion, $estado, $idUsuario);
             
             if ($response['status']) {
                 $database = new Database();
@@ -44,10 +45,11 @@ if (isset($_POST)) {
         case 'edit_reporte':
             $id = $_POST['id'];
             $fecha = $_POST['fecha'] . ' ' . $_POST['hora'];
+            $fecha_fin = isset($_POST['fecha_fin']) ? $_POST['fecha_fin'] . ' ' . $_POST['hora_fin'] : null;
             $observacion = $_POST['observacion'];
             $estado = $_POST['estado'];
 
-            $response = Robos::update_robos($id,$fecha, $observacion, $estado);
+            $response = Robos::update_robos($id,$fecha, $fecha_fin,$observacion, $estado);
             
             if ($response['status']) {
                 $database = new Database();

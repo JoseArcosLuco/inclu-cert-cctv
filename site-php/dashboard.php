@@ -72,11 +72,11 @@ $clientes = Clientes::get_all_clients();
                 </div>
                 <div class="col-sm-2">
                     <p class="m-0">Fecha inicio:</p>
-                    <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" required disabled>
+                    <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" required>
                 </div>
                 <div class="col-sm-2">
                     <p class="m-0">Fecha fin:</p>
-                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" required disabled>
+                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" required>
                 </div>
             </div>
 
@@ -335,6 +335,22 @@ $clientes = Clientes::get_all_clients();
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Atención!</h5>
+                                </div>
+                                <div class="modal-body col-12">
+                                    <p class="bg-danger text-white text-center p-2 rounded mb-1">La fecha seleccionada no es válida</p>
+                                    <p class="text-center p-2 m-0">Por favor, seleccione una fecha valida</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div> <!--end::Container-->
             </div> <!--end::App Content-->
         </main> <!--end::App Main-->
@@ -389,42 +405,76 @@ $clientes = Clientes::get_all_clients();
         });
     </script> <!-- apexcharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script> <!-- ChartJS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
     <script>
-        // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-        // IT'S ALL JUST JUNK FOR DEMO
-        // ++++++++++++++++++++++++++++++++++++++++++
+        let fechaActual = moment();
+        let fechaInicio = fechaActual.startOf('month').format('YYYY-MM-DD');
+        let fechaFin = fechaActual.endOf('month').format('YYYY-MM-DD');
+
+        $('#fecha_inicio').val(fechaInicio);
+        $('#fecha_fin').val(fechaFin);
+
+        let diasEnElMes = moment().daysInMonth();
+        let dia1 = 1;
+        let dia2 = Math.floor(diasEnElMes / 5) + 1;
+        let dia3 = Math.floor(diasEnElMes / 5) * 2 + 1;
+        let dia4 = Math.floor(diasEnElMes / 5) * 3 + 1;
+        let dia5 = Math.floor(diasEnElMes / 5) * 4 + 1;
+        let dia6 = diasEnElMes;
+
+        let fecha1 = fechaActual.date(dia1).format('YYYY-MM-DD');
+        let fecha2 = fechaActual.date(dia2).format('YYYY-MM-DD');
+        let fecha3 = fechaActual.date(dia3).format('YYYY-MM-DD');
+        let fecha4 = fechaActual.date(dia4).format('YYYY-MM-DD');
+        let fecha5 = fechaActual.date(dia5).format('YYYY-MM-DD');
+        let fecha6 = fechaActual.date(dia6).format('YYYY-MM-DD');
+
+        let fechasCategorias = [fecha1, fecha2, fecha3, fecha4, fecha5, fecha6];
+        let tema = '';
+        let color = '';
+
+        const storedTheme = localStorage.getItem('theme');
+
+        if (storedTheme === 'light'){
+            tema = 'light';
+            color = '#595959';
+        } else {
+            tema = 'dark';
+            color = '#d7d7d7';
+        }
 
         const sales_chart_options = {
             series: [{
                     name: "Cliente 1",
-                    data: [28, 48, 40, 19, 1, 27, 9],
+                    data: [28, 48, 40, 19, 1, 27],
                 },
                 {
                     name: "Cliente 2",
-                    data: [6, 5, 8, 8, 5, 5, 40],
+                    data: [6, 5, 8, 8, 5, 5],
                 },
                 {
                     name: "Cliente 3",
-                    data: [9, 2, 4, 6, 5, 4, 2],
+                    data: [9, 2, 4, 6, 5, 4],
                 },
                 {
                     name: "Cliente 4",
-                    data: [7, 6, 45, 3, 23, 6, 7],
+                    data: [7, 6, 45, 3, 23, 6],
                 },
                 {
                     name: "Cliente 5",
-                    data: [8, 48, 12, 3, 45, 9, 35],
+                    data: [8, 48, 12, 3, 45, 9],
                 },
                 {
                     name: "Cliente 6",
-                    data: [9, 7, 6, 48, 8, 9, 7],
+                    data: [9, 7, 6, 48, 8, 9],
                 },
             ],
             chart: {
-                height: 300,
+                height: 305,
                 type: "area",
                 toolbar: {
-                    show: false,
+                    show: true,
                 },
             },
             legend: {
@@ -433,13 +483,14 @@ $clientes = Clientes::get_all_clients();
                 labels: {
                     colors: ["#fff", "#222936"],
                 },
-                fontSize: '18px'
+                fontSize: '18px',
+                offsetY: 27,
             },
             theme: {
                 palette: 'palette4'
             },
             dataLabels: {
-                enabled: false,
+                enabled: true,
             },
             stroke: {
                 curve: "smooth",
@@ -448,20 +499,12 @@ $clientes = Clientes::get_all_clients();
                 labels: {
                     show: true,
                     style: {
-                        colors: ['#fff', '#222936'],
+                        colors: color,
                         fontSize: '14px'
                     }
                 },
                 type: "datetime",
-                categories: [
-                    "2024-01-01",
-                    "2024-02-01",
-                    "2024-03-01",
-                    "2024-04-01",
-                    "2024-05-01",
-                    "2024-06-01",
-                    "2024-07-01",
-                ],
+                categories: fechasCategorias,
             },
             yaxis: {
                 show: true,
@@ -470,12 +513,13 @@ $clientes = Clientes::get_all_clients();
                 labels: {
                     show: true,
                     style: {
-                        colors: ['#fff', '#222936'],
+                        colors: color,
                         fontSize: '14px'
                     }
                 },
             },
             tooltip: {
+                theme: tema,
                 x: {
                     format: "MMMM yyyy",
                 },
@@ -499,22 +543,30 @@ $clientes = Clientes::get_all_clients();
             series: [44, 55, 41],
             chart: {
                 type: "pie",
+                height: 397,
+                toolbar: {
+                    show: true,
+                }
             },
             labels: ["Cliente 1", "Cliente 2", "Cliente 3"],
             dataLabels: {
                 style: {
-                    colors: ["#fff"],
+                    colors: ['#fff'],
                 }
             },
             theme: {
-                palette: 'palette4'
+                palette: 'palette4',
+            },
+            tooltip: {
+                theme: tema
             },
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ['#fff', '#222936'],
+                    colors: ["#fff", "#222936"],
                 },
-                fontSize: '18px'
+                fontSize: '18px',
+                offsetY: 12,
             }
         };
 
@@ -526,7 +578,6 @@ $clientes = Clientes::get_all_clients();
 
         //BAR CHART
 
-        var fechasUnicas = ['2024-08-01', '2024-08-02', '2024-08-03', '2024-08-04', '2024-08-05'];
         var seriesRobos = [3, 4, 2, 5, 6];
         var seriesInternet = [1, 2, 3, 4, 5];
         var seriesEnergia = [2, 1, 4, 3, 2];
@@ -551,21 +602,36 @@ $clientes = Clientes::get_all_clients();
                 }
             ],
             xaxis: {
-                categories: fechasUnicas
+                categories: fechasCategorias,
+                labels: {
+                    style:{
+                        colors: color,
+                        fontSize: '12px'
+                    }
+                }
             },
             yaxis: {
                 title: {
                     text: 'Eventos',
+                },
+                labels: {
+                    style:{
+                        colors: color,
+                        fontSize: '12px'
+                    }
                 }
             },
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ['#fff', '#222936'],
+                    colors: ["#fff", "#222936"],
+                    padding: 20,
                 },
-                fontSize: '18px'
+                fontSize: '18px',
+                offsetY: 25,
             },
             tooltip: {
+                theme: tema,
                 y: {
                     formatter: function(val) {
                         return val + " eventos"
@@ -603,11 +669,23 @@ $clientes = Clientes::get_all_clients();
                 }
             ],
             xaxis: {
-                categories: fechasUnicas,
+                categories: fechasCategorias,
+                labels: {
+                    style: {
+                        colors: color,
+                        fontSize: '12px'
+                    }
+                }
             },
             yaxis: {
                 title: {
                     text: 'Eventos'
+                },
+                labels: {
+                    style: {
+                        colors: color,
+                        fontSize: '12px'
+                    }
                 }
             },
             legend: {
@@ -615,9 +693,11 @@ $clientes = Clientes::get_all_clients();
                 labels: {
                     colors: ['#fff', '#222936'],
                 },
-                fontSize: '18px'
+                fontSize: '18px',
+                offsetY: 25,
             },
             tooltip: {
+                theme: tema,
                 y: {
                     formatter: function(val) {
                         return val + " eventos";
@@ -631,7 +711,6 @@ $clientes = Clientes::get_all_clients();
     </script> <!-- jsvectormap -->
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
         $('#id_cliente').change(function() {
             var id = $(this).val();
@@ -656,7 +735,6 @@ $clientes = Clientes::get_all_clients();
         })
         $('#id_planta').on('change', function() {
             let id_planta = $('#id_planta').val();
-            $('#fecha_inicio, #fecha_fin').prop('disabled', false);
 
             $.ajax({
                 url: "./ajax_handler/dashboard.php",
@@ -691,6 +769,15 @@ $clientes = Clientes::get_all_clients();
             let id_planta = $('#id_planta').val();
             let fecha_inicio = $('#fecha_inicio').val() + ' 00:00:00';
             let fecha_fin = $('#fecha_fin').val() + ' 23:59:59';
+
+            let fechaInicioVal = moment($('#fecha_inicio').val());
+            let fechaFinVal = moment($('#fecha_fin').val());
+
+            if (fechaFinVal.isBefore(fechaInicioVal)) {
+                $('#warningModal').modal('show');
+                $('#fecha_inicio').val(fechaInicio);
+                $('#fecha_fin').val(fechaFin);
+            }
 
             $.ajax({
                 url: "./ajax_handler/dashboard.php",
