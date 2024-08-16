@@ -23,6 +23,8 @@ $menuActivePeriodico = '';
 $menuActiveCorteEnergia = '';
 $menuActiveRobo = '';
 $menuActiveCorteInternet = '';
+$menuActiveNovedades ='';
+
 $form = '';
 
 if (isset($_GET['form'])) {
@@ -83,6 +85,10 @@ if (isset($_GET['form'])) {
         case "corte_internet":
             $menuActiveCorteInternet = 'active';
             break;
+        case "novedades":
+                $menuActiveNovedades = 'active';
+                break;
+            
     }
 }
 
@@ -131,6 +137,12 @@ if (isset($_GET['form'])) {
                                     <a href="<?php echo $base_url?>/formularios.php?form=corte_internet&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteInternet;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Corte Internet</p>
+                                    </a> 
+                                </li>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=novedades&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveNovedades;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Reportes Novedades</p>
                                     </a> 
                                 </li>
                             </ul>
