@@ -173,7 +173,7 @@ $clientes = Clientes::get_all_clients();
                         <div class="col-lg-4 connectedSortable">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h3 class="card-title">Gráfico de Torta</h3>
+                                    <h3 class="card-title" id="grafico_torta">Gráfico de Torta</h3>
                                     <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!--begin::Row-->
@@ -444,6 +444,33 @@ $clientes = Clientes::get_all_clients();
             color = '#d7d7d7';
         }
 
+        let clientes = [];
+        let total = [];
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/dashboard.php",
+            data: {
+                action: 'updateChart'
+            },
+            success: function(data) {
+                $('#grafico_torta').text('Plantas por Cliente');
+                data.forEach(function(cliente) {
+                    clientes.push(cliente.nombre)
+                    total.push(cliente.total_plantas)
+                });
+
+                pie_chart.resetSeries();
+
+                pie_chart.updateOptions({
+                    labels: clientes,
+                    series: total
+                })
+            },
+            error: function(data) {
+                console.log(data)
+            }
+        });
+
         const sales_chart_options = {
             series: [{
                     name: "Cliente 1",
@@ -540,7 +567,7 @@ $clientes = Clientes::get_all_clients();
         //PIE CHART
 
         const pie_chart_options = {
-            series: [44, 55, 41],
+            series: [43],
             chart: {
                 type: "pie",
                 height: 397,
@@ -548,7 +575,7 @@ $clientes = Clientes::get_all_clients();
                     show: true,
                 }
             },
-            labels: ["Cliente 1", "Cliente 2", "Cliente 3"],
+            labels: ['cliente'],
             dataLabels: {
                 style: {
                     colors: ['#fff'],
@@ -713,23 +740,37 @@ $clientes = Clientes::get_all_clients();
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
     <script>
         $('#id_cliente').change(function() {
-            var id = $(this).val();
+            let id = $(this).val();
             $('#id_planta').prop('disabled', false);
 
             $.ajax({
                 type: "POST",
-                url: "./ajax_handler/cortesEnergia.php",
+                url: "./ajax_handler/dashboard.php",
                 data: {
-                    action: 'get_plantas',
+                    action: 'updateChartClientes',
                     id: id
                 },
                 datatype: "json",
                 success: function(data) {
+                    let reportes = [];
+                    let plantas = [];
                     $('#id_planta').empty();
                     $('#id_planta').append('<option value="">Seleccionar</option>');
                     data.forEach(function(planta) {
                         $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                        plantas.push(planta.nombre)
+                        reportes.push(planta.reportes)
                     });
+
+                    $('#grafico_torta').text('Reportes por Planta');
+                    
+                    pie_chart.updateOptions({
+                        labels: plantas,
+                        series: reportes
+                    })
+                },
+                error: function(data) {
+                    console.log(data);
                 }
             })
         })
