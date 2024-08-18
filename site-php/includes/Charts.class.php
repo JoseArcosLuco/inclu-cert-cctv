@@ -4,6 +4,63 @@ require_once('Database.class.php');
 class ChartData
 {
 
+    public static function obtenerChartData()
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+        $sql = "
+            SELECT cliente.nombre as nombre,
+            COUNT(planta.id) as total_plantas
+            FROM cctv_clientes cliente
+            LEFT JOIN cctv_plantas planta ON cliente.id = planta.id_clientes
+            GROUP BY cliente.id;
+        ";
+        $stmt = $conn->prepare($sql);
+        if ($stmt->execute()) {
+            return $stmt->fetchAll();
+        } else {
+            return [];
+        }
+    }
+
+    public static function obtenerDatosClientes($id)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+        $sql = "
+            SELECT 
+                p.id as id, 
+                p.nombre as nombre,
+                COALESCE(r.robo, 0) + COALESCE(i.internet, 0) + COALESCE(e.energia, 0) as reportes
+            FROM 
+            cctv_plantas p
+            LEFT JOIN (
+                SELECT id_planta, COUNT(*) as robo
+                FROM cctv_reporte_robo
+                GROUP BY id_planta
+            ) r ON p.id = r.id_planta
+            LEFT JOIN (
+                SELECT id_planta, COUNT(*) as internet
+                FROM cctv_reporte_corte_internet
+                GROUP BY id_planta
+            ) i ON p.id = i.id_planta
+            LEFT JOIN (
+                SELECT id_planta, COUNT(*) as energia
+                FROM cctv_reporte_corte_energia
+                GROUP BY id_planta
+            ) e ON p.id = e.id_planta
+            WHERE 
+            p.id_clientes = :id
+            ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        if ($stmt->execute()) {
+            return $stmt->fetchAll();
+        } else {
+            return [];
+        }
+    }
+
     public static function obtenerDatosWithoutFecha($id_planta)
     {
         $database = new Database();

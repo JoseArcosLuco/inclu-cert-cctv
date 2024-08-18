@@ -7,9 +7,14 @@ if (isset($_POST)) {
 
     switch ($action) {
 
-        case 'get_plantas':
+        case 'updateChart':
+            $response = ChartData::obtenerChartData();
+            echo json_encode($response);
+            break;
+
+        case 'updateChartClientes':
             $id = $_POST['id'];
-            $response = CortesEnergia::get_all_plantas($id);
+            $response = ChartData::obtenerDatosClientes($id);
             echo json_encode($response);
             break;
 
