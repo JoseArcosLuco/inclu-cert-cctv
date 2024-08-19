@@ -50,6 +50,9 @@ switch( $formAccion ) {
     case "corte_internet":
         $tituloFormulario = 'Registro de Cortes de Internet';
         break;
+    case "novedades":
+        $tituloFormulario = 'Registro de Novedades';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;

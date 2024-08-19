@@ -86,8 +86,8 @@ if (isset($_GET['form'])) {
             $menuActiveCorteInternet = 'active';
             break;
         case "novedades":
-                $menuActiveNovedades = 'active';
-                break;
+            $menuActiveNovedades = 'active';
+            break;
             
     }
 }
@@ -99,7 +99,7 @@ if (isset($_GET['form'])) {
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''|| $menuActiveRobo != ''|| $menuActiveCorteEnergia != ''|| $menuActiveCorteInternet != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
+                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''|| $menuActiveRobo != ''|| $menuActiveCorteEnergia != ''|| $menuActiveCorteInternet != '' || $menuActiveNovedades != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Dashboard
                                     <i class="nav-arrow bi bi-chevron-right"></i>
