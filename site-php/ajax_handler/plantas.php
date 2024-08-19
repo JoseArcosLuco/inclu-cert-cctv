@@ -48,6 +48,17 @@ if (isset($_POST)) {
             echo json_encode($response);
             break;
 
+        case 'get_plantas_short_data':
+            $response = Plantas::get_all_plantas_short_data();
+            echo json_encode($response);
+            break;
+
+        case 'get_plantas_by_id':
+            $id = $_POST['id'];
+            $response = Plantas::get_plantas_by_id($id);
+            echo json_encode($response);
+            break;
+
         case 'edit_planta':
             $id = $_POST['id'];
             $idComuna = $_POST['id_comuna'];
