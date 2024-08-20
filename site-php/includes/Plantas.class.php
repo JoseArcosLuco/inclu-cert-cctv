@@ -2,11 +2,12 @@
     require_once('Database.class.php');
 
     class Plantas{
-        public static function create_plantas($idcomuna,$idcomisarias,$idtipoplanta,$idclientes,$nombre,$grupo,$ubicacion,$encargadocontacto,$encargadoemail,$encargadotelefono,$mapa,$estado){
+        public static function create_plantas($idcomuna,$idcomisarias,$idtipoplanta,$idclientes,$nombre,$grupo,$ubicacion,$encargadocontacto,$encargadoemail,$encargadotelefono,$mapa,$estado, $marcaDispositivos, 
+        $modelosDispositivos, $cantidadCamaras, $modeloCamaras, $codificacionCamaras, $analiticas, $sensores, $tamanoGrabacion, $diasGrabacion, $alarmaVoceo, $sirenas, $internet, $proveedorInternet, $p2p, $autoregistros){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_plantas (id_comuna,id_comisarias,id_tipo_planta,id_clientes,nombre,grupo,ubicacion,encargado_contacto,encargado_email,encargado_telefono,mapa,estado)
-                VALUES(:idcomuna,:idcomisarias,:idtipoplanta,:id_clientes,:nombre,:grupo,:ubicacion,:encargadocontacto,:encargadoemail,:encargadotelefono,:mapa,:estado)');
+            $stmt = $conn->prepare('INSERT INTO cctv_plantas (id_comuna,id_comisarias,id_tipo_planta,id_clientes,nombre,grupo,ubicacion,encargado_contacto,encargado_email,encargado_telefono,mapa,estado, marca_dispositivos, modelos_dispositivos, cantidad_camaras, tipo_modelo_camaras, codificacion_camaras, analiticas, sensores, tamano_grabacion, dias_grabacion, alarma_voceo, sirenas, internet, proveedor_internet, p2p, autoregistro)
+                VALUES(:idcomuna,:idcomisarias,:idtipoplanta,:id_clientes,:nombre,:grupo,:ubicacion,:encargadocontacto,:encargadoemail,:encargadotelefono,:mapa,:estado, :marcaDispositivos, :modelosDispositivos, :cantidadCamaras, :modeloCamaras, :codificacionCamaras, :analiticas, :sensores, :tamanoGrabacion, :diasGrabacion, :alarmaVoceo, :sirenas, :internet, :proveedorInternet, :p2p, :autoregistros)');
             
             $stmt->bindParam(':idcomuna',$idcomuna);
             $stmt->bindParam(':idcomisarias',$idcomisarias);
@@ -20,6 +21,21 @@
             $stmt->bindParam(':encargadotelefono',$encargadotelefono);
             $stmt->bindParam(':mapa',$mapa);
             $stmt->bindParam(':estado',$estado);
+            $stmt->bindParam(':marcaDispositivos',$marcaDispositivos);
+            $stmt->bindParam(':modelosDispositivos',$modelosDispositivos);
+            $stmt->bindParam(':cantidadCamaras',$cantidadCamaras);
+            $stmt->bindParam(':modeloCamaras',$modeloCamaras);
+            $stmt->bindParam(':codificacionCamaras',$codificacionCamaras);
+            $stmt->bindParam(':analiticas',$analiticas);
+            $stmt->bindParam(':sensores',$sensores);
+            $stmt->bindParam(':tamanoGrabacion',$tamanoGrabacion);
+            $stmt->bindParam(':diasGrabacion',$diasGrabacion);
+            $stmt->bindParam(':alarmaVoceo',$alarmaVoceo);
+            $stmt->bindParam(':sirenas',$sirenas);
+            $stmt->bindParam(':internet',$internet);
+            $stmt->bindParam(':proveedorInternet',$proveedorInternet);
+            $stmt->bindParam(':p2p',$p2p);
+            $stmt->bindParam(':autoregistros',$autoregistros);
 
             if ($stmt->execute()) {
                 return [

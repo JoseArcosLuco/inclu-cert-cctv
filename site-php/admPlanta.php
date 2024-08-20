@@ -75,38 +75,38 @@ $clientes = Clientes::get_all_clients();
                     </div>
                     <form id="formPlantas" name="formPlantas">
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Nombre:
-                                            <input type="text" class="form-control" id="nombre" required>
-                                        </label>
+                            <div id="formPagina1">
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Nombre:
+                                                <input type="text" class="form-control" id="nombre" required>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Cliente:
+                                                <select class="form-select" name="id_clientes" id="id_clientes" required>
+                                                    <?php foreach ($clientes as $cliente) : ?>
+                                                        <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Cliente:
-                                            <select class="form-select" name="id_clientes" id="id_clientes" required>
-                                                <?php foreach ($clientes as $cliente) : ?>
-                                                    <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Dirección:
+                                                <input type="text" class="form-control" id="direccion" required>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Dirección:
-                                            <input type="text" class="form-control" id="direccion" required>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Ciudad:
                                                 <select class="form-select" name="id_ciudad" id="id_ciudad" required>
@@ -117,94 +117,217 @@ $clientes = Clientes::get_all_clients();
                                             </label>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Comuna:
+                                                <select class="form-select" name="id_comuna" id="id_comuna" required>
+                                                    <option value="">Seleccione una Ciudad</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Comuna:
-                                            <select class="form-select" name="id_comuna" id="id_comuna" required>
-                                                <option value="">Seleccione una Ciudad</option>
-                                            </select>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Comisaria:
+                                                <select class="form-select" name="id_comisaria" id="id_comisaria" required>
+                                                    <?php foreach ($comisarias as $comisaria) : ?>
+                                                        <option value="<?php echo $comisaria['id'] ?>"><?php echo htmlspecialchars($comisaria['nombre']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Tipo de Planta:
+                                                <select class="form-select" name="id_tipoPlanta" id="id_tipoPlanta" required>
+                                                    <?php foreach ($tiposPlanta as $tipoPlanta) : ?>
+                                                        <option value="<?php echo $tipoPlanta['id'] ?>"><?php echo htmlspecialchars($tipoPlanta['nombre']); ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Grupo:
+                                                <input class="form-control" type="text" id="grupo" name="grupo" required>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Email Encargado:
+                                                <input class="form-control" type="email" id="emailEncargado" name="emailEncargado" required>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Nombre Encargado:
+                                                <input class="form-control" type="text" id="nombreEncargado" name="nombreEncargado" required>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Telefono Encargado:
+                                                <input class="form-control" type="tel" id="telEncargado" name="telEncargado" required>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Estado:
+                                                <select class="form-select" name="estado" id="estado" required>
+                                                    <option value="1">Activo</option>
+                                                    <option value="0">Inactivo</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Mapa:
+                                                <input class="form-control" type="text" id="mapa" name="mapa" required>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Comisaria:
-                                            <select class="form-select" name="id_comisaria" id="id_comisaria" required>
-                                                <?php foreach ($comisarias as $comisaria) : ?>
-                                                    <option value="<?php echo $comisaria['id'] ?>"><?php echo htmlspecialchars($comisaria['nombre']); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </label>
+                            <div hidden id="formPagina2">
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Marca Dispositivos:
+                                                <input class="form-control" type="text" id="marcaDispositivos" name="marcaDispositivos"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Modelos Dispositivos:
+                                                <input class="form-control" type="text" id="modelosDispositivos" name="modelosDispositivos"></input>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Tipo de Planta:
-                                            <select class="form-select" name="id_tipoPlanta" id="id_tipoPlanta" required>
-                                                <?php foreach ($tiposPlanta as $tipoPlanta) : ?>
-                                                    <option value="<?php echo $tipoPlanta['id'] ?>"><?php echo htmlspecialchars($tipoPlanta['nombre']); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Cantidad de Cámaras:
+                                                <input class="form-control" type="number" id="cantidadCamaras" name="cantidadCamaras"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Tipo Modelo de Cámaras:
+                                                <input class="form-control" type="text" id="modeloCamaras" name="modeloCamaras"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Codificación de Cámaras:
+                                                <input class="form-control" type="text" id="codificacionCamaras" name="codificacionCamaras"></input>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Grupo:
-                                            <input class="form-control" type="text" id="grupo" name="grupo" required>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Analíticas:
+                                                <input class="form-control" type="text" id="analiticas" name="analiticas"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Sensores:
+                                                <input class="form-control" type="text" id="sensores" name="sensores"></input>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Email Encargado:
-                                            <input class="form-control" type="email" id="emailEncargado" name="emailEncargado" required>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Tamaño Grabación:
+                                                <input class="form-control" type="text" id="tamanoGrabacion" name="tamanoGrabacion"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Dias Grabación:
+                                                <input class="form-control" type="number" id="diasGrabacion" name="diasGrabacion"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Alarma Voceo:
+                                                <input class="form-control" type="text" id="alarmaVoceo" name="alarmaVoceo"></input>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Nombre Encargado:
-                                            <input class="form-control" type="text" id="nombreEncargado" name="nombreEncargado" required>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Sirenas:
+                                                <input class="form-control" type="text" id="sirenas" name="sirenas"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Internet:
+                                                <input class="form-control" type="text" id="internet" name="internet"></input>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Proveedor Internet:
+                                                <input class="form-control" type="text" id="proveedorInternet" name="proveedorInternet"></input>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Telefono Encargado:
-                                            <input class="form-control" type="tel" id="telEncargado" name="telEncargado" required>
-                                        </label>
+                                <div class="row">
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">P2P:
+                                                <input class="form-control" type="text" id="p2p" name="p2p"></input>
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-4 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Estado:
-                                            <select class="form-select" name="estado" id="estado" required>
-                                                <option value="1">Activo</option>
-                                                <option value="0">Inactivo</option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 mb-2">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Mapa:
-                                            <input class="form-control" type="text" id="mapa" name="mapa" required>
-                                        </label>
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Autoregistro:
+                                                <input class="form-control" type="text" id="autoregistro" name="autoregistro"></input>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-primary active" id="btnForm1">1</button>
+                                <button type="button" class="btn btn-outline-primary" id="btnForm2" title="Información adicional">2</button>
+                            </div>
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
                         </div>
@@ -213,7 +336,7 @@ $clientes = Clientes::get_all_clients();
             </div>
         </div>
 
-        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+        <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -225,33 +348,31 @@ $clientes = Clientes::get_all_clients();
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="additionalInfo" tabindex="-1" aria-labelledby="additionalInfo" aria-hidden="true">
+        <div class="modal fade" id="additionalModal" tabindex="-1" aria-labelledby="additionalModal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                     </div>
                     <div class="modal-body">
                         <div class="container">
-                            <div class="row" id="row1">
+                            <div class="row mb-2" id="row1">
                             </div>
-                            <div class="row" id="row2">
+                            <div class="row mb-2" id="row2">
                             </div>
-                            <div class="row" id="row3">
+                            <div class="row mb-2" id="row3">
                             </div>
-                            <div class="row" id="row4">
+                            <div class="row mb-2" id="row4">
                             </div>
-                            <div class="row" id="row5">
-                            </div>
-                            <div class="row" id="row6">
-                            </div>
-                            <div class="row" id="row7">
-                            </div>
-                            <div class="row" id="row8">
+                            <div class="row mb-2" id="row5">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-outline-primary" id="btn1">1</button>
+                            <button type="button" class="btn btn-outline-primary" id="btn2">2</button>
+                        </div>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>'
                     </div>
                 </div>
             </div>
@@ -264,6 +385,19 @@ $clientes = Clientes::get_all_clients();
 <script>
     //ver las comunas según la ciudad ingresada en el formulario
     $(document).ready(function() {
+        $('#btnForm2').click(function() {
+            $('#btnForm1').removeClass('active');
+            $('#btnForm2').addClass('active');
+            $('#formPagina1').prop('hidden', true);
+            $('#formPagina2').prop('hidden', false);
+        });
+        $('#btnForm1').click(function() {
+            $('#btnForm2').removeClass('active');
+            $('#btnForm1').addClass('active');
+            $('#formPagina2').prop('hidden', true);
+            $('#formPagina1').prop('hidden', false);
+        });
+
         $('#id_ciudad').change(function() {
             var id_ciudad = $(this).val();
 
@@ -313,16 +447,15 @@ $clientes = Clientes::get_all_clients();
                 id: plantaId
             },
             success: function(response) {
-                console.log(response)
                 $('#formPlantas').attr('data-action', 'edit_planta');
                 $('#formPlantas').attr('data-id', response[0].id);
                 $('#nombre').val(response[0].nombre);
                 $('#id_clientes').val(response[0].id_clientes);
                 $('#direccion').val(response[0].ubicacion);
                 $('#id_ciudad').val(response[0].id_ciudad);
-                $('#id_comuna').append('<?php foreach ($comunas as $comuna):?>')
-                $('#id_comuna').append('<?php echo '<option value="' . $comuna['id'] . '">' . $comuna['nombre'] . '</option>';?>')
-                $('#id_comuna').append('<?php endforeach;?>')
+                $('#id_comuna').append('<?php foreach ($comunas as $comuna): ?>')
+                $('#id_comuna').append('<?php echo '<option value="' . $comuna['id'] . '">' . $comuna['nombre'] . '</option>'; ?>')
+                $('#id_comuna').append('<?php endforeach; ?>')
                 $('#id_comuna').val(response[0].id_comuna);
                 $('#id_comisaria').val(response[0].id_comisarias);
                 $('#id_tipoPlanta').val(response[0].id_tipo_planta);
@@ -332,6 +465,21 @@ $clientes = Clientes::get_all_clients();
                 $('#emailEncargado').val(response[0].encargado_email);
                 $('#mapa').val(response[0].mapa);
                 $('#estado').val(response[0].estado);
+                $('#marcaDispositivos').val(response[0].marca_dispositivos);
+                $('#modelosDispositivos').val(response[0].modelos_dispositivos);
+                $('#cantidadCamaras').val(response[0].cantidad_camaras);
+                $('#modeloCamaras').val(response[0].tipo_modelo_camaras);
+                $('#codificacionCamaras').val(response[0].codificacion_camaras);
+                $('#analiticas').val(response[0].analiticas);
+                $('#sensores').val(response[0].sensores);
+                $('#tamanoGrabacion').val(response[0].tamano_grabacion);
+                $('#diasGrabacion').val(response[0].dias_grabacion);
+                $('#alarmaVoceo').val(response[0].alarma_voceo);
+                $('#sirenas').val(response[0].sirenas);
+                $('#internet').val(response[0].internet);
+                $('#proveedorInternet').val(response[0].proveedor_internet);
+                $('#p2p').val(response[0].p2p);
+                $('#autoregistro').val(response[0].autoregistro);
 
 
                 $('#modalCRUD').modal('show');
@@ -343,9 +491,11 @@ $clientes = Clientes::get_all_clients();
     });
 
     $('#tabla tbody').on('click', '.btnInfo', function() {
+        let modal = $('#additionalModal .modal-dialog .modal-content');
         var $row = $(this).closest('tr');
         var data = tablaPlantas.row($row).data();
         var plantaId = data.id;
+
         $.ajax({
             type: 'POST',
             url: './ajax_handler/plantas.php',
@@ -354,29 +504,67 @@ $clientes = Clientes::get_all_clients();
                 id: plantaId
             },
             success: function(response) {
-                console.log(response)
-                let modal = $('#additionalInfo .modal-dialog .modal-content');
+                $('#additionalModal').modal('show');
+                modal.response = response;
                 modal.find('.modal-header').append('<h5 class="modal-title">Información Planta ' + response[0].nombre + '</h5>');
-                modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">ID: </span><span class="badge bg-primary">' + response[0].id + '</span></p>');
-                modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cliente: </span>' + clientesMap[response[0].id_clientes] + '</p>');
-                modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Tipo de Planta: </span>' + tipoPlantaMap[response[0].id_tipo_planta] + '</p>');
-                modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Ciudad: </span>' + response[0].nombre_ciudad + '</p>');
-                modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Comuna: </span>' + comunasMap[response[0].id_comuna] + '</p>');
-                modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Comisaria: </span>' + comisariasMap[response[0].id_comisarias] + '</p>');
-                modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Grupo: </span>' + response[0].grupo + '</p>');
-                modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Dirección: </span>' + response[0].ubicacion + '</p>');
-                modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Mapa: </span>' + response[0].mapa + '</p>');
-                modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Encargado: </span>' + response[0].encargado_contacto + '</p>');
-                modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Teléfono: </span>' + response[0].encargado_telefono + '</p>');
-                modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Email: </span>' + response[0].encargado_email + '</p>');
+                pagina1(modal);
 
-
-                $('#additionalInfo').modal('show');
+                $('#btn1').prop('aria-current', "page").addClass('active');
+                $('#btn2').removeClass('active');
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log('Error en AJAX:', textStatus, errorThrown);
             }
-        })
+        });
+
+        $('#btn2').click(function() {
+            modal.find('.modal-body p').remove();
+            pagina2(modal);
+            $('#btn2').prop('aria-current', "page").addClass('active');
+            $('#btn1').removeClass('active');
+        });
+
+        $('#btn1').click(function() {
+            modal.find('.modal-body p').remove();
+            pagina1(modal);
+            $('#btn1').prop('aria-current', "page").addClass('active');
+            $('#btn2').removeClass('active');
+        });
+
+        function pagina1(modal) {
+            let response = modal.response;
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">ID: </span><span class="badge bg-primary">' + response[0].id + '</span></p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cliente: </span>' + clientesMap[response[0].id_clientes] + '</p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Tipo de Planta: </span>' + tipoPlantaMap[response[0].id_tipo_planta] + '</p>');
+            modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Ciudad: </span>' + response[0].nombre_ciudad + '</p>');
+            modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Comuna: </span>' + comunasMap[response[0].id_comuna] + '</p>');
+            modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Comisaria: </span>' + comisariasMap[response[0].id_comisarias] + '</p>');
+            modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Grupo: </span>' + response[0].grupo + '</p>');
+            modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Dirección: </span>' + response[0].ubicacion + '</p>');
+            modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Mapa: </span>' + response[0].mapa + '</p>');
+            modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Encargado: </span>' + response[0].encargado_contacto + '</p>');
+            modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Teléfono: </span>' + response[0].encargado_telefono + '</p>');
+            modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Email: </span>' + response[0].encargado_email + '</p>');
+        };
+
+        function pagina2(modal) {
+            let response = modal.response;
+            console.log(response);
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Marca Dispositivos: </span>'+ response[0].marca_dispositivos +'</p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelos Dispositivos: </span>'+ response[0].modelos_dispositivos +'</p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cantidad Cámaras: </span>'+ response[0].cantidad_camaras +'</p>');
+            modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelo Cámaras: </span>' + response[0].tipo_modelo_camaras + '</p>');
+            modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Codificación Cámaras: </span>' + response[0].codificacion_camaras + '</p>');
+            modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Analíticas: </span>' + response[0].analiticas + '</p>');
+            modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Sensores: </span>' + response[0].sensores + '</p>');
+            modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Tamaño Grabación: </span>' + response[0].tamano_grabacion + '</p>');
+            modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Dias Grabación: </span>' + response[0].dias_grabacion + '</p>');
+            modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Alarma Voceo: </span>' + response[0].alarma_voceo + '</p>');
+            modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Sirenas: </span>' + response[0].sirenas + '</p>');
+            modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Proveedor Internet: </span>' + response[0].proveedor_internet + '</p>');
+            modal.find('#row5').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">P2P: </span>' + response[0].p2p + '</p>');
+            modal.find('#row5').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Autoregistro: </span>' + response[0].autoregistro + '</p>');
+        };
     });
 
     //Formatear Modal
@@ -387,11 +575,10 @@ $clientes = Clientes::get_all_clients();
         modal.find('.modal-footer button').remove();
     });
 
-    $('#additionalInfo').on('hidden.bs.modal', function() {
-        var modal = $('#additionalInfo .modal-dialog .modal-content');
+    $('#additionalModal').on('hidden.bs.modal', function() {
+        var modal = $('#additionalModal .modal-dialog .modal-content');
         modal.find('.modal-header h5').remove();
         modal.find('.modal-body p').remove();
-        modal.find('.modal-footer button').remove();
     });
 
     //Eliminar Planta
@@ -412,10 +599,6 @@ $clientes = Clientes::get_all_clients();
         modal.find('.modal-body').append('<p>Tipo de Planta: ' + tipoPlantaMap[data.id_tipo_planta] + '</p>');
         modal.find('.modal-body').append('<p>Grupo: ' + data.grupo + '</p>');
         modal.find('.modal-body').append('<p>Ubicación: ' + data.ubicacion + '</p>');
-        modal.find('.modal-body').append('<p>Nombre Encargado: ' + data.encargado_contacto + '</p>');
-        modal.find('.modal-body').append('<p>Email Encargado: ' + data.encargado_email + '</p>');
-        modal.find('.modal-body').append('<p>Telefono Encargado: ' + data.encargado_telefono + '</p>');
-        modal.find('.modal-body').append('<p>Mapa: ' + data.mapa + '</p>');
         modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
@@ -556,7 +739,7 @@ $clientes = Clientes::get_all_clients();
                 {
                     "data": null,
                     "render": function(data, type, row) {
-                        let url = '<?php echo $base_url?>/formularios.php?form=nvr&planta=' + row.id + '&token=<?php echo $token;?>'
+                        let url = '<?php echo $base_url ?>/formularios.php?form=nvr&planta=' + row.id + '&token=<?php echo $token; ?>'
                         return '<div class="text-center d-inline-block d-md-block"><div class="btn-group"><a href="' + url + '" class="btn btn-warning btn-sm btnNVR" title="Ir a NVR"><i class="material-icons">scanner</i></a><button class="btn btn-info btn-sm btnInfo" title="Información adicional"><i class="material-icons">info</i></button><button class="btn btn-primary btn-sm btnEditar" title="Editar"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-sm btnBorrar" title="Eliminar"><i class="material-icons">delete</i></button></div></div>'
                     }
                 }
@@ -594,9 +777,23 @@ $clientes = Clientes::get_all_clients();
             encargado_email: $.trim($("#emailEncargado").val()),
             encargado_telefono: $.trim($("#telEncargado").val()),
             mapa: $.trim($("#mapa").val()),
-            estado: $.trim($("#estado").val())
+            estado: $.trim($("#estado").val()),
+            marcaDispositivos: $.trim($("#marcaDispositivos").val()) || null,
+            modelosDispositivos: $.trim($("#modelosDispositivos").val()) || null,
+            cantidadCamaras: $.trim($("#cantidadCamaras").val()) || null,
+            modeloCamaras: $.trim($("#modeloCamaras").val()) || null,
+            codificacionCamaras: $.trim($("#codificacionCamaras").val()) || null,
+            analiticas: $.trim($("#analiticas").val()) || null,
+            sensores: $.trim($("#sensores").val()) || null,
+            tamanoGrabacion: $.trim($("#tamanoGrabacion").val()) || null,
+            diasGrabacion: $.trim($("#diasGrabacion").val()) || null,
+            alarmaVoceo: $.trim($("#alarmaVoceo").val()) || null,
+            sirenas: $.trim($("#sirenas").val()) || null,
+            internet: $.trim($("#internet").val()) || null,
+            proveedorInternet: $.trim($("#proveedorInternet").val()) || null,
+            p2p: $.trim($("#p2p").val()) || null,
+            autoregistro: $.trim($("#autoregistro").val()) || null,
         };
-        console.log(formData);
         $.ajax({
             type: "POST",
             url: "./ajax_handler/plantas.php",
@@ -641,7 +838,6 @@ $clientes = Clientes::get_all_clients();
 
                 } else {
                     alert(data.message);
-                    // console.log("nofunkopapito")
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
