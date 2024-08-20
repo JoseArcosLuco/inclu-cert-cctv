@@ -65,10 +65,28 @@
             }
         }
 
+        public static function get_all_plantas_short_data(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT id, id_comuna, id_comisarias, id_tipo_planta, id_clientes, nombre, grupo, ubicacion, estado FROM cctv_plantas');
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
+            }
+        }
+
         public static function get_plantas_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id=:id');
+            $stmt = $conn->prepare('SELECT p.* ,
+                                    ciudad.id as id_ciudad,
+                                    ciudad.nombre as nombre_ciudad
+                                    FROM cctv_plantas p
+                                    LEFT JOIN cctv_comunas comuna ON p.id_comuna = comuna.id
+                                    LEFT JOIN cctv_ciudad ciudad ON comuna.id_ciudad = ciudad.id
+                                    WHERE p.id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();

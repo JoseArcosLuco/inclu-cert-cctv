@@ -50,18 +50,6 @@ $clientes = Clientes::get_all_clients();
                             <th>
                                 Ubicación
                             </th>
-                            <th class="text-start">
-                                Nombre Encargado
-                            </th>
-                            <th class="text-start">
-                                Email Encargado
-                            </th>
-                            <th class="text-start">
-                                Telefono Encargado
-                            </th>
-                            <th>
-                                Mapa
-                            </th>
                             <th class="text-center">
                                 Estado
                             </th>
@@ -237,6 +225,37 @@ $clientes = Clientes::get_all_clients();
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="additionalInfo" tabindex="-1" aria-labelledby="additionalInfo" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row" id="row1">
+                            </div>
+                            <div class="row" id="row2">
+                            </div>
+                            <div class="row" id="row3">
+                            </div>
+                            <div class="row" id="row4">
+                            </div>
+                            <div class="row" id="row5">
+                            </div>
+                            <div class="row" id="row6">
+                            </div>
+                            <div class="row" id="row7">
+                            </div>
+                            <div class="row" id="row8">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- end::Modal -->
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
@@ -281,29 +300,93 @@ $clientes = Clientes::get_all_clients();
 
     //Editar Planta
     $('#tabla tbody').on('click', '.btnEditar', function() {
-        var data = tablaPlantas.row($(this).parents('tr')).data();
-        $('#formPlantas').attr('data-action', 'edit_planta');
-        $('#formPlantas').attr('data-id', data.id);
-        $('#nombre').val(data.nombre);
-        $('#id_clientes').val(data.id_clientes);
-        $('#direccion').val(data.ubicacion);
-        $('#id_comuna').val(data.id_comuna);
-        $('#id_comisaria').val(data.id_comisarias);
-        $('#id_tipoPlanta').val(data.id_tipo_planta);
-        $('#grupo').val(data.grupo);
-        $('#nombreEncargado').val(data.encargado_contacto);
-        $('#telEncargado').val(data.encargado_telefono);
-        $('#emailEncargado').val(data.encargado_email);
-        $('#mapa').val(data.mapa);
-        $('#estado').val(data.estado);
+        var $row = $(this).closest('tr');
+        var data = tablaPlantas.row($row).data();
+        var plantaId = data.id;
+        $.ajax({
+            type: 'POST',
+            url: './ajax_handler/plantas.php',
+            data: {
+                action: 'get_plantas_by_id',
+                id: plantaId
+            },
+            success: function(response) {
+                console.log(response)
+                $('#formPlantas').attr('data-action', 'edit_planta');
+                $('#formPlantas').attr('data-id', response[0].id);
+                $('#nombre').val(response[0].nombre);
+                $('#id_clientes').val(response[0].id_clientes);
+                $('#direccion').val(response[0].ubicacion);
+                $('#id_ciudad').val(response[0].id_ciudad);
+                $('#id_comuna').append('<?php foreach ($comunas as $comuna):?>')
+                $('#id_comuna').append('<?php echo '<option value="' . $comuna['id'] . '">' . $comuna['nombre'] . '</option>';?>')
+                $('#id_comuna').append('<?php endforeach;?>')
+                $('#id_comuna').val(response[0].id_comuna);
+                $('#id_comisaria').val(response[0].id_comisarias);
+                $('#id_tipoPlanta').val(response[0].id_tipo_planta);
+                $('#grupo').val(response[0].grupo);
+                $('#nombreEncargado').val(response[0].encargado_contacto);
+                $('#telEncargado').val(response[0].encargado_telefono);
+                $('#emailEncargado').val(response[0].encargado_email);
+                $('#mapa').val(response[0].mapa);
+                $('#estado').val(response[0].estado);
 
 
-        $('#modalCRUD').modal('show');
+                $('#modalCRUD').modal('show');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error en AJAX:', textStatus, errorThrown);
+            }
+        })
+    });
+
+    $('#tabla tbody').on('click', '.btnInfo', function() {
+        var $row = $(this).closest('tr');
+        var data = tablaPlantas.row($row).data();
+        var plantaId = data.id;
+        $.ajax({
+            type: 'POST',
+            url: './ajax_handler/plantas.php',
+            data: {
+                action: 'get_plantas_by_id',
+                id: plantaId
+            },
+            success: function(response) {
+                console.log(response)
+                let modal = $('#additionalInfo .modal-dialog .modal-content');
+                modal.find('.modal-header').append('<h5 class="modal-title">Información Planta ' + response[0].nombre + '</h5>');
+                modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">ID: </span><span class="badge bg-primary">' + response[0].id + '</span></p>');
+                modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cliente: </span>' + clientesMap[response[0].id_clientes] + '</p>');
+                modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Tipo de Planta: </span>' + tipoPlantaMap[response[0].id_tipo_planta] + '</p>');
+                modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Ciudad: </span>' + response[0].nombre_ciudad + '</p>');
+                modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Comuna: </span>' + comunasMap[response[0].id_comuna] + '</p>');
+                modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Comisaria: </span>' + comisariasMap[response[0].id_comisarias] + '</p>');
+                modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Grupo: </span>' + response[0].grupo + '</p>');
+                modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Dirección: </span>' + response[0].ubicacion + '</p>');
+                modal.find('#row3').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Mapa: </span>' + response[0].mapa + '</p>');
+                modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Encargado: </span>' + response[0].encargado_contacto + '</p>');
+                modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Teléfono: </span>' + response[0].encargado_telefono + '</p>');
+                modal.find('#row4').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Email: </span>' + response[0].encargado_email + '</p>');
+
+
+                $('#additionalInfo').modal('show');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error en AJAX:', textStatus, errorThrown);
+            }
+        })
     });
 
     //Formatear Modal
     $('#warningModal').on('hidden.bs.modal', function() {
         var modal = $('#warningModal .modal-dialog .modal-content');
+        modal.find('.modal-header h5').remove();
+        modal.find('.modal-body p').remove();
+        modal.find('.modal-footer button').remove();
+    });
+
+    $('#additionalInfo').on('hidden.bs.modal', function() {
+        var modal = $('#additionalInfo .modal-dialog .modal-content');
         modal.find('.modal-header h5').remove();
         modal.find('.modal-body p').remove();
         modal.find('.modal-footer button').remove();
@@ -401,7 +484,7 @@ $clientes = Clientes::get_all_clients();
                 "url": "./ajax_handler/plantas.php",
                 "type": 'POST',
                 "data": {
-                    action: 'get_plantas'
+                    action: 'get_plantas_short_data'
                 },
                 "dataSrc": ""
             },
@@ -463,34 +546,17 @@ $clientes = Clientes::get_all_clients();
                     "data": "ubicacion"
                 },
                 {
-                    "data": "encargado_contacto",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-capitalize');
-                    }
-                },
-                {
-                    "data": "encargado_email",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-start');
-                    }
-                },
-                {
-                    "data": "encargado_telefono",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-start');
-                    }
-                },
-                {
-                    "data": "mapa"
-                },
-                {
                     "data": "estado",
                     "render": function(data) {
                         return data == 1 ? 'Activo' : 'Inactivo';
                     }
                 },
                 {
-                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    "data": null,
+                    "render": function(data, type, row) {
+                        let url = '<?php echo $base_url?>/formularios.php?form=nvr&planta=' + row.id + '&token=<?php echo $token;?>'
+                        return '<div class="text-center d-inline-block d-md-block"><div class="btn-group"><a href="' + url + '" class="btn btn-warning btn-sm btnNVR" title="Ir a NVR"><i class="material-icons">scanner</i></a><button class="btn btn-info btn-sm btnInfo" title="Información adicional"><i class="material-icons">info</i></button><button class="btn btn-primary btn-sm btnEditar" title="Editar"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-sm btnBorrar" title="Eliminar"><i class="material-icons">delete</i></button></div></div>'
+                    }
                 }
             ],
             "createdRow": function(row, data, dataIndex) {
@@ -548,10 +614,6 @@ $clientes = Clientes::get_all_clients();
                             "id_tipo_planta": data.planta.id_tipo_planta,
                             "grupo": data.planta.grupo,
                             "ubicacion": data.planta.ubicacion,
-                            "encargado_contacto": data.planta.encargado_contacto,
-                            "encargado_email": data.planta.encargado_email,
-                            "encargado_telefono": data.planta.encargado_telefono,
-                            "mapa": data.planta.mapa,
                             "estado": data.planta.estado
                         }).draw().node();
                         $(newRow).attr('data-id', data.planta.id);
@@ -569,10 +631,6 @@ $clientes = Clientes::get_all_clients();
                             "id_tipo_planta": formData.id_tipo_planta,
                             "grupo": formData.grupo,
                             "ubicacion": formData.ubicacion,
-                            "encargado_contacto": formData.encargado_contacto,
-                            "encargado_email": formData.encargado_email,
-                            "encargado_telefono": formData.encargado_telefono,
-                            "mapa": formData.mapa,
                             "estado": formData.estado
                         }).draw();
                         $('#modalCRUD').modal('hide');

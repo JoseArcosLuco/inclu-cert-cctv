@@ -53,6 +53,9 @@ switch( $formAccion ) {
     case "novedades":
         $tituloFormulario = 'Registro de Novedades';
         break;
+    case "nvr":
+        $tituloFormulario = 'Registro de Dispositivos NVR';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;

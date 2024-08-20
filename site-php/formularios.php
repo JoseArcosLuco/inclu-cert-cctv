@@ -106,6 +106,9 @@ $id_usuario = isset($_SESSION["iduser"]) ? $_SESSION["iduser"] : '';
                 case "novedades":
                     include "formularioNovedades.php";
                     break;
+                case "nvr":
+                    include "admNVR.php";
+                    break;
             }
             
             
