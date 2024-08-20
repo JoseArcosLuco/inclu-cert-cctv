@@ -141,6 +141,7 @@ $plantas = Plantas::get_all_plantas();
         $('#formReporte').attr('data-action', 'create_nvr');
         $('#formReporte')[0].reset();
         $('#nombre_planta').val(plantasMap[plantaId]);
+        $('#modalCRUD .modal-title').text('Agregar NVR');
         $('#modalCRUD').modal('show');
     });
 
@@ -153,7 +154,7 @@ $plantas = Plantas::get_all_plantas();
         $('#num_dispositivo').val(data.numero_dispositivo);
         $('#serial').val(data.serial);
         $('#estado').val(data.estado);
-        $('#modalCRUD .modal-title').val('Editar Reporte');
+        $('#modalCRUD .modal-title').text('Editar NVR');
 
         $('#modalCRUD').modal('show');
     });

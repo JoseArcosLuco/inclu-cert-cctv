@@ -209,6 +209,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         $('#canal').val($data.canal);
         $('#observacion').val($data.observacion);
         $('#estado').val($data.estado);
+        $('#modalCRUD .modal-title').text('Editar Reporte');
 
         $('#modalCRUD').modal('show');
 

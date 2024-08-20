@@ -117,6 +117,7 @@ $plantas = Plantas::get_all_plantas();
     $("#addUser").click(function() {
         $('#formCamara').attr('data-action', 'create_camara');
         $('#formCamara')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Cámaras');
         $('#modalCRUD').modal('show');
     });
 
@@ -128,6 +129,7 @@ $plantas = Plantas::get_all_plantas();
         $('#id_planta').val(data.id_plantas);
         $('#nombre').val(data.nombre);
         $('#estado').val(data.estado);
+        $('#modalCRUD .modal-title').text('Editar Cámara');
 
         $('#modalCRUD').modal('show');
     });

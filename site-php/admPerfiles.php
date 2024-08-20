@@ -113,6 +113,7 @@ $plantas = Plantas::get_all_plantas();
     $("#addUser").click(function() {
         $('#formPerfil').attr('data-action', 'create_perfil');
         $('#formPerfil')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Perfil');
         $('#modalCRUD').modal('show');
     });
 
@@ -123,6 +124,7 @@ $plantas = Plantas::get_all_plantas();
         $('#formPerfil').attr('data-id', data.id);
         $('#nombre').val(data.nombre);
         $('#estado').val(data.estado);
+        $('#modalCRUD .modal-title').text('Editar Perfil');
 
         $('#modalCRUD').modal('show');
     });

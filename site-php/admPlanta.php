@@ -295,11 +295,13 @@ $clientes = Clientes::get_all_clients();
     $("#addPlanta").click(function() {
         $('#formPlantas').attr('data-action', 'create_planta');
         $('#formPlantas')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Planta');
         $('#modalCRUD').modal('show');
     });
 
     //Editar Planta
     $('#tabla tbody').on('click', '.btnEditar', function() {
+        $('#modalCRUD .modal-title').text('Editar Planta');
         var $row = $(this).closest('tr');
         var data = tablaPlantas.row($row).data();
         var plantaId = data.id;

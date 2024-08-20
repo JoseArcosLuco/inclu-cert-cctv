@@ -110,10 +110,8 @@ include("./includes/Database.class.php");
     $("#add").click(function() {
         $('#formTipoPlanta').attr('data-action', 'create_');
         $('#formTipoPlanta')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Tipo de Planta');
         $('#modalCRUD').modal('show');
-
-        const p = document.getElementById("exampleModalLabel");
-        p.innerText = "Agregar Tipo Planta!";
     });
 
     //Editar
@@ -121,9 +119,7 @@ include("./includes/Database.class.php");
         var data = tabla.row($(this).parents('tr')).data();
         $('#formTipoPlanta').attr('data-action', 'edit_');
         $('#formTipoPlanta').attr('data-id', data.id);
-
-        const p = document.getElementById("exampleModalLabel");
-        p.innerText = "Editar Tipo Planta!";
+        $('#modalCRUD .modal-title').text('Editar Tipo de Planta');
 
         $('#nombres').val(data.nombre);
         $('#estado').val(data.estado);

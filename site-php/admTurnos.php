@@ -130,6 +130,7 @@ $jornadas = Jornada::get_all_jornadas();
     $("#addUser").click(function(){
         $('#formTurno').attr('data-action', 'create_turno');
         $('#formTurno')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Turno');
         $('#modalCRUD').modal('show');
     });
 
@@ -142,6 +143,7 @@ $jornadas = Jornada::get_all_jornadas();
         $('#id_plantas').val(data.id_plantas);
         $('#id_jornada').val(data.id_jornada);
         $('#estado').val(data.estado);
+        $('#modalCRUD .modal-title').text('Editar Turno');
 
         $('#modalCRUD').modal('show');
     });
