@@ -13,8 +13,8 @@ $plantas = Plantas::get_all_plantas();
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar NVR<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
-                <h3 id="nombrePlanta"></h3>
+                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar NVR<i class="material-icons">add</i></button>
+                <h3 class="card-title m-0 p-0 d-flex align-items-center justify-content-end col-6" id="nombrePlanta"></h3>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -26,13 +26,13 @@ $plantas = Plantas::get_all_plantas();
                             <th>
                                 Planta
                             </th>
-                            <th>
+                            <th class="text-start">
                                 Número Dispositivo
                             </th>
-                            <th>
+                            <th class="text-start">
                                 Serial
                             </th>
-                            <th>
+                            <th class="text-center">
                                 Estado
                             </th>
                             <th class="text-center">
@@ -126,7 +126,6 @@ $plantas = Plantas::get_all_plantas();
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
-
     let plantaId = <?php echo $_GET['planta']; ?>;
 
     var plantas = <?php echo json_encode($plantas); ?>;
@@ -148,22 +147,11 @@ $plantas = Plantas::get_all_plantas();
     //Editar Reporte
     $('#tabla tbody').on('click', '.btnEditar', function() {
         var data = tablaReporte.row($(this).parents('tr')).data();
-        $('#id_cliente').prop('disabled', true);
-        $('#id_planta').prop('disabled', true);
-        $('#fecha_fin , #hora_fin, #hora').prop('disabled', false);
-        $('#formReporte').attr('data-action', 'edit_reporte');
+        $('#formReporte').attr('data-action', 'edit_nvr');
         $('#formReporte').attr('data-id', data.id);
-        $('#id_cliente').val(data.id_cliente);
-        $('#id_planta').empty();
-        $('#id_planta').append('<?php foreach ($plantas as $planta): ?>');
-        $('#id_planta').append('<option value="<?php echo $planta['id'] ?>" ><?php echo htmlspecialchars($planta['nombre']); ?></option>');
-        $('#id_planta').append('<?php endforeach; ?>');
-        $('#id_planta').val(data.id_planta);
-        $('#fecha').val(moment(data.fecha, 'YYYY-MM-DD HH:mm:ss').format('yyyy-MM-DD'));
-        $('#hora').val(moment(data.fecha).format('HH:mm'));
-        $('#fecha_fin').val(moment(data.fecha_fin, 'YYYY-MM-DD HH:mm:ss').format('yyyy-MM-DD'));
-        $('#hora_fin').val(moment(data.fecha_fin).format('HH:mm'));
-        $('#observacion').val(data.observacion);
+        $('#nombre_planta').val(plantasMap[data.id_planta]);
+        $('#num_dispositivo').val(data.numero_dispositivo);
+        $('#serial').val(data.serial);
         $('#estado').val(data.estado);
         $('#modalCRUD .modal-title').val('Editar Reporte');
 
@@ -182,33 +170,38 @@ $plantas = Plantas::get_all_plantas();
     $('#tabla tbody').on('click', '.btnBorrar', function() {
         var $row = $(this).closest('tr'); // Capturamos la fila correctamente
         var data = tablaReporte.row($row).data();
-        var reporteId = data.id;
-        var fecha = moment(data.fecha).format('DD-MM-YYYY');
-        var hora = moment(data.fecha).format('HH:mm');
-        var fecha_fin = moment(data.fecha_fin).format('DD-MM-YYYY');
-        var hora_fin = moment(data.fecha_fin).format('HH:mm');
+        var nvrId = data.id;
+        let estado = data.estado;
+        let funcionEstado = function(estado) {
+            if (estado == 1) {
+                return 'En Línea'
+            } else if (estado == 2) {
+                return 'Retirado'
+            } else if (estado == 3) {
+                return 'Reemplazado'
+            } else {
+                return 'Desconocido'
+            }
+        };
         var modal = $('#warningModal .modal-dialog .modal-content');
 
         modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
         modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
-        modal.find('.modal-body').append('<p class="col-6">Cliente: ' + clienteMap[data.id_cliente] + '</p>');
+        modal.find('.modal-body').append('<p class="col-6">ID: ' + nvrId + '</p>');
         modal.find('.modal-body').append('<p class="col-6">Planta: ' + plantasMap[data.id_planta] + '</p>');
-        modal.find('.modal-body').append('<p>Fecha Inicial: ' + fecha + '</p>');
-        modal.find('.modal-body').append('<p>Hora Inicial: ' + hora + '</p>');
-        modal.find('.modal-body').append('<p>Fecha Termino: ' + fecha_fin + '</p>');
-        modal.find('.modal-body').append('<p>Hora Termino: ' + hora_fin + '</p>');
-        modal.find('.modal-body').append('<p>Autor Reporte: ' + usuariosMap[data.id_usuario] + '</p>');
-        modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
+        modal.find('.modal-body').append('<p class="col-6">Dispositivo: ' + data.numero_dispositivo + '</p>');
+        modal.find('.modal-body').append('<p class="col-6">Serial: ' + data.serial + '</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + funcionEstado(estado) + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
         $('#warningModal').modal('show');
         $('#warningModal').on('click', '.btnBorrar', function() {
             $.ajax({
                 type: "POST",
-                url: "./ajax_handler/cortesInternet.php",
+                url: "./ajax_handler/nvr.php",
                 data: {
-                    action: 'delete_reporte',
-                    id: reporteId
+                    action: 'delete_nvr',
+                    id: nvrId
                 },
                 datatype: "json",
                 encode: true,
@@ -241,8 +234,7 @@ $plantas = Plantas::get_all_plantas();
                 },
                 "dataSrc": ""
             },
-            "columns": [
-                {
+            "columns": [{
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
@@ -255,19 +247,28 @@ $plantas = Plantas::get_all_plantas();
                     }
                 },
                 {
-                    "data": "numero_dispositivo"
+                    "data": "numero_dispositivo",
+                    "createdCell": function(td) {
+                        $(td).addClass('text-start');
+                    }
                 },
                 {
-                    "data": "serial"
+                    "data": "serial",
+                    "createdCell": function(td) {
+                        $(td).addClass('text-start');
+                    }
                 },
                 {
                     "data": "estado",
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    },
                     "render": function(data) {
-                        if(data === 1) {
+                        if (data === 1) {
                             return 'En Línea';
-                        } else if (data === 2){
+                        } else if (data === 2) {
                             return 'Retirado';
-                        } else if (data === 3){
+                        } else if (data === 3) {
                             return 'Reemplazado';
                         }
                     }
@@ -322,14 +323,14 @@ $plantas = Plantas::get_all_plantas();
                         $(newRow).attr('data-id', data.nvr.id);
                         $('#modalCRUD').modal('hide');
 
-                    } else if (action === 'edit_reporte') {
+                    } else if (action === 'edit_nvr') {
                         var row = tablaReporte.row($('[data-id="' + id + '"]'));
                         row.data({
                             "id": id,
                             "id_planta": formData.id_planta,
                             "numero_dispositivo": formData.num_dispositivo,
                             "serial": formData.serial,
-                            "estado": formData.estado,
+                            "estado": data.nvr.estado
                         }).draw();
                         $('#modalCRUD').modal('hide');
 
