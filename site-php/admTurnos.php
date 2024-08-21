@@ -253,7 +253,13 @@ $jornadas = Jornada::get_all_jornadas();
                         return data == 1 ? 'Activo' : 'Inactivo';
                     } 
                 },
-                {"defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                {
+                    "data":null,
+                    render: function(data, type, row) {
+                        let url = '<?php echo $base_url ?>/formularios.php?form=operador&turno='+data.id+'&token=<?php echo $token; ?>'
+                        return "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><a href='"+url+"' class='btn btn-info btn-sm btnOperador' title='Ir a Operadores'><i class='material-icons'>engineering</i></a><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    }
+                }
             ],
             "createdRow": function(row, data, dataIndex) {
             $(row).attr('data-id', data.id); // Añadir atributo data-id

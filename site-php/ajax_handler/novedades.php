@@ -15,9 +15,10 @@ if (isset($_POST)) {
             $fecha_fin = isset($_POST['fecha_fin']) ? $_POST['fecha_fin'] . ' ' . $_POST['hora_fin'] : null;
             $observacion = $_POST['observacion'];
             $estado = $_POST['estado'];
+            $tipo_novedad = $_POST['tipo_novedad'];
 
-            $response = Novedades::create_novedades($idPlanta, $idCliente, $fecha, $fecha_fin ,$observacion, $estado , $idUsuario);
-            
+            $response = Novedades::create_novedades($idPlanta, $idCliente, $fecha, $fecha_fin, $observacion, $estado, $idUsuario, $tipo_novedad);
+
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
@@ -36,9 +37,10 @@ if (isset($_POST)) {
             $response = Novedades::get_all_plantas($id);
             echo json_encode($response);
             break;
-        
+
         case 'get_novedades':
-            $response = Novedades::get_all_novedades();
+            $tipo_novedad = $_POST['tipo_novedad'];
+            $response = Novedades::get_all_novedades($tipo_novedad);
             echo json_encode($response);
             break;
 
@@ -48,9 +50,10 @@ if (isset($_POST)) {
             $fecha_fin = isset($_POST['fecha_fin']) ? $_POST['fecha_fin'] . ' ' . $_POST['hora_fin'] : null;
             $observacion = $_POST['observacion'];
             $estado = $_POST['estado'];
+            $tipo_novedad = $_POST['tipo_novedad'];
 
-            $response = Novedades::update_novedades($id,$fecha,$fecha_fin, $observacion, $estado);
-            
+            $response = Novedades::update_novedades($id, $fecha, $fecha_fin, $observacion, $estado, $tipo_novedad);
+
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
@@ -69,7 +72,6 @@ if (isset($_POST)) {
             $response = Novedades::delete_novedades_by_id($id);
             echo json_encode($response);
             break;
-        // Otros casos para update, delete, etc.
+            // Otros casos para update, delete, etc.
     }
 }
-?>

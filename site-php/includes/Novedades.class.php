@@ -2,11 +2,11 @@
     require_once('Database.class.php');
 
     class Novedades{
-        public static function create_novedades($id_planta, $id_cliente, $fecha,$fecha_fin, $observacion,$estado, $id_usuario){
+        public static function create_novedades($id_planta, $id_cliente, $fecha,$fecha_fin, $observacion,$estado, $id_usuario ,$tipo_novedad){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_reporte_novedades (id_planta,id_cliente,fecha,fecha_fin,observacion,estado,id_usuario)
-                                    VALUES(:id_planta ,:id_cliente, :fecha ,:fecha_fin, :observacion, :estado, :id_usuario)');
+            $stmt = $conn->prepare('INSERT INTO cctv_reporte_novedades (id_planta,id_cliente,fecha,fecha_fin,observacion,estado,id_usuario, tipo_novedad)
+                                    VALUES(:id_planta ,:id_cliente, :fecha ,:fecha_fin, :observacion, :estado, :id_usuario, :tipo_novedad)');
 
             $stmt->bindParam(':id_usuario',$id_usuario);
             $stmt->bindParam(':id_planta',$id_planta);
@@ -15,6 +15,7 @@
             $stmt->bindParam(':fecha_fin',$fecha_fin);
             $stmt->bindParam(':observacion',$observacion);
             $stmt->bindParam(':estado',$estado);
+            $stmt->bindParam(':tipo_novedad',$tipo_novedad);
             if ($stmt->execute()) {
                 return [
                     'status' => true,
@@ -60,10 +61,11 @@
             }
         }
 
-        public static function get_all_novedades(){
+        public static function get_all_novedades($tipo_novedad){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_novedades');
+            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_novedades WHERE tipo_novedad=:tipo_novedad');
+            $stmt->bindParam(':tipo_novedad',$tipo_novedad);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
                 return $result;
@@ -72,16 +74,17 @@
             }
         }
 
-        public static function update_novedades($id, $fecha,$fecha_fin, $observacion,$estado){
+        public static function update_novedades($id, $fecha,$fecha_fin, $observacion,$estado, $tipo_novedad){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_reporte_novedades SET fecha=:fecha,fecha_fin=:fecha_fin, observacion=:observacion, estado=:estado WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_reporte_novedades SET fecha=:fecha,fecha_fin=:fecha_fin, observacion=:observacion, estado=:estado, tipo_novedad=:tipo_novedad WHERE id=:id');
             $stmt->bindParam(':fecha',$fecha);
             $stmt->bindParam(':fecha_fin',$fecha_fin);
             $stmt->bindParam(':observacion',$observacion);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
+            $stmt->bindParam(':tipo_novedad',$tipo_novedad);
 
             if ($stmt->execute()) {
                 return [
