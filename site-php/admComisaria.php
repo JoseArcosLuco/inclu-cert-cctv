@@ -146,9 +146,8 @@ require_once('./includes/Perfil.class.php');
     $("#add").click(function() {
         $('#formComisaria').attr('data-action', 'create_');
         $('#formComisaria')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Comisaría');
         $('#modalCRUD').modal('show');
-        const p = document.getElementById("exampleModalLabel");
-        p.innerText = "Agregar Comisaria!";
     });
 
     //Editar
@@ -161,10 +160,8 @@ require_once('./includes/Perfil.class.php');
         $('#telefono').val(data.telefono);
         $('#movil').val(data.movil);
         $('#estado').val(data.estado);
+        $('#modalCRUD .modal-title').text('Editar Comisaría');
         $('#modalCRUD').modal('show');
-
-        const p = document.getElementById("exampleModalLabel");
-        p.innerText = "Editar Comisaria!";
     });
 
     //Formatear Modal

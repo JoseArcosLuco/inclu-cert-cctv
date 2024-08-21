@@ -147,6 +147,7 @@ include("./includes/Database.class.php");
     $("#addUser").click(function(){
         $('#formClientes').attr('data-action', 'create_');
         $('#formClientes')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Cliente');
         $('#modalCRUD').modal('show');
     });
 
@@ -161,6 +162,7 @@ include("./includes/Database.class.php");
         $('#fecha_contrato').val(data.fecha_contrato);
         $('#contacto').val(data.contacto);
         $('#estado').val(data.estado);
+        $('#modalCRUD .modal-title').text('Editar Información Cliente');
 
         $('#modalCRUD').modal('show');
     });

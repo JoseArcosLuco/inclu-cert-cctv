@@ -212,6 +212,7 @@ $usuarios = Users::get_all_users();
         $('#formReporte').attr('data-action', 'create_novedades');
         $('#formReporte')[0].reset();
         $('#id_cliente').prop('disabled', false);
+        $('#modalCRUD .modal-title').text('Agregar Reporte');
         $('#modalCRUD').modal('show');
     });
 
@@ -235,7 +236,7 @@ $usuarios = Users::get_all_users();
         $('#hora_fin').val(moment(data.fecha_fin).format('HH:mm'));
         $('#observacion').val(data.observacion);
         $('#estado').val(data.estado);
-        $('#modalCRUD .modal-title').val('Editar Reporte');
+        $('#modalCRUD .modal-title').text('Editar Reporte');
 
         $('#modalCRUD').modal('show');
     });

@@ -41,31 +41,30 @@ if (isset($_POST)) {
             echo json_encode($response);
             break;
 
-        case 'edit_reporte':
+        case 'edit_nvr':
             $id = $_POST['id'];
-            $fecha = $_POST['fecha'] . ' ' . $_POST['hora'];
-            $fecha_fin = isset($_POST['fecha_fin']) ? $_POST['fecha_fin'] . ' ' . $_POST['hora_fin'] : null;
-            $observacion = $_POST['observacion'];
+            $numeroDispositivo = $_POST['num_dispositivo'];
+            $serial = $_POST['serial'];
             $estado = $_POST['estado'];
 
-            $response = CortesInternet::update_corteInternet($id,$fecha,$fecha_fin,$observacion, $estado);
+            $response = NVR::update_nvr($id, $numeroDispositivo, $serial, $estado);
             
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
-                $stmt = $conn->prepare('SELECT * FROM cctv_reporte_corte_internet WHERE id = :id');
+                $stmt = $conn->prepare('SELECT * FROM cctv_nvr WHERE id = :id');
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
-                $updatedReporte = $stmt->fetch(PDO::FETCH_ASSOC);
-                $response['reporte'] = $updatedReporte;
+                $updatedNVR = $stmt->fetch(PDO::FETCH_ASSOC);
+                $response['nvr'] = $updatedNVR;
             }
 
             echo json_encode($response);
             break;
 
-        case 'delete_reporte':
+        case 'delete_nvr':
             $id = $_POST['id'];
-            $response = CortesInternet::delete_corteInternet_by_id($id);
+            $response = NVR::delete_nvr_by_id($id);
             echo json_encode($response);
             break;
         // Otros casos para update, delete, etc.

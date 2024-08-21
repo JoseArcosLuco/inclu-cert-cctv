@@ -25,11 +25,11 @@
             }
         }
 
-        public static function delete_corteEnergia_by_id($id){
+        public static function delete_nvr_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('DELETE FROM cctv_reporte_corte_energia WHERE id=:id');
+            $stmt = $conn->prepare('DELETE FROM cctv_nvr WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
                 return [
@@ -57,26 +57,14 @@
             }
         }
 
-        public static function get_all_corteEnergia(){
-            $database = new Database();
-            $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_corte_energia');
-            if($stmt->execute()){
-                $result = $stmt->fetchAll();
-                return $result;
-            } else {
-                return [];
-            }
-        }
-
-        public static function update_corteEnergia($id, $fecha,$fecha_fin, $observacion,$estado){
+        public static function update_nvr($id, $numDispositivo, $serial, $estado){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_reporte_corte_energia SET fecha=:fecha,fecha_fin=:fecha_fin, observacion=:observacion, estado=:estado WHERE id=:id');
-            $stmt->bindParam(':fecha',$fecha);
-            $stmt->bindParam(':fecha_fin',$fecha_fin);
-            $stmt->bindParam(':observacion',$observacion);
+            $stmt = $conn->prepare('UPDATE cctv_nvr SET numero_dispositivo=:num_dispositivo, serial=:serial, estado=:estado WHERE id=:id');
+
+            $stmt->bindParam(':num_dispositivo',$numDispositivo);
+            $stmt->bindParam(':serial',$serial);
             $stmt->bindParam(':estado',$estado);
             $stmt->bindParam(':id',$id);
 

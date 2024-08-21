@@ -121,10 +121,8 @@ include("./includes/Database.class.php");
     $("#add").click(function(){
         $('#formJornada').attr('data-action', 'create_');
         $('#formJornada')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Jornada');
         $('#modalCRUD').modal('show');
-
-        const p = document.getElementById("exampleModalLabel");
-        p.innerText = "Agregar Jornada!";
     });
 
     //Editar
@@ -132,9 +130,7 @@ include("./includes/Database.class.php");
         var data = tabla.row($(this).parents('tr')).data();
         $('#formJornada').attr('data-action', 'edit_');
         $('#formJornada').attr('data-id', data.id);
-        
-        const p = document.getElementById("exampleModalLabel");
-        p.innerText = "Editar Jornada!";
+        $('#modalCRUD .modal-title').text('Editar Jornada');
         
         $('#nombre').val(data.nombre);
         $('#estado').val(data.estado);

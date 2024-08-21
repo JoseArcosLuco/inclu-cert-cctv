@@ -152,6 +152,7 @@ $perfiles = Perfil::get_all_perfiles();
     $("#addUser").click(function(){
         $('#formUsuarios').attr('data-action', 'create_user');
         $('#formUsuarios')[0].reset();
+        $('#modalCRUD .modal-title').text('Agregar Usuario');
         $('#modalCRUD').modal('show');
     });
 
@@ -166,6 +167,7 @@ $perfiles = Perfil::get_all_perfiles();
         $('#email').val(data.email);    
         $('#estado').val(data.estado);
         $('#password').val('');
+        $('#modalCRUD .modal-title').text('Editar Usuario');
 
         $('#modalCRUD').modal('show');
     });

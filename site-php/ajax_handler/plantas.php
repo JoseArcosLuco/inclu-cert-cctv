@@ -27,8 +27,24 @@ if (isset($_POST)) {
             $telEncargado = $_POST['encargado_telefono'];
             $mapa = $_POST['mapa'];
             $estado = $_POST['estado'];
+            $marcaDispositivos = $_POST['marcaDispositivos'] ?? null;
+            $modelosDispositivos = $_POST['modelosDispositivos'] ?? null;
+            $cantidadCamaras = $_POST['cantidadCamaras'] ?? null;
+            $modeloCamaras = $_POST['modeloCamaras'] ?? null;
+            $codificacionCamaras = $_POST['codificacionCamaras'] ?? null;
+            $analiticas = $_POST['analiticas'] ?? null;
+            $sensores = $_POST['sensores'] ?? null;
+            $tamanoGrabacion = $_POST['tamanoGrabacion'] ?? null;
+            $diasGrabacion = $_POST['diasGrabacion'] ?? null;
+            $alarmaVoceo = $_POST['alarmaVoceo'] ?? null;
+            $sirenas = $_POST['sirenas'] ?? null;
+            $internet = $_POST['internet'] ?? null;
+            $proveedorInternet = $_POST['proveedorInternet'] ?? null;
+            $p2p = $_POST['p2p'] ?? null;
+            $autoregistro = $_POST['autoregistro'] ?? null;
 
-            $response = Plantas::create_plantas($idComuna, $idComisaria, $idTipoPlanta, $idCLiente,$nombre, $grupo, $direccion,$nombreEncargado,$emailEncargado,$telEncargado,$mapa, $estado);
+            $response = Plantas::create_plantas($idComuna, $idComisaria, $idTipoPlanta, $idCLiente,$nombre, $grupo, $direccion,$nombreEncargado,$emailEncargado,$telEncargado,$mapa, $estado, $marcaDispositivos, 
+            $modelosDispositivos, $cantidadCamaras, $modeloCamaras, $codificacionCamaras, $analiticas, $sensores, $tamanoGrabacion, $diasGrabacion, $alarmaVoceo, $sirenas, $internet, $proveedorInternet, $p2p, $autoregistro);
             
             if ($response['status']) {
                 $database = new Database();
