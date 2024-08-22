@@ -17,7 +17,7 @@ $turnos = Turnos::get_all_turnos();
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <div class="container d-flex gap-3">
                     <a href="<?php echo $base_url ?>/formularios.php?form=turnos&token=<?php echo $token; ?>" class="btn btn-light rounded-circle d-flex alignt-items-center jusitfy-content-center p-2" title="Volver" id="back"><i class="material-icons fs-3">arrow_back</i></a>
-                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar NVR<i class="material-icons">add</i></button>
+                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Operador<i class="material-icons">add</i></button>
                 </div>
                 <h3 class="card-title m-0 p-0 d-flex align-items-center justify-content-end col-6" id="nombreTurno"></h3>
             </div> <!-- /.card-header -->
