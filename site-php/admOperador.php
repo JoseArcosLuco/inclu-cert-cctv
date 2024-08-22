@@ -1,9 +1,13 @@
 <?php
 include("./includes/Database.class.php");
 
-require_once('./includes/Plantas.class.php');
+require_once('./includes/Turnos.class.php');
+require_once('./includes/Users.class.php');
+require_once('./includes/Operadores.class.php');
 
-$plantas = Plantas::get_all_plantas();
+$select_users = Operadores::get_all_unasigned_users();
+$users = Users::get_all_users();
+$turnos = Turnos::get_all_turnos();
 
 ?>
 
@@ -12,10 +16,10 @@ $plantas = Plantas::get_all_plantas();
         <div class="card mb-4">
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <div class="container d-flex gap-3">
-                    <a href="<?php echo $base_url ?>/formularios.php?form=plantas&token=<?php echo $token; ?>" class="btn btn-light rounded-circle d-flex alignt-items-center jusitfy-content-center p-2" title="Volver" id="back"><i class="material-icons fs-3">arrow_back</i></a>
+                    <a href="<?php echo $base_url ?>/formularios.php?form=turnos&token=<?php echo $token; ?>" class="btn btn-light rounded-circle d-flex alignt-items-center jusitfy-content-center p-2" title="Volver" id="back"><i class="material-icons fs-3">arrow_back</i></a>
                     <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar NVR<i class="material-icons">add</i></button>
                 </div>
-                <h3 class="card-title m-0 p-0 d-flex align-items-center justify-content-end col-6" id="nombrePlanta"></h3>
+                <h3 class="card-title m-0 p-0 d-flex align-items-center justify-content-end col-6" id="nombreTurno"></h3>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -25,16 +29,10 @@ $plantas = Plantas::get_all_plantas();
                                 ID
                             </th>
                             <th>
-                                Planta
+                                Turno
                             </th>
                             <th class="text-start">
-                                Número Dispositivo
-                            </th>
-                            <th class="text-start">
-                                Serial
-                            </th>
-                            <th class="text-center">
-                                Estado
+                                Nombre Completo Operador
                             </th>
                             <th class="text-center">
                                 Opciones
@@ -52,49 +50,33 @@ $plantas = Plantas::get_all_plantas();
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between align-items-center">
-                        <h5 class="modal-title" id="exampleModalLabel">Agregar Reporte</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Agregar Operador</h5>
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="formReporte" name="formReporte">
+                    <form id="formReporte" name="formReporte" autocomplete="off">
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-12 mb-3">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Planta:
-                                            <input type="text" class="form-control" name="nombre_planta" id="nombre_planta" required disabled>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
-                                        <label class="col-form-label w-100">Número Dispositivo:
-                                            <input type="number" class="form-control" name="num_dispositivo" id="num_dispositivo" requiered>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            <label class="col-form-label w-100">Serial:
-                                                <input type="number" class="form-control" name="serial" id="serial" requiered>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group">
-                                        <label class="col-form-label w-100">Estado:
-                                            <select class="form-select" name="estado" id="estado">
-                                                <option value="1">En Línea</option>
-                                                <option value="2">Retirado</option>
-                                                <option value="3">Reemplazado</option>
+                                        <label class="col-form-label w-100">Usuario:
+                                            <select class="form-select" name="id_user" id="id_user" required>
+                                                <option value="">Seleccione</option>
+                                                <?php foreach ($select_users as $user) : ?>
+                                                    <option value="<?php echo $user['id'] ?>"><?php echo $user['nombres'] . ' ' . $user['apellidos'] ?></option>
+                                                <?php endforeach; ?>
                                             </select>
                                         </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Buscar:
+                                            <input type="text" class="form-control" name="search" id="search">
+                                        </label>
+                                        <div>
+                                            <ul id="results" hidden class="list-group w-100"></ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -127,37 +109,62 @@ $plantas = Plantas::get_all_plantas();
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
-    let plantaId = <?php echo $_GET['planta']; ?>;
+    let turnoId = <?php echo $_GET['turno']; ?>;
 
-    var plantas = <?php echo json_encode($plantas); ?>;
-    var plantasMap = {};
+    var turnos = <?php echo json_encode($turnos); ?>;
+    var turnosMap = {};
 
-    plantas.forEach(function(planta) {
-        plantasMap[planta.id] = planta.nombre;
+    turnos.forEach(function(turno) {
+        turnosMap[turno.id] = turno.nombre;
     });
-    $('#nombrePlanta').text(plantasMap[plantaId]);
 
-    //Crear Reporte
+    var usuarios = <?php echo json_encode($users); ?>;
+    var usuariosMap = {};
+
+    usuarios.forEach(function(usuario) {
+        usuariosMap[usuario.id] = usuario.nombres + ' ' + usuario.apellidos;
+    });
+    $('#nombreTurno').text(turnosMap[turnoId]);
+
+    //Crear Operador
     $("#addUser").click(function() {
-        $('#formReporte').attr('data-action', 'create_nvr');
+        $('#formReporte').attr('data-action', 'create_operador');
         $('#formReporte')[0].reset();
-        $('#nombre_planta').val(plantasMap[plantaId]);
-        $('#modalCRUD .modal-title').text('Agregar NVR');
+        $('#modalCRUD .modal-title').text('Agregar Operador');
         $('#modalCRUD').modal('show');
     });
 
-    //Editar Reporte
-    $('#tabla tbody').on('click', '.btnEditar', function() {
-        var data = tablaReporte.row($(this).parents('tr')).data();
-        $('#formReporte').attr('data-action', 'edit_nvr');
-        $('#formReporte').attr('data-id', data.id);
-        $('#nombre_planta').val(plantasMap[data.id_planta]);
-        $('#num_dispositivo').val(data.numero_dispositivo);
-        $('#serial').val(data.serial);
-        $('#estado').val(data.estado);
-        $('#modalCRUD .modal-title').text('Editar NVR');
+    $('#search').on('input', function() {
+        let searchValue = $(this).val();
 
-        $('#modalCRUD').modal('show');
+        if (searchValue !== '') {
+            $.ajax({
+                type: 'POST',
+                url: './ajax_handler/operador.php',
+                data: {
+                    action: 'search_operadores',
+                    search: searchValue
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#results').empty();
+
+                    $('#results').prop('hidden', false);
+                    $.each(data, function(index, user) {
+                        $('#results').append('<li class="list-group-item list-group-item-action" data-id="' + user.id + '">' + user.nombres + ' ' + user.apellidos + '</li>');
+                    });
+                    $('#results li').on('click', function() {
+                        let texto = $(this).text();
+                        let id = $(this).data('id');
+                        $('#results').empty();
+                        $('#search').val(texto);
+                        $('#id_user option[value="' + id + '"]').prop('selected', true);
+                    });
+                }
+            });
+        } else {
+            $('#results').prop('hidden', true);
+        }
     });
 
     //Formatear Modal
@@ -168,42 +175,30 @@ $plantas = Plantas::get_all_plantas();
         modal.find('.modal-footer button').remove();
     });
 
-    //Eliminar Reporte
-    $('#tabla tbody').on('click', '.btnBorrar', function() {
-        var $row = $(this).closest('tr'); // Capturamos la fila correctamente
-        var data = tablaReporte.row($row).data();
-        var nvrId = data.id;
-        let estado = data.estado;
-        let funcionEstado = function(estado) {
-            if (estado == 1) {
-                return 'En Línea'
-            } else if (estado == 2) {
-                return 'Retirado'
-            } else if (estado == 3) {
-                return 'Reemplazado'
-            } else {
-                return 'Desconocido'
-            }
-        };
+    //Eliminar Operador
+    $('#tabla tbody').on('click','.btnBorrarOperador',function() {
+        let $row = $(this).closest('tr'); // Capturamos la fila correctamente
+        let data = tablaReporte.row($row).data();
+        let operadorId = data.id;
+        let usuarioId = data.id_users;
         var modal = $('#warningModal .modal-dialog .modal-content');
 
         modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
-        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
-        modal.find('.modal-body').append('<p class="col-6">ID: ' + nvrId + '</p>');
-        modal.find('.modal-body').append('<p class="col-6">Planta: ' + plantasMap[data.id_planta] + '</p>');
-        modal.find('.modal-body').append('<p class="col-6">Dispositivo: ' + data.numero_dispositivo + '</p>');
-        modal.find('.modal-body').append('<p class="col-6">Serial: ' + data.serial + '</p>');
-        modal.find('.modal-body').append('<p>Estado: ' + funcionEstado(estado) + '</p>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este operador del Turno? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p class="col-6">ID: ' + operadorId + '</p>');
+        modal.find('.modal-body').append('<p class="col-6">Turno: ' + turnosMap[turnoId] + '</p>');
+        modal.find('.modal-body').append('<p class="col-6">Nombre Completo: ' + usuariosMap[usuarioId] + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
         $('#warningModal').modal('show');
         $('#warningModal').on('click', '.btnBorrar', function() {
             $.ajax({
                 type: "POST",
-                url: "./ajax_handler/nvr.php",
+                url: "./ajax_handler/operador.php",
                 data: {
-                    action: 'delete_nvr',
-                    id: nvrId
+                    action: 'delete_operador',
+                    id: operadorId,
+                    id_user: usuarioId
                 },
                 datatype: "json",
                 encode: true,
@@ -228,11 +223,11 @@ $plantas = Plantas::get_all_plantas();
         tablaReporte = $('#tabla').DataTable({
             responsive: true,
             "ajax": {
-                "url": "./ajax_handler/nvr.php",
+                "url": "./ajax_handler/operador.php",
                 "type": 'POST',
                 "data": {
-                    id: plantaId,
-                    action: 'get_nvr'
+                    id: turnoId,
+                    action: 'get_operadores'
                 },
                 "dataSrc": ""
             },
@@ -243,40 +238,25 @@ $plantas = Plantas::get_all_plantas();
                     }
                 },
                 {
-                    "data": "id_planta",
+                    "data": "id_turnos",
                     "render": function(data) {
-                        return plantasMap[data] || 'Desconocido';
+                        return turnosMap[data] || 'Desconocido';
                     }
                 },
                 {
-                    "data": "numero_dispositivo",
+                    "data": "id_users",
                     "createdCell": function(td) {
                         $(td).addClass('text-start');
-                    }
-                },
-                {
-                    "data": "serial",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-start');
-                    }
-                },
-                {
-                    "data": "estado",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-center');
                     },
                     "render": function(data) {
-                        if (data === 1) {
-                            return 'En Línea';
-                        } else if (data === 2) {
-                            return 'Retirado';
-                        } else if (data === 3) {
-                            return 'Reemplazado';
-                        }
+                        return usuariosMap[data] || 'Desconocido';
                     }
                 },
                 {
-                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    "data": null,
+                    "render": function() {
+                        return "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-warning d-flex align-items-center justify-content-center btn-sm btnBorrarOperador'><i class='material-icons'>do_not_disturb_on</i></button></div></div>"
+                    }
                 }
             ],
             "createdRow": function(row, data, dataIndex) {
@@ -301,28 +281,24 @@ $plantas = Plantas::get_all_plantas();
         var formData = {
             action: action,
             id: id,
-            id_planta: plantaId,
-            num_dispositivo: $.trim($("#num_dispositivo").val()),
-            serial: $.trim($("#serial").val()),
-            estado: $.trim($("#estado").val())
+            id_user: $.trim($('#id_user').val()),
+            id_turno: turnoId,
         };
         $.ajax({
             type: "POST",
-            url: "./ajax_handler/nvr.php",
+            url: "./ajax_handler/operador.php",
             data: formData,
             datatype: "json",
             encode: true,
             success: function(data) {
                 if (data.status) {
-                    if (action === 'create_nvr') {
+                    if (action === 'create_operador') {
                         var newRow = tablaReporte.row.add({
-                            "id": data.nvr.id,
-                            "id_planta": data.nvr.id_planta,
-                            "numero_dispositivo": data.nvr.numero_dispositivo,
-                            "serial": data.nvr.serial,
-                            "estado": data.nvr.estado,
+                            "id": data.operador.id,
+                            "id_turnos": data.operador.id_turnos,
+                            "id_users": data.operador.id_users
                         }).draw().node();
-                        $(newRow).attr('data-id', data.nvr.id);
+                        $(newRow).attr('data-id', data.operador.id);
                         $('#modalCRUD').modal('hide');
 
                     } else if (action === 'edit_nvr') {

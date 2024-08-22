@@ -109,6 +109,9 @@ $id_usuario = isset($_SESSION["iduser"]) ? $_SESSION["iduser"] : '';
                 case "nvr":
                     include "admNVR.php";
                     break;
+                case "operador":
+                    include "admOperador.php";
+                    break;
             }
             
             

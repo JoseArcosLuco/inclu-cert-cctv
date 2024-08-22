@@ -14,10 +14,18 @@ $usuarios = Users::get_all_users();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
-            <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Reporte Novedades<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="col-6 col-md-8">
+                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5 w-min-content" id="addUser">Agregar Reporte Novedades<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                </div>
+                <label class="col-6 col-md-4 col-form-label p-0">Novedad:
+                    <select class="form-select d-flex" id="tipo_novedad" name="novedad">
+                        <option value="1" selected>Diaria</option>
+                        <option value="2">Semanal</option>
+                    </select>
+                </label>
             </div> <!-- /.card-header -->
-            <div class="card-body p-0 table-responsive">
+            <div class=" card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
                     <thead>
                         <tr>
@@ -131,7 +139,7 @@ $usuarios = Users::get_all_users();
                                                 <input type="time" class="form-control" name="hora_fin" id="hora_fin" disabled>
                                             </label>
                                         </div>
-                                    </div>               
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -148,6 +156,19 @@ $usuarios = Users::get_all_users();
                                             <select class="form-select" name="estado" id="estado">
                                                 <option value="1">Activo</option>
                                                 <option value="0">Inactivo</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Tipo de Novedad:
+                                            <select class="form-select" name="id_novedad" id="id_novedad" requiere>
+                                                <option value="">Seleccione</option>
+                                                <option value="1">Diaria</option>
+                                                <option value="2">Semanal</option>
                                             </select>
                                         </label>
                                     </div>
@@ -236,6 +257,7 @@ $usuarios = Users::get_all_users();
         $('#hora_fin').val(moment(data.fecha_fin).format('HH:mm'));
         $('#observacion').val(data.observacion);
         $('#estado').val(data.estado);
+        $('#id_novedad').val(data.tipo_novedad);
         $('#modalCRUD .modal-title').text('Editar Reporte');
 
         $('#modalCRUD').modal('show');
@@ -360,8 +382,12 @@ $usuarios = Users::get_all_users();
             "ajax": {
                 "url": "./ajax_handler/novedades.php",
                 "type": 'POST',
-                "data": {
-                    action: 'get_novedades'
+                "data": function(d) {
+                    let data = {
+                        action: 'get_novedades'
+                    };
+                    data.tipo_novedad = $('#tipo_novedad').val();
+                    return data;
                 },
                 "dataSrc": ""
             },
@@ -404,7 +430,7 @@ $usuarios = Users::get_all_users();
                 {
                     "data": "fecha_fin",
                     "render": function(data) {
-                        return data ? moment(data).format('HH:mm'): 'Sin Hora';
+                        return data ? moment(data).format('HH:mm') : 'Sin Hora';
                     }
                 },
                 {
@@ -441,6 +467,10 @@ $usuarios = Users::get_all_users();
     });
 </script>
 <script>
+    $('#tipo_novedad').on('change', function() {
+        tablaReporte.ajax.reload();
+    });
+
     // fomrulario Subir/Editar cámaras
 
     $("#formReporte").submit(function(e) {
@@ -460,6 +490,7 @@ $usuarios = Users::get_all_users();
             fecha_fin: $("#fecha_fin").val() ? $.trim($("#fecha_fin").val()) : null,
             hora_fin: $("#hora_fin").val() ? $.trim($("#hora_fin").val()) + ':00' : null,
             observacion: $.trim($("#observacion").val()),
+            tipo_novedad: $.trim($("#id_novedad").val()),
             estado: $.trim($("#estado").val())
         };
         $.ajax({
@@ -471,37 +502,39 @@ $usuarios = Users::get_all_users();
             success: function(data) {
                 if (data.status) {
                     if (action === 'create_novedades') {
-                        let hora = moment(data.reporte.fecha, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
-                        let hora_fin = moment(data.reporte.fecha_fin, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
-                        var newRow = tablaReporte.row.add({
-                            "id": data.reporte.id,
-                            "id_cliente": data.reporte.id_cliente,
-                            "id_planta": data.reporte.id_planta,
-                            "fecha": formData.fecha,
-                            "hora": hora,
-                            "fecha_fin": formData.fecha_fin,
-                            "hora_fin": hora_fin,
-                            "observacion": data.reporte.observacion,
-                            "id_usuario": data.reporte.id_usuario,
-                            "estado": data.reporte.estado,
-                        }).draw().node();
-                        $(newRow).attr('data-id', data.reporte.id);
+                        tablaReporte.ajax.reload();
+                        // let hora = moment(data.reporte.fecha, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                        // let hora_fin = moment(data.reporte.fecha_fin, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                        // var newRow = tablaReporte.row.add({
+                        //     "id": data.reporte.id,
+                        //     "id_cliente": data.reporte.id_cliente,
+                        //     "id_planta": data.reporte.id_planta,
+                        //     "fecha": formData.fecha,
+                        //     "hora": hora,
+                        //     "fecha_fin": formData.fecha_fin,
+                        //     "hora_fin": hora_fin,
+                        //     "observacion": data.reporte.observacion,
+                        //     "id_usuario": data.reporte.id_usuario,
+                        //     "estado": data.reporte.estado,
+                        // }).draw().node();
+                        // $(newRow).attr('data-id', data.reporte.id);
                         $('#modalCRUD').modal('hide');
 
                     } else if (action === 'edit_novedades') {
-                        var row = tablaReporte.row($('[data-id="' + id + '"]'));
-                        row.data({
-                            "id": id,
-                            "id_cliente": formData.id_cliente,
-                            "id_planta": formData.id_planta,
-                            "fecha": formData.fecha,
-                            "hora": formData.hora,
-                            "fecha_fin": formData.fecha_fin,
-                            "hora_fin": formData.hora_fin,
-                            "observacion": formData.observacion,
-                            "id_usuario": formData.id_usuario,
-                            "estado": formData.estado,
-                        }).draw();
+                        tablaReporte.ajax.reload();
+                        // var row = tablaReporte.row($('[data-id="' + id + '"]'));
+                        // row.data({
+                        //     "id": id,
+                        //     "id_cliente": formData.id_cliente,
+                        //     "id_planta": formData.id_planta,
+                        //     "fecha": formData.fecha,
+                        //     "hora": formData.hora,
+                        //     "fecha_fin": formData.fecha_fin,
+                        //     "hora_fin": formData.hora_fin,
+                        //     "observacion": formData.observacion,
+                        //     "id_usuario": formData.id_usuario,
+                        //     "estado": formData.estado,
+                        // }).draw();
                         $('#modalCRUD').modal('hide');
 
                     }
