@@ -213,6 +213,20 @@ $operadores = Operadores::get_all_operadores_without_turno();
 
         $('#modalCRUD').modal('show');
 
+        $('#camaras_online').on('change', function() {
+            let camarasOnline = $(this).val();
+            let camaras = $('#camaras').val();
+            let modal = $('#warningModal .modal-dialog .modal-content');
+
+            if (camarasOnline > camaras) {
+                $('#camaras_online').val(camaras);
+                modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Error en la Reporte ' + $data.id + '</h5>');
+                modal.find('.modal-body').append('<p class="bg-danger text-white text-center p-2 rounded mb-1">El valor de Camaras Online no puede ser mayor al valor de Camaras.</p> <p class="text-center p-2 m-0">Por favor, seleccione una valor menor o igual a ' + camaras + '.</p>');
+                modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>');
+                $('#warningModal').modal('show');
+            }
+        });
+
         $("#formReporte").submit(function(e) {
             e.preventDefault();
             console.log($data);
