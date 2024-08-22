@@ -103,8 +103,9 @@ $perfiles = Perfil::get_all_perfiles();
                             <div class="row">
                                 <div class="col-md-8 mb-3">
                                     <div class="form-group">
-                                        <label class="col-form-label w-100">Contraseña:
+                                        <label class="col-form-label w-100" id="label_contraseña">Contraseña:
                                             <input type="password" class="form-control" id="password">
+                                            <button type="button" id="cambiar_contraseña" class="btn btn-secondary form-control" hidden>Cambiar Contraseña</button>
                                         </label>
                                     </div>
                                 </div>    
@@ -166,6 +167,12 @@ $perfiles = Perfil::get_all_perfiles();
         $('#apellidos').val(data.apellidos);
         $('#email').val(data.email);    
         $('#estado').val(data.estado);
+        $('#cambiar_contraseña').prop('hidden', false);
+        $('#password').prop('hidden', true);
+        $('#cambiar_contraseña').click(function(){
+            $('#password').prop('hidden', false);
+            $('#cambiar_contraseña').prop('hidden', true);
+        });
         $('#password').val('');
         $('#modalCRUD .modal-title').text('Editar Usuario');
 
@@ -307,7 +314,6 @@ $perfiles = Perfil::get_all_perfiles();
             password: $.trim($("#password").val()),
             estado: $.trim($("#estado").val())
         };
-        console.log(formData);
         $.ajax({
             type: "POST",
             url: "./ajax_handler/users.php",
@@ -330,7 +336,6 @@ $perfiles = Perfil::get_all_perfiles();
                             $('#modalCRUD').modal('hide');
                     }else if (action === 'edit_user'){
                         var row = tablaUsuarios.row($('[data-id="' + id + '"]'));
-                        console.log(row.data());
                         row.data({
                             "id": id,
                             "id_perfil": formData.id_perfil,
@@ -346,7 +351,6 @@ $perfiles = Perfil::get_all_perfiles();
                     
                 } else {
                     alert(data.message);
-                    // console.log("nofunkopapito")
                 } },
             error:function(jqXHR, textStatus, errorThrown) {
                 // Manejar errores de AJAX
