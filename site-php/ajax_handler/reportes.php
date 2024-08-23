@@ -65,7 +65,8 @@ if (isset($_POST)) {
             break;
 
         case 'get_reportes':
-            $response = Reportes::get_all_reportes();
+            $id_cliente = $_POST['cliente'];
+            $response = Reportes::get_all_reportes($id_cliente);
             echo json_encode($response);
             break;
 
@@ -94,18 +95,6 @@ if (isset($_POST)) {
         case 'delete_reporte':
             $id = $_POST['id'];
             $response = Reportes::delete_reporte_by_id($id);
-            echo json_encode($response);
-            break;
-
-        case 'get_reportes_by_cliente':
-            $id_cliente = $_POST['id'];
-            $database = new Database();
-            $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_diario WHERE id_clientes = :id_cliente');
-            $stmt->bindParam(':id_cliente', $id_cliente);
-            $stmt->execute();
-            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
             echo json_encode($response);
             break;
         

@@ -47,10 +47,16 @@
             }
         }
 
-        public static function get_all_reportes(){
+        public static function get_all_reportes($id_cliente){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_diario');
+
+            if(empty($id_cliente)){
+                $stmt = $conn->prepare('SELECT * FROM cctv_reporte_diario');
+            } else {
+                $stmt = $conn->prepare('SELECT * FROM cctv_reporte_diario WHERE id_cliente = :id_cliente');
+                $stmt->bindParam(':id_cliente',$id_cliente);
+            }
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
                 return $result;

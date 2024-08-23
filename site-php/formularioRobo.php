@@ -472,37 +472,39 @@ $usuarios = Users::get_all_users();
             success: function(data) {
                 if (data.status) {
                     if (action === 'create_reporte') {
-                        let hora = moment(data.reporte.fecha, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
-                        let hora_fin = moment(data.reporte.fecha_fin, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
-                        var newRow = tablaReporte.row.add({
-                            "id": data.reporte.id,
-                            "id_cliente": data.reporte.id_cliente,
-                            "id_planta": data.reporte.id_planta,
-                            "fecha": formData.fecha,
-                            "hora": hora,
-                            "fecha_fin": formData.fecha_fin,
-                            "hora_fin": hora_fin,
-                            "observacion": data.reporte.observacion,
-                            "id_usuario": data.reporte.id_usuario,
-                            "estado": data.reporte.estado,
-                        }).draw().node();
-                        $(newRow).attr('data-id', data.reporte.id);
+                        tablaReporte.ajax.reload();
+                        // let hora = moment(data.reporte.fecha, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                        // let hora_fin = moment(data.reporte.fecha_fin, 'YYYY-MM-DD HH:mm:ss').format('HH:mm');
+                        // var newRow = tablaReporte.row.add({
+                        //     "id": data.reporte.id,
+                        //     "id_cliente": data.reporte.id_cliente,
+                        //     "id_planta": data.reporte.id_planta,
+                        //     "fecha": formData.fecha,
+                        //     "hora": hora,
+                        //     "fecha_fin": formData.fecha_fin,
+                        //     "hora_fin": hora_fin,
+                        //     "observacion": data.reporte.observacion,
+                        //     "id_usuario": data.reporte.id_usuario,
+                        //     "estado": data.reporte.estado,
+                        // }).draw().node();
+                        // $(newRow).attr('data-id', data.reporte.id);
                         $('#modalCRUD').modal('hide');
 
                     } else if (action === 'edit_reporte') {
-                        var row = tablaReporte.row($('[data-id="' + id + '"]'));
-                        row.data({
-                            "id": id,
-                            "id_cliente": formData.id_cliente,
-                            "id_planta": formData.id_planta,
-                            "fecha": formData.fecha,
-                            "hora": formData.hora,
-                            "fecha_fin": formData.fecha_fin,
-                            "hora_fin": formData.hora_fin,
-                            "observacion": formData.observacion,
-                            "id_usuario": formData.id_usuario,
-                            "estado": formData.estado,
-                        }).draw();
+                        tablaReporte.ajax.reload();
+                        // var row = tablaReporte.row($('[data-id="' + id + '"]'));
+                        // row.data({
+                        //     "id": id,
+                        //     "id_cliente": formData.id_cliente,
+                        //     "id_planta": formData.id_planta,
+                        //     "fecha": formData.fecha,
+                        //     "hora": formData.hora,
+                        //     "fecha_fin": formData.fecha_fin,
+                        //     "hora_fin": formData.hora_fin,
+                        //     "observacion": formData.observacion,
+                        //     "id_usuario": formData.id_usuario,
+                        //     "estado": formData.estado,
+                        // }).draw();
                         $('#modalCRUD').modal('hide');
 
                     }

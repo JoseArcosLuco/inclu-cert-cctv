@@ -13,32 +13,32 @@ $operadores = Operadores::get_all_operadores_without_turno();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4 col-12">
-            <div class="card-header p-3 d-flex align-items-center justify-content-start">
-                <div class="dropdown col-md-2 col-7">
-                    <button class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-start gap-2 fs-5" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="dropdown col-6 col-md-8">
+                    <button class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-start gap-1 fs-5" data-bs-toggle="dropdown" aria-expanded="false">
                         Agregar Reporte
                     </button>
                     <ul class="dropdown-menu">
                         <?php foreach ($clientes as $cliente): ?>
-                        <li>
-                            <a class="dropdown-item"
-                            href="<?php echo $base_url?>/formularios.php?cliente=<?php echo $cliente['id']?>&form=informeperiodico&token=<?php echo $token;?>"
-                            name="addUser" 
-                            id="addUser">
-                                <?php echo htmlspecialchars($cliente['nombre']);?>
-                            </a>
-                        </li>
+                            <li>
+                                <a class="dropdown-item"
+                                    href="<?php echo $base_url ?>/formularios.php?cliente=<?php echo $cliente['id'] ?>&form=informeperiodico&token=<?php echo $token; ?>"
+                                    name="addUser"
+                                    id="addUser">
+                                    <?php echo htmlspecialchars($cliente['nombre']); ?>
+                                </a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                <div class="card-title d-flex align-items-center justify-content-end gap-1 col-md-2 col-5">Cliente:
-                    <select class="form-select form-select-sm" name="cliente" id="cliente">
-                        <option value="">Seleccione</option>
+                <label class="card-title col-md-4 col-6 p-0">Cliente:
+                    <select class="form-select d-flex" name="cliente" id="cliente">
+                        <option value="" selected>Ver Todos</option>
                         <?php foreach ($clientes as $cliente): ?>
-                        <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
+                            <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
                         <?php endforeach; ?>
                     </select>
-                </div>
+                </label>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -79,7 +79,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                     <tbody>
                     </tbody>
                 </table>
-            </div>      
+            </div>
         </div> <!-- /.card -->
 
         <div class="modal fade" id="modalCRUD" tabindex="-1" role="dialog">
@@ -90,7 +90,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form id="formReporte" name="formReporte">    
+                    <form id="formReporte" name="formReporte">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -99,7 +99,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                             <select class="form-select" name="id_cliente" id="id_cliente">
                                                 <option value="">Seleccione</option>
                                                 <?php foreach ($clientes as $cliente): ?>
-                                                    <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
+                                                    <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </label>
@@ -114,7 +114,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                                 </select>
                                             </label>
                                         </div>
-                                    </div>               
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -132,7 +132,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                                 <input type="number" class="form-control" name="canal" id="canal" requiered>
                                             </label>
                                         </div>
-                                    </div>               
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -150,7 +150,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                                 <input type="number" class="form-control" name="camaras_online" id="camaras_online" requiered>
                                             </label>
                                         </div>
-                                    </div>               
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -160,14 +160,14 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                             <textarea name="observacion" id="observacion" class="form-control" rows="3" requiered></textarea>
                                         </label>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" id="btnGuardar" class="btn btn-dark">Guardar</button>
                         </div>
-                    </form>    
+                    </form>
                 </div>
             </div>
         </div>
@@ -201,7 +201,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         $('#formReporte').attr('data-id', $data.id);
         $('#id_cliente').val($data.id_cliente);
         $('#id_planta').append('<?php foreach ($plantas as $planta): ?>');
-        $('#id_planta').append('<option value="<?php echo $planta['id']?>" ><?php echo htmlspecialchars($planta['nombre']);?></option>');
+        $('#id_planta').append('<option value="<?php echo $planta['id'] ?>" ><?php echo htmlspecialchars($planta['nombre']); ?></option>');
         $('#id_planta').append('<?php endforeach; ?>');
         $('#id_planta').val($data.id_planta);
         $('#fecha').val($data.fecha);
@@ -213,12 +213,26 @@ $operadores = Operadores::get_all_operadores_without_turno();
 
         $('#modalCRUD').modal('show');
 
+        $('#camaras_online').on('change', function() {
+            let camarasOnline = $(this).val();
+            let camaras = $('#camaras').val();
+            let modal = $('#warningModal .modal-dialog .modal-content');
+
+            if (camarasOnline > camaras) {
+                $('#camaras_online').val(camaras);
+                modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Error en la Reporte ' + $data.id + '</h5>');
+                modal.find('.modal-body').append('<p class="bg-danger text-white text-center p-2 rounded mb-1">El valor de Camaras Online no puede ser mayor al valor de Camaras.</p> <p class="text-center p-2 m-0">Por favor, seleccione una valor menor o igual a ' + camaras + '.</p>');
+                modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>');
+                $('#warningModal').modal('show');
+            }
+        });
+
         $("#formReporte").submit(function(e) {
             e.preventDefault();
             console.log($data);
             var formData = {
                 action: 'edit_reporte',
-                id : $data.id,
+                id: $data.id,
                 fecha: $.trim($('#fecha').val()),
                 canal: $.trim($('#canal').val()),
                 camaras_online: $.trim($('#camaras_online').val()),
@@ -257,7 +271,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
     });
 
     //Formatear Modal
-    $('#warningModal').on('hidden.bs.modal', function() {    
+    $('#warningModal').on('hidden.bs.modal', function() {
         var modal = $('#warningModal .modal-dialog .modal-content');
         modal.find('.modal-header h5').remove();
         modal.find('.modal-body p').remove();
@@ -266,46 +280,49 @@ $operadores = Operadores::get_all_operadores_without_turno();
 
     //Eliminar Reporte
     $('#tabla tbody').on('click', '.btnBorrar', function() {
-    var $row = $(this).closest('tr');  // Capturamos la fila correctamente
-    var data = tablaReporte.row($row).data();
-    var reporteId = data.id;
-    var modal = $('#warningModal .modal-dialog .modal-content');
-    console.log(data);
+        var $row = $(this).closest('tr'); // Capturamos la fila correctamente
+        var data = tablaReporte.row($row).data();
+        var reporteId = data.id;
+        var modal = $('#warningModal .modal-dialog .modal-content');
+        console.log(data);
 
-    modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
-    modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
-    modal.find('.modal-body').append('<p>ID: '+data.id+'</p>');
-    modal.find('.modal-body').append('<p>Operador: '+operadoresMap[data.id_operador]+'</p>');
-    modal.find('.modal-body').append('<p>Planta: '+plantasMap[data.id_planta]+'</p>');
-    modal.find('.modal-body').append('<p>Fecha: '+moment(data.fecha).format('DD/MM/YYYY') || 'Fecha no válida' +'</p>');
-    modal.find('.modal-body').append('<p>N° de Cámaras: '+data.camaras+'</p>');
-    modal.find('.modal-body').append('<p>N° de Cámaras en Lína: '+data.camaras_online+'</p>');
-    modal.find('.modal-body').append('<p>Canal: '+data.canal+'</p>');
-    modal.find('.modal-footer').append('<button type="button" class="btn |btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
-    modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
-    $('#warningModal').modal('show');
-    $('#warningModal').on('click', '.btnBorrar', function(){
-    $.ajax({
-        type: "POST",
-        url: "./ajax_handler/reportes.php",
-        data: { action: 'delete_reporte', id: reporteId },
-        datatype: "json",
-        encode: true,
-        success: function(response) {
-            if (response.status) {
-                // Remover la fila de la tabla
-                tablaReporte.row($row).remove().draw()  ;
-            } else {
-                alert(response.message);
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            // Manejar errores de AJAX
-            console.log("Error en AJAX: " + textStatus, errorThrown);
-            alert("Error en la solicitud: " + textStatus);
-        }
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
+        modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
+        modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
+        modal.find('.modal-body').append('<p>Operador: ' + operadoresMap[data.id_operador] + '</p>');
+        modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_planta] + '</p>');
+        modal.find('.modal-body').append('<p>Fecha: ' + moment(data.fecha).format('DD/MM/YYYY') || 'Fecha no válida' + '</p>');
+        modal.find('.modal-body').append('<p>N° de Cámaras: ' + data.camaras + '</p>');
+        modal.find('.modal-body').append('<p>N° de Cámaras en Lína: ' + data.camaras_online + '</p>');
+        modal.find('.modal-body').append('<p>Canal: ' + data.canal + '</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn |btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
+        $('#warningModal').modal('show');
+        $('#warningModal').on('click', '.btnBorrar', function() {
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/reportes.php",
+                data: {
+                    action: 'delete_reporte',
+                    id: reporteId
+                },
+                datatype: "json",
+                encode: true,
+                success: function(response) {
+                    if (response.status) {
+                        // Remover la fila de la tabla
+                        tablaReporte.row($row).remove().draw();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Manejar errores de AJAX
+                    console.log("Error en AJAX: " + textStatus, errorThrown);
+                    alert("Error en la solicitud: " + textStatus);
+                }
+            });
         });
-    });
     });
 
     var plantas = <?php echo json_encode($plantas); ?>;
@@ -322,23 +339,32 @@ $operadores = Operadores::get_all_operadores_without_turno();
         operadoresMap[operador.id] = operador.nombre;
     });
 
-        $(document).ready( function(){
-        tablaReporte =  $('#tabla').DataTable({
+    $('#cliente').on('change', function() {
+        tablaReporte.ajax.reload();
+    });
+
+    $(document).ready(function() {
+        tablaReporte = $('#tabla').DataTable({
             responsive: true,
-            "ajax": {            
+            "ajax": {
                 "url": "./ajax_handler/reportes.php",
                 "type": 'POST',
-                "data": {action: 'get_reportes'},
+                "data": function(d) {
+                    let data = {
+                        action: 'get_reportes'
+                    };
+                    data.cliente = $('#cliente').val();
+                    return data;
+                },
                 "dataSrc": ""
             },
-            "columns":[
-                {   
+            "columns": [{
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
                 },
-                {   
+                {
                     "data": "fecha",
                     render: function(data) {
                         return moment(data).format('DD/MM/YYYY');
@@ -353,7 +379,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         return operadoresMap[data] || 'Desconocido';
                     }
                 },
-                {   
+                {
                     "data": "id_planta",
                     "render": function(data) {
                         return plantasMap[data] || 'Desconocido';
@@ -383,7 +409,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 {
                     "data": "observacion",
                 },
-                {   
+                {
                     "data": null,
                     "render": function(data, type, row) {
                         var porcentaje = 0;
@@ -396,10 +422,12 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         $(td).addClass('text-center');
                     }
                 },
-                {"defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"}
+                {
+                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                }
             ],
             "createdRow": function(row, data, dataIndex) {
-            $(row).attr('data-id', data.id); // Añadir atributo data-id
+                $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
             "language": {
                 "url": "./assets/json/espanol.json"
@@ -409,6 +437,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
     });
 </script>
 <!-- end::Script -->
-    
+
 </body>
+
 </html>
