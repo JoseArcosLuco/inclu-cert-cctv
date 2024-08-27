@@ -112,6 +112,9 @@ $id_usuario = isset($_SESSION["iduser"]) ? $_SESSION["iduser"] : '';
                 case "operador":
                     include "admOperador.php";
                     break;
+                case "reporteCompleto":
+                    include "formularioReporteCompleto.php";
+                    break;
             }
             
             
