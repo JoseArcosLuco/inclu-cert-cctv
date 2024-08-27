@@ -5,7 +5,7 @@ if (isset($_SESSION["token"])) {
 }else{
     $token = '';
 }
-
+$idPerfil = '';
 $idPerfil = isset($_SESSION["idperfil"]) ? $_SESSION["idperfil"] : '';
 
 //limpiamos las variables
@@ -156,42 +156,54 @@ if (isset($_GET['form'])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <?php if ($idPerfi === '1' || $idPerfi === '2'): ?>
+                                <?php if ($idPerfil === 1 || $idPerfil === 2): ?>
                                     <li class="nav-item"> 
                                         <a href="<?php echo $base_url?>/formularios.php?form=perfil&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePerfil;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
                                             <p>Admin Perfiles</p>
                                         </a> 
                                     </li>
+                                
+                                    <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=tipoplanta&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTp;?>"> <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Tipo Planta</p>
+                                        </a> 
+                                    </li>
+                                    
+                                    <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=comisarias&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveC;?>"> <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Comisarias</p>
+                                        </a> 
+                                    </li>
+                                    
+                                    <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=jornadas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveJ;?>"> <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Jornadas</p>
+                                        </a> 
+                                    </li>
+                                    
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=turnos&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTurnos;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Turnos</p>
+                                        </a> 
+                                    </li>
                                 <?php endif; ?>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=tipoplanta&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTp;?>"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Tipo Planta</p>
-                                    </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=comisarias&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveC;?>"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Comisarias</p>
-                                    </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=jornadas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveJ;?>"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Jornadas</p>
-                                    </a> </li>
-                                <li class="nav-item"> 
-                                    <a href="<?php echo $base_url?>/formularios.php?form=turnos&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTurnos;?>"> 
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Turnos</p>
-                                    </a> 
-                                </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=clientes&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveClientes;?>"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Clientes</p>
-                                    </a> </li>
-                                <li class="nav-item"> 
-                                    <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveP;?>"> 
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Plantas</p>
-                                    </a> 
-                                </li>
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=clientes&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveClientes;?>"> <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Clientes</p>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveP;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Plantas</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
                                 <!-- <li class="nav-item"> <a href="./admCiudades.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Ciudades</p>
                                     </a> </li> -->
-                                <?php if ($idPerfi === '1'): ?>
+                                <?php if ($idPerfil === 1): ?>
                                     <li class="nav-item">
                                         <a href="./formularios.php?form=usuarios&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveU;?>">
                                             <i class="nav-icon bi bi-circle"></i>
@@ -199,12 +211,14 @@ if (isset($_GET['form'])) {
                                         </a>
                                     </li>
                                 <?php endif; ?>
-                                <li class="nav-item">
-                                    <a href="./formularios.php?form=camaras&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCam;?>">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Admin Cámaras</p>
-                                    </a>
-                                </li>
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item">
+                                        <a href="./formularios.php?form=camaras&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCam;?>">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Admin Cámaras</p>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
                             </ul>
                         </li>
                         
