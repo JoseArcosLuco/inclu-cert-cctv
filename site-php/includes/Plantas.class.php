@@ -129,11 +129,16 @@
             }
         }
 
-        public static function update_plantas($id, $idcomuna, $idcomisarias, $idtipoplanta,$idcliente,$nombre, $grupo, $ubicacion, $encargadocontacto, $encargadoemail, $encargadotelefono, $mapa, $estado){
+        public static function update_plantas($id, $idcomuna, $idcomisarias, $idtipoplanta,$idcliente,$nombre, $grupo, $ubicacion, $encargadocontacto, $encargadoemail, $encargadotelefono, $mapa, $estado,$marcaDispositivos, 
+        $modelosDispositivos, $cantidadCamaras, $modeloCamaras, $codificacionCamaras, $analiticas, $sensores, $tamanoGrabacion, $diasGrabacion, $alarmaVoceo, $sirenas, $internet, $proveedorInternet, $p2p, $autoregistros){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_plantas SET id_comuna=:idcomuna,id_comisarias=:idcomisarias,id_tipo_planta=:idtipoplanta,id_clientes=:idclientes,nombre=:nombre,grupo=:grupo,ubicacion=:ubicacion,encargado_contacto=:encargadocontacto,encargado_email=:encargadoemail,encargado_telefono=:encargadotelefono,mapa=:mapa,estado=:estado WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_plantas SET id_comuna=:idcomuna,id_comisarias=:idcomisarias,id_tipo_planta=:idtipoplanta,id_clientes=:idclientes,nombre=:nombre,grupo=:grupo,ubicacion=:ubicacion,encargado_contacto=:encargadocontacto,encargado_email=:encargadoemail,encargado_telefono=:encargadotelefono, ' .
+                                    'mapa=:mapa,estado=:estado,marca_dispositivos=:marcaDispositivos, modelos_dispositivos=:modelosDispositivos, cantidad_camaras=:cantidadCamaras, tipo_modelo_camaras=:modeloCamaras, ' .
+                                    'codificacion_camaras=:codificacionCamaras, analiticas=:analiticas, sensores=:sensores, tamano_grabacion=:tamanoGrabacion, dias_grabacion=:diasGrabacion, alarma_voceo=:alarmaVoceo, sirenas=:sirenas, internet=:internet, proveedor_internet=:proveedorInternet, p2p=:p2p, autoregistro=:autoregistros ' .
+                                    'WHERE id=:id');
+            
             $stmt->bindParam(':idcomuna',$idcomuna);
             $stmt->bindParam(':idcomisarias',$idcomisarias);
             $stmt->bindParam(':idtipoplanta',$idtipoplanta);
@@ -146,6 +151,24 @@
             $stmt->bindParam(':encargadotelefono',$encargadotelefono);
             $stmt->bindParam(':mapa',$mapa);
             $stmt->bindParam(':estado',$estado);
+
+            $stmt->bindParam(':marcaDispositivos',$marcaDispositivos);
+            $stmt->bindParam(':modelosDispositivos',$modelosDispositivos);
+            $stmt->bindParam(':cantidadCamaras',$cantidadCamaras);
+            $stmt->bindParam(':modeloCamaras',$modeloCamaras);
+            $stmt->bindParam(':codificacionCamaras',$codificacionCamaras);
+            $stmt->bindParam(':analiticas',$analiticas);
+            $stmt->bindParam(':sensores',$sensores);
+            $stmt->bindParam(':tamanoGrabacion',$tamanoGrabacion);
+            $stmt->bindParam(':diasGrabacion',$diasGrabacion);
+            $stmt->bindParam(':alarmaVoceo',$alarmaVoceo);
+            $stmt->bindParam(':sirenas',$sirenas);
+            $stmt->bindParam(':internet',$internet);
+            $stmt->bindParam(':proveedorInternet',$proveedorInternet);
+            $stmt->bindParam(':p2p',$p2p);
+            $stmt->bindParam(':autoregistros',$autoregistros);
+
+
             $stmt->bindParam(':id',$id);
 
             if ($stmt->execute()) {

@@ -207,14 +207,14 @@ $clientes = Clientes::get_all_clients();
                                 <div class="row">
                                     <div class="col-md-6 mb-2">
                                         <div class="form-group">
-                                            <label class="col-form-label w-100">Marca Dispositivos:
+                                            <label class="col-form-label w-100">Marca NVR:
                                                 <input class="form-control" type="text" id="marcaDispositivos" name="marcaDispositivos"></input>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-2">
                                         <div class="form-group">
-                                            <label class="col-form-label w-100">Modelos Dispositivos:
+                                            <label class="col-form-label w-100">Modelos NVR:
                                                 <input class="form-control" type="text" id="modelosDispositivos" name="modelosDispositivos"></input>
                                             </label>
                                         </div>
@@ -550,8 +550,8 @@ $clientes = Clientes::get_all_clients();
         function pagina2(modal) {
             let response = modal.response;
             console.log(response);
-            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Marca Dispositivos: </span>'+ response[0].marca_dispositivos +'</p>');
-            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelos Dispositivos: </span>'+ response[0].modelos_dispositivos +'</p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Marca NVR: </span>'+ response[0].marca_dispositivos +'</p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelos NVR: </span>'+ response[0].modelos_dispositivos +'</p>');
             modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cantidad Cámaras: </span>'+ response[0].cantidad_camaras +'</p>');
             modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelo Cámaras: </span>' + response[0].tipo_modelo_camaras + '</p>');
             modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Codificación Cámaras: </span>' + response[0].codificacion_camaras + '</p>');
@@ -813,7 +813,26 @@ $clientes = Clientes::get_all_clients();
                             "id_tipo_planta": data.planta.id_tipo_planta,
                             "grupo": data.planta.grupo,
                             "ubicacion": data.planta.ubicacion,
-                            "estado": data.planta.estado
+                            "estado": data.planta.estado,
+
+                            "marcaDispositivos": data.planta.marca_dispositivos,
+                            "modelosDispositivos": data.planta.modelos_dispositivos,
+                            "cantidadCamaras": data.planta.cantidad_camaras,
+                            "modeloCamaras": data.planta.tipo_modelo_camaras,
+                            "codificacionCamaras": data.planta.codificacion_camaras,
+
+                            "analiticas": data.planta.analiticas,
+                            "sensores": data.planta.sensores,
+                            "tamanoGrabacion": data.planta.tamano_grabacion,
+                            "diasGrabacion": data.planta.dias_grabacion,
+                            "alarmaVoceo": data.planta.alarma_voceo,
+                            
+                            "sirenas": data.planta.sirenas,           
+                            "internet": data.planta.internet,
+                            "proveedorInternet": data.planta.proveedor_internet,
+                            "p2p": data.planta.p2p,
+                            "autoregistro": data.planta.autoregistro
+
                         }).draw().node();
                         $(newRow).attr('data-id', data.planta.id);
                         $('#modalCRUD').modal('hide');
@@ -823,14 +842,33 @@ $clientes = Clientes::get_all_clients();
                         console.log(row.data());
                         row.data({
                             "id": id,
-                            "nombre": formData.nombre,
-                            "id_clientes": formData.id_clientes,
-                            "id_comuna": formData.id_comuna,
-                            "id_comisarias": formData.id_comisarias,
-                            "id_tipo_planta": formData.id_tipo_planta,
-                            "grupo": formData.grupo,
-                            "ubicacion": formData.ubicacion,
-                            "estado": formData.estado
+                            "nombre": data.planta.nombre,
+                            "id_clientes": data.planta.id_clientes,
+                            "id_comuna": data.planta.id_comuna,
+                            "id_comisarias": data.planta.id_comisarias,
+                            "id_tipo_planta": data.planta.id_tipo_planta,
+                            "grupo": data.planta.grupo,
+                            "ubicacion": data.planta.ubicacion,
+                            "estado": data.planta.estado,
+
+                            "marcaDispositivos": data.planta.marca_dispositivos,
+                            "modelosDispositivos": data.planta.modelos_dispositivos,
+                            "cantidadCamaras": data.planta.cantidad_camaras,
+                            "modeloCamaras": data.planta.tipo_modelo_camaras,
+                            "codificacionCamaras": data.planta.codificacion_camaras,
+
+                            "analiticas": data.planta.analiticas,
+                            "sensores": data.planta.sensores,
+                            "tamanoGrabacion": data.planta.tamano_grabacion,
+                            "diasGrabacion": data.planta.dias_grabacion,
+                            "alarmaVoceo": data.planta.alarma_voceo,
+                            
+                            "sirenas": data.planta.sirenas,           
+                            "internet": data.planta.internet,
+                            "proveedorInternet": data.planta.proveedor_internet,
+                            "p2p": data.planta.p2p,
+                            "autoregistro": data.planta.autoregistro
+
                         }).draw();
                         $('#modalCRUD').modal('hide');
 
