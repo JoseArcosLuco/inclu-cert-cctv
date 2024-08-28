@@ -134,14 +134,14 @@ $usuarios = Users::get_all_users();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-9 mb-3">
+                                <div class="col-md-7 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Observación:
                                             <textarea name="observacion" id="observacion" class="form-control" rows="3" requiere></textarea>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-5 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
