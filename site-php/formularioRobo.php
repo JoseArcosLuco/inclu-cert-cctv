@@ -145,8 +145,11 @@ $usuarios = Users::get_all_users();
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
-                                                <option value="1">Activo</option>
-                                                <option value="0">Inactivo</option>
+                                                <option value="1">Intrusión detectada</option>
+                                                <option value="2">Intrusión frustrada</option>
+                                                <option value="3">Intrusión no detectada</option>
+                                                <option value="4">Incendio</option>
+                                                <option value="5">Incidente general</option>
                                             </select>
                                         </label>
                                     </div>
@@ -424,7 +427,20 @@ $usuarios = Users::get_all_users();
                 {
                     "data": "estado",
                     "render": function(data) {
-                        return data == 1 ? 'Activo' : 'Inactivo'; //editar estado del robo en función de los requerimientos
+                        switch(data) {
+                            case 1:
+                                return ' Intrusión detectada';
+                            case 2:
+                                return ' Intrusión frustrada';
+                            case 3:
+                                return 'Intrusión no detectada';
+                            case 4:
+                                return 'Incendio';
+                            case 5:
+                                return 'Incidente general';
+                            default:
+                                return 'Estado desconocido'; // En caso de que el valor no coincida con ninguno de los anteriores
+                        }
                     }
                 },
                 {

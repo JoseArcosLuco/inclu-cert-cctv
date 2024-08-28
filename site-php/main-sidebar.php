@@ -114,10 +114,15 @@ if (isset($_GET['form'])) {
                             <ul class="nav nav-treeview">
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/dashboard.php?form=dashboard&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveD;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Dashboard</p>
-                                    </a> </li>
-                                <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveI;?>"> <i class="nav-icon bi bi-circle"></i>
-                                        <p>Informes</p>
-                                    </a> </li>
+                                    </a> 
+                                </li>
+                                
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveI;?>"> <i class="nav-icon bi bi-circle"></i>
+                                            <p>Informes</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveFr;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes CCTV</p>
                                     </a> </li>
