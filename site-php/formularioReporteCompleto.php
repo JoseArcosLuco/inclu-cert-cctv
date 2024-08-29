@@ -57,8 +57,12 @@ $users = Users::get_all_users();
             </div> <!--end::Col--> <!--begin::Col-->
             <div class="col-md-9">
                 <div class="card card-danger card-outline mb-4">
-                    <div class="card-header p-3">
-                        <div class="card-title">Gestión Camaras</div>
+                    <div class="card-header d-flex justify-content-start align-items-center">
+                        <div class="card-title col-6">Gestión Cámaras</div>
+                        <div class="card-title col-6 d-none justify-content-end" id="totalCamaras" name="totalCamaras">Total Cámaras:
+                            <span class="badge bg-success" id="totalCamarasValue">
+                            </span>
+                        </div>
                     </div>
                     <div class="card-body" id="initialValue">
                         <p class="text-center text-black fw-bold bg-info rounded p-2">Seleccione una Planta</p>
@@ -126,10 +130,16 @@ $users = Users::get_all_users();
                     },
                     dataType: 'json',
                     success: function(data) {
-                        let operadoresArray = [];
+                        $('#totalCamaras').removeClass('d-none');
+                        $('#totalCamaras').addClass('d-flex');
+                        $('#totalCamarasValue').text(data.length);
+
+                        let operadoresArray = new Set();
                         data.forEach(function(item) {
                             let operadores = item.operador.split(',');
-                            operadoresArray = operadoresArray.concat(operadores);
+                            operadores.forEach(function(operador) {
+                                operadoresArray.add(operador);
+                            });
                         });
                         info.empty();
                         $('#initialValue').prop('hidden', true);
@@ -145,7 +155,7 @@ $users = Users::get_all_users();
                                             <label class="form-label w-100">Turno:
                                                 <select class="form-select" name="turno" id="turno_${camara.id}" required>
                                                     <option value="">Seleccione</option>
-                                                    ${operadoresArray.map((operador) => `<option value="${usuariosMap[operador]}">${usuariosMap[operador]}</option>`)}
+                                                    ${Array.from(operadoresArray).map((operador) => `<option value="${operador}">${usuariosMap[operador]}</option>`).join('')}
                                                 </select>
                                             </label>
                                         </div>
@@ -229,8 +239,56 @@ $users = Users::get_all_users();
                 info.empty();
                 $('#initialValue').prop('hidden', false);
                 info.prop('hidden', true);
+                $('#totalCamaras').removeClass('d-flex');
+                $('#totalCamaras').addClass('d-none');
             }
         });
 
+        $('#submitBtn').click(function() {
+            $('.form').each(function() {
+                const form = $(this)[0];
+
+                
+                if (!form.checkValidity()) {
+                    //clase de bootstrap para mostrar el error
+                    $(this).addClass('was-validated');
+                } else {
+
+                    let camaraId = $(this).attr('id').split('_')[1];
+                    let formData = {
+                        action: 'guardarReportes',
+                        fecha: $('#fecha').val(),
+                        id_cliente: $('#id_cliente').val(),
+                        id_planta: $('#planta').val(),  
+                        id_operador: $.trim($('#turno_' + camaraId).val()),
+                        id_camara: $.trim($('#camaras_' + camaraId).val()),
+                        estado: $.trim($('#estado_' + camaraId).val()),
+                        visual: $.trim($('#visual_' + camaraId).val()),
+                        analiticas: $.trim($('#analiticas_' + camaraId).val()),
+                        recorrido: $.trim($('#recorrido_' + camaraId).val()),
+                        evento: $.trim($('#evento_' + camaraId).val()),
+                        grabaciones: $.trim($('#grabaciones_' + camaraId).val()),
+                        observacion: $.trim($('#observacion_' + camaraId).val())
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: './ajax_handler/reporteCompleto.php',
+                        data: formData,
+                        success: function(response) {
+                            console.log(response);
+                            if (response.status === true) {
+                                alert('dadadadaBIEN', response.message);
+                            } else {
+                                alert('dadadadaMAL', response.message);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log('Error en AJAX:', textStatus, errorThrown);
+                        }
+                    });
+                }
+            });
+        });
     });
 </script>

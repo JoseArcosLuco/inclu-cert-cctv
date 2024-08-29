@@ -1,47 +1,48 @@
 <?php
-    include("../includes/Database.class.php");
+include("../includes/Database.class.php");
+include("../includes/RCompleto.class.php");
 
-    if (isset($_POST)) {
-        $action = $_POST['action'];
+if (isset($_POST)) {
+    $action = $_POST['action'];
 
-        switch($action){
+    switch ($action) {
 
-            case 'get_plantas':
-                $id_cliente = $_POST['id_cliente'];
-                $database = new Database();
-                $conn = $database->getConnection();
-                $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id_cliente');
-                $stmt->bindParam(':id_cliente', $id_cliente);
-                $stmt->execute();
-                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        case 'get_plantas':
+            $id_cliente = $_POST['id_cliente'];
 
-                echo json_encode($response);
-                break;
-            
-            case 'get_plantas_camaras':
-                $id_plantas = $_POST['id_plantas'];
-                $database = new Database();
-                $conn = $database->getConnection();
-                $sql = '
-                SELECT cam.*,
-                GROUP_CONCAT(op.id_users) as operador
-                FROM cctv_camaras cam
-                LEFT JOIN cctv_plantas p ON cam.id_plantas = p.id
-                LEFT JOIN cctv_turnos t ON p.id_clientes = t.id
-                LEFT JOIN cctv_operadores op ON t.id = op.id_turnos
-                WHERE cam.id_plantas = :id_plantas AND op.estado = 1
-                GROUP BY cam.id;';
-                $stmt = $conn->prepare($sql);
-                $stmt->bindParam(':id_plantas', $id_plantas);
-                $stmt->execute();
-                $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $response = ReporteCompleto::get_plantas($id_cliente);
 
-                echo json_encode($response);
-                break;
+            echo json_encode($response);
+            break;
 
-            default:
-                echo 'Fail';
-                break;
-        }
+        case 'get_plantas_camaras':
+            $id_plantas = $_POST['id_plantas'];
+
+            $response = ReporteCompleto::get_plantas_camaras($id_plantas);
+
+            echo json_encode($response);
+            break;
+
+        case 'guardarReportes':
+            $id_planta = $_POST['id_planta'];
+            $fecha = $_POST['fecha'];
+            $id_camara = $_POST['id_camara'];
+            $id_operador = $_POST['id_operador'];
+            $estado = $_POST['estado'];
+            $visual = $_POST['visual'];
+            $analiticas = $_POST['analiticas'];
+            $recorrido = $_POST['recorrido'];
+            $evento = $_POST['evento'];
+            $grabaciones = $_POST['grabaciones'];
+            $observacion = $_POST['observacion'];
+
+            $response = ReporteCompleto::create_reporte($id_planta, $id_operador, $id_camara ,$estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion);
+
+            echo json_encode($response);
+            break;
+
+        default:
+            echo 'Fail';
+            break;
     }
-?>
+}
