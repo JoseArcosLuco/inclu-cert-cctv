@@ -24,8 +24,6 @@ if (isset($_POST)) {
             break;
 
         case 'guardarReportes':
-            $id_planta = $_POST['id_planta'];
-            $fecha = $_POST['fecha'];
             $id_camara = $_POST['id_camara'];
             $id_operador = $_POST['id_operador'];
             $estado = $_POST['estado'];
@@ -35,8 +33,19 @@ if (isset($_POST)) {
             $evento = $_POST['evento'];
             $grabaciones = $_POST['grabaciones'];
             $observacion = $_POST['observacion'];
+            $id_reporte = $_POST['id_insertado'];
 
-            $response = ReporteCompleto::create_reporte($id_planta, $id_operador, $id_camara ,$estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion);
+            $response = ReporteCompleto::create_reporte($id_reporte, $id_operador, $id_camara, $estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion);
+
+            echo json_encode($response);
+            break;
+
+        case 'guardarReportesGral':
+            $id_planta = $_POST['planta_id'];
+            $fecha = $_POST['fecha'];
+            $usuario_id = $_POST['usuario_id'];
+
+            $response = ReporteCompleto::create_reporteGral($id_planta, $fecha, $usuario_id);
 
             echo json_encode($response);
             break;
