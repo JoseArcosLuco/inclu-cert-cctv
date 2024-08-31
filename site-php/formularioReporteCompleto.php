@@ -7,7 +7,6 @@ require_once('./includes/Users.class.php');
 $clientes = Clientes::get_all_clients();
 $plantas = Plantas::get_all_plantas();
 $users = Users::get_all_users();
-
 ?>
 
 
@@ -20,12 +19,12 @@ $users = Users::get_all_users();
                         <div class="card-title col-12">Buscar Cámaras</div>
                     </div> <!--end::Header--> <!--begin::Form-->
                     <div class="card-body">
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label class="form-label w-100">Fecha
                                 <input type="date" class="form-control" id="fecha" name="fecha" disabled required value="<?php echo date("Y-m-d"); ?>">
                             </label>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label class="form-label w-100">Cliente
                                 <select class="form-select" name="id_cliente" id="id_cliente">
                                     <option value="">Seleccione</option>
@@ -35,7 +34,7 @@ $users = Users::get_all_users();
                                 </select>
                             </label>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label class="form-label w-100">Planta
                                 <select class="form-control" name="planta" id="planta" required disabled>
                                     <option value="">Seleccione un Cliente</option>
@@ -103,7 +102,7 @@ $users = Users::get_all_users();
                 success: function(data) {
                     var $plantaSelect = $('#planta');
                     $plantaSelect.empty();
-                    $plantaSelect.append('<option value="">Seleccione </option>');
+                    $plantaSelect.append('<option value="">Seleccione</option>');
                     $.each(data, function(index, planta) {
                         $plantaSelect.append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
                     });
@@ -152,7 +151,7 @@ $users = Users::get_all_users();
                                     <h5 class="text-center text-black bg-info rounded p-2 fw-bold">${camara.nombre}</h5>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <label class="form-label w-100">Turno:
+                                            <label class="form-label w-100">Operador:
                                                 <select class="form-select" name="turno" id="turno_${camara.id}" required>
                                                     <option value="">Seleccione</option>
                                                     ${Array.from(operadoresArray).map((operador) => `<option value="${operador}">${usuariosMap[operador]}</option>`).join('')}
@@ -178,7 +177,7 @@ $users = Users::get_all_users();
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="form-label w-100">Visual:
-                                                <select class="form-select" id="visual_${camara.id}" required>
+                                                <select class="form-select" id="visual_${camara.id}">
                                                     <option value="">Seleccione</option>
                                                     <option value="1">Clara</option>
                                                     <option value="2">Desenfocada</option>
@@ -188,7 +187,7 @@ $users = Users::get_all_users();
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label w-100">Analíticas:
-                                                <select class="form-select" id="analiticas_${camara.id}" required>
+                                                <select class="form-select" id="analiticas_${camara.id}">
                                                     <option value="">Seleccione</option>
                                                     <option value="1">Activas</option>
                                                     <option value="2">Inactivas</option>
@@ -197,7 +196,7 @@ $users = Users::get_all_users();
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label w-100">Recorrido:
-                                                <select class="form-select" id="recorrido_${camara.id}" required>
+                                                <select class="form-select" id="recorrido_${camara.id}">
                                                     <option value="">Seleccione</option>
                                                     <option value="1">Activo</option>
                                                     <option value="2">Inactivo</option>
@@ -208,7 +207,7 @@ $users = Users::get_all_users();
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="form-label w-100">Evento:
-                                                <select class="form-select" id="evento_${camara.id}" required>
+                                                <select class="form-select" id="evento_${camara.id}">
                                                     <option value="">Seleccione</option>
                                                     <option value="1">Activo</option>
                                                     <option value="2">Inactivo</option>
@@ -222,7 +221,7 @@ $users = Users::get_all_users();
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label w-100">Observación:
-                                                <textarea class="form-control" id="observacion_${camara.id}" required rows="1"></textarea>
+                                                <textarea class="form-control" id="observacion_${camara.id}" rows="1"></textarea>
                                             </label>
                                         </div>
                                     </div>
@@ -245,50 +244,76 @@ $users = Users::get_all_users();
         });
 
         $('#submitBtn').click(function() {
+            id_usuario = <?php echo $id_usuario; ?>;
+            let valid = true;
+
             $('.form').each(function() {
                 const form = $(this)[0];
-
-                
                 if (!form.checkValidity()) {
-                    //clase de bootstrap para mostrar el error
                     $(this).addClass('was-validated');
-                } else {
-
-                    let camaraId = $(this).attr('id').split('_')[1];
-                    let formData = {
-                        action: 'guardarReportes',
-                        fecha: $('#fecha').val(),
-                        id_cliente: $('#id_cliente').val(),
-                        id_planta: $('#planta').val(),  
-                        id_operador: $.trim($('#turno_' + camaraId).val()),
-                        id_camara: $.trim($('#camaras_' + camaraId).val()),
-                        estado: $.trim($('#estado_' + camaraId).val()),
-                        visual: $.trim($('#visual_' + camaraId).val()),
-                        analiticas: $.trim($('#analiticas_' + camaraId).val()),
-                        recorrido: $.trim($('#recorrido_' + camaraId).val()),
-                        evento: $.trim($('#evento_' + camaraId).val()),
-                        grabaciones: $.trim($('#grabaciones_' + camaraId).val()),
-                        observacion: $.trim($('#observacion_' + camaraId).val())
-                    };
-
-                    $.ajax({
-                        type: 'POST',
-                        url: './ajax_handler/reporteCompleto.php',
-                        data: formData,
-                        success: function(response) {
-                            console.log(response);
-                            if (response.status === true) {
-                                alert('dadadadaBIEN', response.message);
-                            } else {
-                                alert('dadadadaMAL', response.message);
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) {
-                            console.log('Error en AJAX:', textStatus, errorThrown);
-                        }
-                    });
+                    valid = false;
+                    return false;
                 }
             });
+
+            if (valid) {
+                $.ajax({
+                    type: 'POST',
+                    url: './ajax_handler/reporteCompleto.php',
+                    data: {
+                        action: 'guardarReportesGral',
+                        usuario_id: id_usuario,
+                        planta_id: $('#planta').val(),
+                        fecha: $('#fecha').val()
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status) {
+                            id_insertado = response.lastInsertId;
+
+                            $('.form').each(function() {
+                                let camaraId = $(this).attr('id').split('_')[1];
+                                let formData = {
+                                    action: 'guardarReportes',
+                                    id_operador: $.trim($('#turno_' + camaraId).val()),
+                                    id_camara: $.trim($('#camaras_' + camaraId).val()),
+                                    estado: $.trim($('#estado_' + camaraId).val()),
+                                    visual: $.trim($('#visual_' + camaraId).val()),
+                                    analiticas: $.trim($('#analiticas_' + camaraId).val()),
+                                    recorrido: $.trim($('#recorrido_' + camaraId).val()),
+                                    evento: $.trim($('#evento_' + camaraId).val()),
+                                    grabaciones: $.trim($('#grabaciones_' + camaraId).val()),
+                                    observacion: $.trim($('#observacion_' + camaraId).val()),
+                                    id_insertado: id_insertado
+                                };
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: './ajax_handler/reporteCompleto.php',
+                                    data: formData,
+                                    dataType: 'json',
+                                    success: function(response) {
+                                        console.log(response);
+                                        if (response.status) {
+                                            alert(response.message);//esto lo cambiaré por un dialog modal
+                                        } else {
+                                            alert(response.message);
+                                        }
+                                    },
+                                    error: function(jqXHR, textStatus, errorThrown) {
+                                        console.log('Error en AJAX:', textStatus, errorThrown);
+                                    }
+                                });
+                            });
+                        } else {
+                            alert('Hubo un problema al guardar la información general.');//esto lo cambiaré por un dialog modal
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log('Error en AJAX:', textStatus, errorThrown);
+                    }
+                });
+            }
         });
     });
 </script>
