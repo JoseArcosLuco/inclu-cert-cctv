@@ -12,10 +12,11 @@ if (isset($_SESSION["token"])) {
 if (empty($token)) {
     echo "<meta http-equiv='refresh' content='2; url=index.php?cod=1' />";
 }
-
 require_once("./includes/Clientes.class.php");
-
+require_once("./includes/Novedades.class.php");
 $clientes = Clientes::get_all_clients();
+$novedadesDiarias = Novedades::get_all_novedades(1);
+$novedadesSemanales = Novedades::get_all_novedades(2);
 ?>
 
 <!DOCTYPE html>
@@ -131,6 +132,89 @@ $clientes = Clientes::get_all_clients();
                             </div> <!--end::Small Box Widget 4-->
                         </div> <!--end::Col-->
                     </div> <!--end::Row--> <!--begin::Row-->
+                    
+                    <div class="row">
+                        <div class="col-lg-6 connectedSortable">
+                            <div class="card direct-chat direct-chat-primary mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Novedades Semanales</h3>
+                                    <div class="card-tools"> <span title="3 New Messages" class="badge text-bg-primary">
+                                            3
+                                        </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" title="Contacts" data-lte-toggle="chat-pane"> <i class="bi bi-chat-text-fill"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!-- Conversations are loaded here -->
+                                        <div class="direct-chat-messages"> <!-- Message. Default to the start -->
+                                            <div class="direct-chat-msg">
+                                                <?php foreach ($novedadesSemanales as $novedadesSemanalesList): ?>
+                                                    <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
+                                                        <?php echo $novedadesSemanalesList['nombres']; ?>&nbsp;<?php echo $novedadesSemanalesList['apellidos']; ?>
+                                                    </span> <span class="direct-chat-timestamp float-end">
+                                                        <?php echo $novedadesSemanalesList['fecha']; ?>
+                                                    </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user1-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
+                                                    <div class="direct-chat-text">
+                                                        <?php echo $novedadesSemanalesList['observacion']; ?>
+                                                    </div> <!-- /.direct-chat-text -->
+                                                <?php endforeach; ?>
+                                            </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
+                                        </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
+                                    <div class="direct-chat-contacts">
+                                        <ul class="contacts-list">
+                                            <li> <a href="#"> <img class="contacts-list-img" src="./assets/img/user1-128x128.jpg" alt="User Avatar">
+                                                    <div class="contacts-list-info"> <span class="contacts-list-name">
+                                                            Count Dracula
+                                                            <small class="contacts-list-date float-end">
+                                                                2/28/2023
+                                                            </small> </span> <span class="contacts-list-msg">
+                                                            How have you been? I was...
+                                                        </span> </div> <!-- /.contacts-list-info -->
+                                                </a> </li> <!-- End Contact Item -->
+                                        </ul> <!-- /.contacts-list -->
+                                    </div> <!-- /.direct-chat-pane -->
+                                </div> <!-- /.card-body -->
+                            </div>
+                        </div>
+                    
+                        <div class="col-lg-6 connectedSortable">
+                            <div class="card direct-chat direct-chat-primary mb-4">
+                                <div class="card-header">
+                                    <h3 class="card-title">Novedades Diarias</h3>
+                                    <div class="card-tools"> <span title="3 New Messages" class="badge text-bg-primary">
+                                            3
+                                        </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" title="Contacts" data-lte-toggle="chat-pane"> <i class="bi bi-chat-text-fill"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
+                                </div> <!-- /.card-header -->
+                                <div class="card-body"> <!-- Conversations are loaded here -->
+                                    
+                                    <div class="direct-chat-messages"> <!-- Message. Default to the start -->
+                                        <div class="direct-chat-msg">
+                                            <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
+                                                    Alexander Pierce
+                                                </span> <span class="direct-chat-timestamp float-end">
+                                                    23 Jan 2:00 pm
+                                                </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user1-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
+                                            <div class="direct-chat-text">
+                                                Is this template really for free? That's unbelievable!
+                                            </div> <!-- /.direct-chat-text -->
+                                        </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
+                                    </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
+                                    
+                                    <div class="direct-chat-contacts">
+                                        <ul class="contacts-list">
+                                            <li> <a href="#"> <img class="contacts-list-img" src="./assets/img/user1-128x128.jpg" alt="User Avatar">
+                                                    <div class="contacts-list-info"> <span class="contacts-list-name">
+                                                            Count Dracula
+                                                            <small class="contacts-list-date float-end">
+                                                                2/28/2023
+                                                            </small> </span> <span class="contacts-list-msg">
+                                                            How have you been? I was...
+                                                        </span> </div> <!-- /.contacts-list-info -->
+                                                </a> </li> <!-- End Contact Item -->
+                                        </ul> <!-- /.contacts-list -->
+                                    </div> <!-- /.direct-chat-pane -->
+                                </div> <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="row"> <!-- Start col -->
                         <div class="col-lg-6 connectedSortable">
                             <div class="card mb-4">

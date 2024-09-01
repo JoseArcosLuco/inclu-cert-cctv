@@ -64,7 +64,7 @@
         public static function get_all_novedades($tipo_novedad){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_novedades WHERE tipo_novedad=:tipo_novedad');
+            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_novedades as rn inner join cctv_users as u on (u.id = rn.id_usuario) WHERE tipo_novedad=:tipo_novedad');
             $stmt->bindParam(':tipo_novedad',$tipo_novedad);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
