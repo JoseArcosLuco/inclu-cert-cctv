@@ -64,7 +64,24 @@
         public static function get_all_novedades($tipo_novedad){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_novedades as rn inner join cctv_users as u on (u.id = rn.id_usuario) WHERE tipo_novedad=:tipo_novedad');
+            $stmt = $conn->prepare('SELECT * FROM cctv_reporte_novedades as rn inner join cctv_users as u on (u.id = rn.id_usuario) WHERE tipo_novedad=:tipo_novedad ORDER BY rn.fecha desc');
+            $stmt->bindParam(':tipo_novedad',$tipo_novedad);
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
+            }
+        }
+
+        public static function get_all_novedades_top10($tipo_novedad){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT u.nombres as nombreusuario,u.apellidos as apellidousuario,p.nombre as nombreplanta,rn.observacion,rn.fecha 
+                                    FROM cctv_reporte_novedades as rn 
+                                    INNER JOIN cctv_users as u on (u.id = rn.id_usuario) 
+                                    INNER JOIN cctv_plantas as p on (p.id = rn.id_planta) 
+                                    WHERE tipo_novedad=:tipo_novedad ORDER BY rn.fecha desc limit 0,10');
             $stmt->bindParam(':tipo_novedad',$tipo_novedad);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();

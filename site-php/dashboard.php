@@ -15,8 +15,8 @@ if (empty($token)) {
 require_once("./includes/Clientes.class.php");
 require_once("./includes/Novedades.class.php");
 $clientes = Clientes::get_all_clients();
-$novedadesDiarias = Novedades::get_all_novedades(1);
-$novedadesSemanales = Novedades::get_all_novedades(2);
+$novedadesDiarias = Novedades::get_all_novedades_top10(1);
+$novedadesSemanales = Novedades::get_all_novedades_top10(2);
 ?>
 
 <!DOCTYPE html>
@@ -147,12 +147,12 @@ $novedadesSemanales = Novedades::get_all_novedades(2);
                                             <div class="direct-chat-msg">
                                                 <?php foreach ($novedadesSemanales as $novedadesSemanalesList): ?>
                                                     <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
-                                                        <?php echo $novedadesSemanalesList['nombres']; ?>&nbsp;<?php echo $novedadesSemanalesList['apellidos']; ?>
+                                                        <?php echo $novedadesSemanalesList['nombreusuario']; ?>&nbsp;<?php echo $novedadesSemanalesList['apellidousuario']; ?>
                                                     </span> <span class="direct-chat-timestamp float-end">
                                                         <?php echo $novedadesSemanalesList['fecha']; ?>
                                                     </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user1-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
                                                     <div class="direct-chat-text">
-                                                        <?php echo $novedadesSemanalesList['observacion']; ?>
+                                                        Planta: <?php echo $novedadesSemanalesList['nombreplanta']; ?> - <?php echo $novedadesSemanalesList['observacion']; ?>
                                                     </div> <!-- /.direct-chat-text -->
                                                 <?php endforeach; ?>
                                             </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
@@ -186,14 +186,16 @@ $novedadesSemanales = Novedades::get_all_novedades(2);
                                     
                                     <div class="direct-chat-messages"> <!-- Message. Default to the start -->
                                         <div class="direct-chat-msg">
-                                            <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
-                                                    Alexander Pierce
-                                                </span> <span class="direct-chat-timestamp float-end">
-                                                    23 Jan 2:00 pm
-                                                </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user1-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
-                                            <div class="direct-chat-text">
-                                                Is this template really for free? That's unbelievable!
-                                            </div> <!-- /.direct-chat-text -->
+                                            <?php foreach ($novedadesDiarias as $novedadesDiariasList): ?>
+                                                <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
+                                                    <?php echo $novedadesDiariasList['nombreusuario']; ?>&nbsp;<?php echo $novedadesDiariasList['apellidousuario']; ?>
+                                                    </span> <span class="direct-chat-timestamp float-end">
+                                                        <?php echo $novedadesDiariasList['fecha']; ?>
+                                                    </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user1-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
+                                                <div class="direct-chat-text">
+                                                        Planta: <?php echo $novedadesDiariasList['nombreplanta']; ?> - <?php echo $novedadesDiariasList['observacion']; ?>
+                                                </div> <!-- /.direct-chat-text -->
+                                            <?php endforeach; ?>
                                         </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
                                     </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
                                     
