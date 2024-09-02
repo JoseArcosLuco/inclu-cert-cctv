@@ -72,6 +72,22 @@
             }
         }
 
+        public static function get_all_corteEnergia_Activos(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT p.nombre as nombreplanta,rce.fecha,rce.observacion,u.nombres as nombreusuario, u.apellidos as apellidousuario
+                                    FROM cctv_reporte_corte_energia as rce 
+                                    INNER JOIN cctv_plantas as p on p.id = rce.id_planta
+                                    INNER JOIN cctv_users as u on u.id = rce.id_usuario 
+                                    WHERE rce.estado=1 ORDER BY rce.fecha desc');
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
+            }
+        }
+
         public static function update_corteEnergia($id, $fecha,$fecha_fin, $observacion,$estado){
             $database = new Database();
             $conn = $database->getConnection();

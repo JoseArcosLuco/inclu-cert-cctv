@@ -72,6 +72,22 @@
             }
         }
 
+        public static function get_all_corteInternet_Activos(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT p.nombre as nombreplanta,rci.fecha,rci.fecha_fin,rci.observacion,u.nombres as nombreusuario, u.apellidos as apellidousuario 
+                                    FROM cctv_reporte_corte_internet as rci
+                                    INNER JOIN cctv_plantas as p on p.id = rci.id_planta
+                                    INNER JOIN cctv_users as u on u.id = rci.id_usuario 
+                                    WHERE rci.estado=1 ORDER BY rci.fecha desc');
+            if($stmt->execute()){
+                $result = $stmt->fetchAll();
+                return $result;
+            } else {
+                return [];
+            }
+        }
+
         public static function update_corteInternet($id, $fecha,$fecha_fin, $observacion,$estado){
             $database = new Database();
             $conn = $database->getConnection();
