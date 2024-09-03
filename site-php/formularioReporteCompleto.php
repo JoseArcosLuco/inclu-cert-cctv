@@ -43,6 +43,7 @@ $users = Users::get_all_users();
                         </div>
                     </div> <!--end::Body--> <!--begin::Footer-->
                     <div class="card-footer">
+                        <a href="<?php echo $base_url ?>/formularios.php?form=reporteCompleto&token=<?php echo $token; ?>" class="btn btn-secondary" id="cancelBtn" name="cancelBtn">Cancelar</a>
                         <button type="submit" class="btn btn-primary" id="submitBtn">Enviar Reporte</button>
                     </div> <!--end::Footer-->
                     <div class="col-md-6" id="mensaje" name="mensaje">
@@ -71,6 +72,41 @@ $users = Users::get_all_users();
                     </div>
                 </div>
             </div> <!--end::Col-->
+
+            <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="resultModalLabel">Exito</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <a href="<?php echo $base_url ?>/formularios.php?form=reporteCompleto&token=<?php echo $token; ?>" class="btn btn-primary">Ir a Reportes</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para mostrar errores -->
+            <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <a href="<?php echo $base_url ?>/formularios.php?form=reporteCompleto&token=<?php echo $token; ?>" class="btn btn-primary">Ir a Reportes</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div> <!--end::Row-->
     </div> <!--end::Container-->
@@ -270,6 +306,10 @@ $users = Users::get_all_users();
                     success: function(response) {
                         if (response.status) {
                             id_insertado = response.lastInsertId;
+                            let totalFormularios = $('.form').length;
+                            let formulariosCompletados = 0;
+                            let exitosos = 0;
+                            let errorEncontrado = null;
 
                             $('.form').each(function() {
                                 let camaraId = $(this).attr('id').split('_')[1];
@@ -293,27 +333,56 @@ $users = Users::get_all_users();
                                     data: formData,
                                     dataType: 'json',
                                     success: function(response) {
-                                        console.log(response);
                                         if (response.status) {
-                                            alert(response.message);//esto lo cambiaré por un dialog modal
+                                            exitosos++;
                                         } else {
-                                            alert(response.message);
+                                            errorEncontrado = response.message;
+                                        }
+                                        formulariosCompletados++;
+
+                                        if (formulariosCompletados === totalFormularios) {
+                                            mostrarResumen(exitosos, errorEncontrado);
                                         }
                                     },
                                     error: function(jqXHR, textStatus, errorThrown) {
-                                        console.log('Error en AJAX:', textStatus, errorThrown);
+                                        errorEncontrado = 'Error en AJAX: ' + textStatus;
+                                        formulariosCompletados++;
+
+                                        if (formulariosCompletados === totalFormularios) {
+                                            mostrarResumen(exitosos, errorEncontrado);
+                                        }
                                     }
                                 });
                             });
                         } else {
-                            alert('Hubo un problema al guardar la información general.');//esto lo cambiaré por un dialog modal
+                            mostrarError('Hubo un problema al guardar la información general.');
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        console.log('Error en AJAX:', textStatus, errorThrown);
+                        mostrarError('Error en AJAX: ' + textStatus);
                     }
                 });
             }
         });
+
+        function mostrarResumen(exitosos, errorEncontrado) {
+            let modalBody = $('#resultModal .modal-body');
+            modalBody.empty();
+
+            if (errorEncontrado) {
+                modalBody.append('<p>No se agregaron reportes por el siguiente error: ' + errorEncontrado + '</p>');
+            } else {
+                modalBody.append('<p>Se agregaron ' + exitosos + ' reportes a la tabla con éxito.</p>');
+            }
+
+            $('#resultModal').modal('show');
+        }
+
+        function mostrarError(mensaje) {
+            let modalBody = $('#errorModal .modal-body');
+            modalBody.empty();
+            modalBody.append('<p>' + mensaje + '</p>');
+            $('#errorModal').modal('show');
+        }
     });
 </script>
