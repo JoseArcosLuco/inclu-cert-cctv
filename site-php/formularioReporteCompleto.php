@@ -90,7 +90,6 @@ $users = Users::get_all_users();
                 </div>
             </div>
 
-            <!-- Modal para mostrar errores -->
             <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -252,7 +251,7 @@ $users = Users::get_all_users();
                                         </div>
                                         <div class="col-md-4">
                                             <label class="form-label w-100">Grabaciones:
-                                                <input type="number" class="form-control" id="grabaciones_${camara.id}">
+                                                <input type="number" class="form-control grabaciones-input" id="grabaciones_${camara.id}">
                                             </label>
                                         </div>
                                         <div class="col-md-4">
@@ -264,6 +263,14 @@ $users = Users::get_all_users();
                                 </div>
                             </form>
                             `);
+                        });
+
+                        $('.grabaciones-input').on('change', function() {
+                            const value = parseInt($(this).val());
+                            if (value < 0 || isNaN(value)) {
+                                mostrarError('El número de grabaciones debe ser mayor o igual a 0');
+                                $(this).val('');
+                            }
                         });
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
