@@ -62,6 +62,12 @@ switch( $formAccion ) {
     case "reporteCompleto":
         $tituloFormulario = 'Registro de Reportes Completo';
         break;
+    case "admReporteCompleto":
+        $tituloFormulario = 'Administración Reportes Completo';
+        break;
+    case "reporteCompletoForm":
+        $tituloFormulario = 'Formulario Reportes Completo';
+        break;
     case "":
         $tituloFormulario = 'Dashboard';
         break;

@@ -82,7 +82,7 @@ class Operadores
         $database = new Database();
         $conn = $database->getConnection();
         $stmt = $conn->prepare('SELECT CONCAT(u.nombres, " ", u.apellidos) AS nombre,
-                                    o.id as id
+                                    u.id as id
                                     FROM cctv_operadores o
                                     JOIN cctv_users u ON o.id_users = u.id
                                     WHERE o.estado = 1;');

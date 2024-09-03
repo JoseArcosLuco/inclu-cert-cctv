@@ -104,4 +104,78 @@ class ReporteCompleto
             return [];
         }
     }
+
+    public static function get_reportes()
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+        $stmt = $conn->prepare('SELECT rp.*,
+                                r.id_planta as id_planta,
+                                r.id_usuario as id_usuario,
+                                r.fecha_registro as fecha
+                                FROM cctv_gestion_reporte_completo_camaras rp
+                                INNER JOIN cctv_gestion_reporte_completo r ON r.id = rp.id_gestion');
+        if ($stmt->execute()) {
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $response;
+        } else {
+            return [];
+        }
+    }
+
+    public static function edit_reporte($id, $id_operador,$estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+        $stmt = $conn->prepare('UPDATE cctv_gestion_reporte_completo_camaras 
+                                SET estado = :estado,
+                                observacion = :observacion,
+                                id_operador = :id_operador,
+                                visual = :visual,
+                                recorrido = :recorrido,
+                                analiticas = :analiticas,
+                                evento = :evento,
+                                grabaciones = :grabaciones
+                                WHERE id = :id ');
+
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->bindParam(':id_operador', $id_operador);
+        $stmt->bindParam(':visual', $visual);
+        $stmt->bindParam(':recorrido', $recorrido);
+        $stmt->bindParam(':analiticas', $analiticas);
+        $stmt->bindParam(':evento', $evento);
+        $stmt->bindParam(':grabaciones', $grabaciones);
+        $stmt->bindParam(':observacion', $observacion);
+        if ($stmt->execute()) {
+            return [
+                'status' => true,
+                'message' => 'Reporte actualizado correctamente.'
+            ];
+        } else {
+            return [
+                'status' => false,
+                'message' => 'Error al actualizar el Reporte.'
+            ];
+        }
+    }
+
+    public static function delete_reporte($id)
+    {
+        $database = new Database();
+        $conn = $database->getConnection();
+        $stmt = $conn->prepare('DELETE FROM cctv_gestion_reporte_completo_camaras WHERE id = :id');
+        $stmt->bindParam(':id', $id);
+        if ($stmt->execute()) {
+            return [
+                'status' => true,
+                'message' => 'Reporte ' . $id . ' borrado correctamente.'
+            ];
+        } else {
+            return [
+                'status' => false,
+                'message' => 'No se ha podido eliminar el Reporte ' . $id
+            ];
+        }
+    }
 }
