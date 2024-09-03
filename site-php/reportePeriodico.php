@@ -63,7 +63,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                 N° de Camaras en Linea
                             </th>
                             <th class="text-center">
-                                Canal Visualización
+                                Estado
                             </th>
                             <th>
                                 Observación
@@ -294,7 +294,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         modal.find('.modal-body').append('<p>Fecha: ' + moment(data.fecha).format('DD/MM/YYYY') || 'Fecha no válida' + '</p>');
         modal.find('.modal-body').append('<p>N° de Cámaras: ' + data.camaras + '</p>');
         modal.find('.modal-body').append('<p>N° de Cámaras en Lína: ' + data.camaras_online + '</p>');
-        modal.find('.modal-body').append('<p>Canal: ' + data.canal + '</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + data.canal + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn |btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
         $('#warningModal').modal('show');
@@ -402,6 +402,22 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 {
                     "data": "canal",
+                    "render": function(data){
+                        switch (data) {
+                            case 1:
+                                return 'En Linea';
+                            case 2:
+                                return 'Intermitente/ Baja señal';
+                            case 3:
+                                return 'Reconector abierto';
+                            case 4:
+                                return 'Pérdida de red';
+                            case 5:
+                                return 'Pérdida de conexión sin confirmar';
+                            default:
+                                return 'Sin confirmar!';
+                        }
+                    },
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }

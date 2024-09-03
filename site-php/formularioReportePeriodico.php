@@ -46,8 +46,16 @@ if (isset($_GET['cliente'])) {
                                         </div>
                                         <div class="col-md-2 mb-3">
                                             <div class="form-group">
-                                                <label class="col-form-label w-100">Canal de Visualización:
-                                                    <input class="form-control" type="number" name="canal_<?php echo $planta['id']; ?>" id="canal_<?php echo $planta['id']; ?>" required>
+                                                <label class="col-form-label w-100">Estado:
+                                                    <!--input class="form-control" type="number" name="canal_<?//php echo $planta['id']; ?>" id="canal_<?//php echo $planta['id']; ?>" required-->
+                                                    <select class="form-select" name="canal_<?php echo $planta['id']; ?>" id="canal_<?php echo $planta['id']; ?>" required>
+                                                        <option value="">Seleccione</option>
+                                                        <option value="1">En Linea</option>
+                                                        <option value="2">Intermitente/ Baja señal</option>
+                                                        <option value="3">Reconector abierto</option>
+                                                        <option value="4">Pérdida de red</option>
+                                                        <option value="5">Pérdida de conexión sin confirmar</option>
+                                                    </select>
                                                 </label>
                                             </div>
                                         </div>
