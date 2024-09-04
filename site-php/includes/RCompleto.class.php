@@ -80,7 +80,7 @@ class ReporteCompleto
             ];
         }
     }
-    
+
     public static function get_plantas_camaras($id_plantas)
     {
         $database = new Database();
@@ -105,25 +105,59 @@ class ReporteCompleto
         }
     }
 
-    public static function get_reportes()
+    public static function get_reportes($id_planta, $id_cliente, $fecha)
     {
         $database = new Database();
         $conn = $database->getConnection();
-        $stmt = $conn->prepare('SELECT rp.*,
-                                r.id_planta as id_planta,
-                                r.id_usuario as id_usuario,
-                                r.fecha_registro as fecha
-                                FROM cctv_gestion_reporte_completo_camaras rp
-                                INNER JOIN cctv_gestion_reporte_completo r ON r.id = rp.id_gestion');
-        if ($stmt->execute()) {
-            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $response;
-        } else {
+
+        $query = 'SELECT rp.*, 
+                        r.id_planta as id_planta, 
+                        r.id_usuario as id_usuario, 
+                        r.fecha_registro as fecha
+                FROM cctv_gestion_reporte_completo_camaras rp
+                INNER JOIN cctv_gestion_reporte_completo r ON r.id = rp.id_gestion';
+
+        $conditions = [];
+        $params = [];
+
+        if (!empty($id_cliente)) {
+            $conditions[] = 'r.id_planta IN (SELECT p.id FROM cctv_plantas p WHERE p.id_clientes = :id_cliente)';
+            $params[':id_cliente'] = $id_cliente;
+        }
+
+        if (!empty($id_planta)) {
+            $conditions[] = 'r.id_planta = :id_planta';
+            $params[':id_planta'] = $id_planta;
+        }
+
+        if (!empty($fecha)) {
+            $conditions[] = 'DATE(r.fecha_registro) = :fecha';
+            $params[':fecha'] = $fecha;
+        }
+
+        if (count($conditions) > 0) {
+            $query .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $stmt = $conn->prepare($query);
+
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        try {
+            if ($stmt->execute()) {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                throw new Exception('Error al ejecutar la consulta');
+            }
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
             return [];
         }
     }
 
-    public static function edit_reporte($id, $id_operador,$estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion)
+    public static function edit_reporte($id, $id_operador, $estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion)
     {
         $database = new Database();
         $conn = $database->getConnection();

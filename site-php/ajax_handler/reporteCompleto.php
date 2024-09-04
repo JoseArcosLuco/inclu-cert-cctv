@@ -1,6 +1,7 @@
 <?php
 include("../includes/Database.class.php");
 include("../includes/RCompleto.class.php");
+include("../includes/Camaras.class.php");
 
 if (isset($_POST)) {
     $action = $_POST['action'];
@@ -11,6 +12,14 @@ if (isset($_POST)) {
             $id_cliente = $_POST['id_cliente'];
 
             $response = ReporteCompleto::get_plantas($id_cliente);
+
+            echo json_encode($response);
+            break;
+
+        case 'updateClienteSelect':
+            $id = $_POST['id'];
+
+            $response = Camaras::get_plantas_by_cliente_id($id);
 
             echo json_encode($response);
             break;
@@ -52,7 +61,11 @@ if (isset($_POST)) {
 
         case 'get_reportes':
 
-            $response = ReporteCompleto::get_reportes();
+            $id_planta = isset($_POST['planta']) ? $_POST['planta'] : null;
+            $id_cliente = isset($_POST['cliente']) ? $_POST['cliente'] : null;
+            $fecha = isset($_POST['fecha']) ? $_POST['fecha'] : null;
+
+            $response = ReporteCompleto::get_reportes($id_planta, $id_cliente, $fecha);
 
             echo json_encode($response);
             break;
@@ -77,7 +90,7 @@ if (isset($_POST)) {
             $id = $_POST['id'];
 
             $response = ReporteCompleto::delete_reporte($id);
-            
+
             echo json_encode($response);
             break;
 
