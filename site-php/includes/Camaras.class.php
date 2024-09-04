@@ -3,14 +3,18 @@ require_once('Database.class.php');
 
 class Camaras
 {
-    public static function create_camaras($idplantas, $nombre, $estado)
+    public static function create_camaras($idplantas, $nombre, $modelo, $tipoCamara, $sn, $estado)
     {
         $database = new Database();
         $conn = $database->getConnection();
-        $stmt = $conn->prepare('INSERT INTO cctv_camaras (id_plantas,nombre,estado)
-                VALUES(:idplantas ,:nombre, :estado)');
+        $stmt = $conn->prepare('INSERT INTO cctv_camaras (id_plantas,nombre,estado, modelo, tipo_camara,sn)
+                VALUES(:idplantas ,:nombre, :modelo, :tipoCamara, :sn, :estado)');
+        
         $stmt->bindParam(':idplantas', $idplantas);
         $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':modelo', $modelo);
+        $stmt->bindParam(':tipoCamara', $tipoCamara);
+        $stmt->bindParam(':sn', $sn);
         $stmt->bindParam(':estado', $estado);
         if ($stmt->execute()) {
             return [

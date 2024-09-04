@@ -11,9 +11,12 @@ if (isset($_POST)) {
         case 'create_camara':
             $idPlanta = $_POST['id_planta'];
             $nombre = $_POST['nombre'];
+            $modelo = $_POST['modelo'];
+            $tipoCamara = $_POST['tipo_camara'];
+            $sn = $_POST['sn'];
             $estado = $_POST['estado'];
 
-            $response = Camaras::create_camaras($idPlanta, $nombre, $estado);
+            $response = Camaras::create_camaras($idPlanta, $nombre, $modelo, $tipoCamara, $sn, $estado);
 
             if ($response['status']) {
                 $database = new Database();

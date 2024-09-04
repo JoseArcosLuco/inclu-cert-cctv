@@ -43,6 +43,15 @@ $plantas = Plantas::get_all_plantas();
                             <th>
                                 Nombre
                             </th>
+                            <th>
+                                Modelo
+                            </th>
+                            <th>
+                                Tipo de Cámara
+                            </th>
+                            <th>
+                                SN
+                            </th>
                             <th class="text-center">
                                 Estado
                             </th>
@@ -69,10 +78,33 @@ $plantas = Plantas::get_all_plantas();
                     <form id="formCamara" name="formCamara">
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre:
                                             <input type="text" class="form-control" id="nombre" name="nombre">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Modelo:
+                                            <input type="text" class="form-control" id="modelo" name="modelo">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Tipo Cámara:
+                                            <input type="text" class="form-control" id="tipo_camara" name="tipo_camara">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">SN:
+                                            <input type="text" class="form-control" id="sn" name="sn">
                                         </label>
                                     </div>
                                 </div>
@@ -82,7 +114,7 @@ $plantas = Plantas::get_all_plantas();
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Planta:
-                                                <select class="form-select" name="id_planta" id="id_planta">
+                                                <select class="form-select" name="id_plantas" id="id_plantas">
                                                     <?php foreach ($plantas as $planta) : ?>
                                                         <option value="<?php echo $planta['id'] ?>"><?php echo htmlspecialchars($planta['nombre']); ?></option>
                                                     <?php endforeach; ?>
@@ -178,8 +210,11 @@ $plantas = Plantas::get_all_plantas();
         var data = tablaCamaras.row($(this).parents('tr')).data();
         $('#formCamara').attr('data-action', 'edit_camara');
         $('#formCamara').attr('data-id', data.id);
-        $('#id_planta').val(data.id_plantas);
+        $('#id_plantas').val(data.id_plantas);
         $('#nombre').val(data.nombre);
+        $('#modelo').val(data.modelo);
+        $('#tipo_camara').val(data.tipo_camara);
+        $('#sn').val(data.sn);
         $('#estado').val(data.estado);
         $('#modalCRUD .modal-title').text('Editar Cámara');
 
@@ -206,6 +241,9 @@ $plantas = Plantas::get_all_plantas();
         modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
         modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_plantas] + '</p>');
         modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
+        modal.find('.modal-body').append('<p>Modelo: ' + data.modelo || 'Desconocido'+ '</p>');
+        modal.find('.modal-body').append('<p>Tipo de Cámara: ' + data.tipo_camara || 'Desconocido' + '</p>');
+        modal.find('.modal-body').append('<p>SN: ' + data.sn || 'Desconocido' + '</p>');
         modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
@@ -280,6 +318,24 @@ $plantas = Plantas::get_all_plantas();
                     }
                 },
                 {
+                    "data": "modelo",
+                    "render": function(data){
+                        return data || 'Desconocido';
+                    }
+                },
+                {
+                    "data": "tipo_camara",
+                    "render": function(data){
+                        return data || 'Desconocido';
+                    }
+                },
+                {
+                    "data": "sn",
+                    "render": function(data){
+                        return data || 'Desconocido';
+                    }
+                },
+                {
                     "data": "estado",
                     "render": function(data) {
                         return data == 1 ? 'Activo' : 'Inactivo';
@@ -314,11 +370,13 @@ $plantas = Plantas::get_all_plantas();
         var formData = {
             action: action,
             id: id,
-            id_planta: $.trim($("#id_planta").val()),
+            id_planta: $.trim($("#id_plantas").val()),
             nombre: $.trim($("#nombre").val()),
+            modelo: $.trim($("#modelo").val()),
+            tipo_camara: $.trim($("#tipo_camara").val()),
+            sn: $.trim($("#sn").val()),
             estado: $.trim($("#estado").val())
         };
-        console.log(formData);
         $.ajax({
             type: "POST",
             url: "./ajax_handler/camaras.php",
@@ -333,6 +391,9 @@ $plantas = Plantas::get_all_plantas();
                             "id": data.camara.id,
                             "id_plantas": data.camara.id_plantas,
                             "nombre": data.camara.nombre,
+                            "modelo": data.camara.modelo,
+                            "tipo_camara": data.camara.tipo_camara,
+                            "sn": data.camara.sn,
                             "estado": data.camara.estado,
                         }).draw().node();
                         $(newRow).attr('data-id', data.camara.id);
@@ -345,6 +406,9 @@ $plantas = Plantas::get_all_plantas();
                             "id": id,
                             "id_plantas": formData.id_planta,
                             "nombre": formData.nombre,
+                            "modelo": formData.modelo,
+                            "tipo_camara": formData.tipo_camara,
+                            "sn": formData.sn,
                             "estado": formData.estado
                         }).draw();
                         $('#modalCRUD').modal('hide');
