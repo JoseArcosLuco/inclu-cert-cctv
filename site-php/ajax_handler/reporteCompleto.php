@@ -50,6 +50,37 @@ if (isset($_POST)) {
             echo json_encode($response);
             break;
 
+        case 'get_reportes':
+
+            $response = ReporteCompleto::get_reportes();
+
+            echo json_encode($response);
+            break;
+
+        case 'edit_reporte':
+            $id = $_POST['id'];
+            $id_operador = $_POST['id_operador'];
+            $estado = $_POST['estado'];
+            $visual = $_POST['visual'];
+            $analiticas = $_POST['analiticas'];
+            $recorrido = $_POST['recorrido'];
+            $evento = $_POST['evento'];
+            $grabaciones = $_POST['grabaciones'];
+            $observacion = $_POST['observacion'];
+
+            $response = ReporteCompleto::edit_reporte($id, $id_operador, $estado, $visual, $analiticas, $recorrido, $evento, $grabaciones, $observacion);
+
+            echo json_encode($response);
+            break;
+
+        case 'delete_reporte':
+            $id = $_POST['id'];
+
+            $response = ReporteCompleto::delete_reporte($id);
+            
+            echo json_encode($response);
+            break;
+
         default:
             echo 'Fail';
             break;

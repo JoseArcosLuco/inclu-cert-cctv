@@ -94,7 +94,9 @@ if (isset($_GET['form'])) {
         case "reporteCompleto":
             $menuActiveReporteCompleto = 'active';
             break;
-            
+        case "reporteCompletoForm":
+            $menuActiveReporteCompleto = 'active';
+            break;
     }
 }
 
