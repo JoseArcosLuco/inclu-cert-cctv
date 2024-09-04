@@ -2,7 +2,9 @@
 include("./includes/Database.class.php");
 
 require_once('./includes/Plantas.class.php');
+require_once('./includes/Clientes.class.php');
 
+$clientes = Clientes::get_all_clients();
 $plantas = Plantas::get_all_plantas();
 
 ?>
@@ -10,8 +12,23 @@ $plantas = Plantas::get_all_plantas();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
-            <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Cámara<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+            <div class="card-header d-flex align-items-center ms-2 mb-3 justify-content-start gap-2">
+                <div class="col-2">
+                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-start gap-2 fs-5" id="addUser">Agregar Cámara<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                </div>
+                <label class="card-title col-2 p-0">Cliente:
+                    <select class="form-select" name="id_cliente" id="id_cliente">
+                        <option value="" selected>Ver Todos</option>
+                        <?php foreach ($clientes as $cliente): ?>
+                            <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <label class="card-title col-2 p-0">Planta:
+                    <select class="form-select" name="id_planta" id="id_planta" disabled>
+                        <option value="">Seleccione un Cliente</option>
+                    </select>
+                </label>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -113,6 +130,41 @@ $plantas = Plantas::get_all_plantas();
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+    $('#id_cliente').change(function() {
+        let id = $(this).val();
+        if (id !== '') {
+            $('#id_planta').prop('disabled', false);
+        } else {
+            $('#id_planta').prop('disabled', true);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/camaras.php",
+            data: {
+                action: 'updateClienteSelect',
+                id: id
+            },
+            dataType: "json",
+            success: function(data) {
+                $('#id_planta').empty();
+                $('#id_planta').append('<option value="">Seleccione</option>');
+                data.forEach(function(planta) {
+                    $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                });
+
+                tablaCamaras.ajax.reload();
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        })
+    });
+
+    $('#id_planta').change(function() {
+        tablaCamaras.ajax.reload();
+    });
+
     //Crear Camara
     $("#addUser").click(function() {
         $('#formCamara').attr('data-action', 'create_camara');
@@ -199,8 +251,13 @@ $plantas = Plantas::get_all_plantas();
             "ajax": {
                 "url": "./ajax_handler/camaras.php",
                 "type": 'POST',
-                "data": {
-                    action: 'get_camaras'
+                "data": function(d) {
+                    let data = {
+                        action: 'get_camaras'
+                    };
+                    data.cliente = $('#id_cliente').val();
+                    data.planta = $('#id_planta').val();
+                    return data;
                 },
                 "dataSrc": ""
             },
