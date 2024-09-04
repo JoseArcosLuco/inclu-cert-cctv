@@ -49,7 +49,7 @@ class ReporteCompleto
     {
         $database = new Database();
         $conn = $database->getConnection();
-        $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id_cliente');
+        $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id_cliente AND (estado = 1 OR estado = 0)');
         $stmt->bindParam(':id_cliente', $id_cliente);
         if ($stmt->execute()) {
             $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -92,7 +92,7 @@ class ReporteCompleto
                 LEFT JOIN cctv_plantas p ON cam.id_plantas = p.id
                 LEFT JOIN cctv_turnos t ON p.id_clientes = t.id
                 LEFT JOIN cctv_operadores op ON t.id = op.id_turnos
-                WHERE cam.id_plantas = :id_plantas AND op.estado = 1
+                WHERE cam.id_plantas = :id_plantas AND op.estado = 1 AND (p.estado = 1 OR p.estado = 0)
                 GROUP BY cam.id;';
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':id_plantas', $id_plantas);

@@ -72,7 +72,7 @@ class ChartData
                                 LEFT JOIN cctv_reporte_corte_internet internet ON planta.id = internet.id_planta
                                 LEFT JOIN cctv_reporte_corte_energia energia ON planta.id = energia.id_planta
                                 LEFT JOIN cctv_reporte_robo robo ON planta.id = robo.id_planta
-                                WHERE planta.id = :id_planta');
+                                WHERE planta.id = :id_planta AND (planta.estado = 1 OR planta.estado = 0)');
 
         $stmt->bindParam(':id_planta', $id_planta);
 
@@ -110,7 +110,7 @@ class ChartData
             ON planta.id = robo.id_planta 
             AND (robo.fecha >= :fecha_inicio AND robo.fecha <= :fecha_fin)
         WHERE 
-            planta.id = :id_planta;
+            planta.id = :id_planta AND (planta.estado = 1 OR planta.estado = 0);
         ";
         $stmt = $conn->prepare($sql);
 

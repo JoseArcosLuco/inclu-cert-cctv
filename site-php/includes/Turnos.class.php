@@ -31,7 +31,7 @@
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('DELETE FROM cctv_turnos WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_turnos SET estado = 3 WHERE id=:id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
                 return [
@@ -49,7 +49,7 @@
         public static function get_all_turnos(){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_turnos');
+            $stmt = $conn->prepare('SELECT * FROM cctv_turnos WHERE estado = 1 OR estado = 0');
             if($stmt->execute()){
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;

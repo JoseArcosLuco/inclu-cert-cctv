@@ -34,7 +34,7 @@ class Camaras
         $database = new Database();
         $conn = $database->getConnection();
 
-        $stmt = $conn->prepare('DELETE FROM cctv_camaras WHERE id=:id');
+        $stmt = $conn->prepare('UPDATE cctv_camaras SET estado = 3 WHERE id=:id');
         $stmt->bindParam(':id', $id);
         if ($stmt->execute()) {
             return [
@@ -53,7 +53,7 @@ class Camaras
     {
         $database = new Database();
         $conn = $database->getConnection();
-        $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes=:id');
+        $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes=:id AND (estado = 1 OR estado = 0)');
         $stmt->bindParam(':id', $id);
         if ($stmt->execute()) {
             $result = $stmt->fetchAll();
@@ -69,18 +69,19 @@ class Camaras
         $conn = $database->getConnection();
 
         if (empty($id_cliente) && empty($id_planta)) {
-            $stmt = $conn->prepare('SELECT * FROM cctv_camaras');
+            $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE (estado = 1 OR estado = 0);');
 
         } else if (!empty($id_cliente) && empty($id_planta)) {
             $stmt = $conn->prepare('SELECT c.* 
                                     FROM cctv_camaras AS c
                                     JOIN cctv_plantas p ON c.id_plantas = p.id
                                     JOIN cctv_clientes clientes ON p.id_clientes = clientes.id
-                                    WHERE clientes.id = :id_cliente;');
+                                    WHERE clientes.id = :id_cliente
+                                    AND (c.estado = 1 OR c.estado = 0);');
             $stmt->bindParam(':id_cliente', $id_cliente);
 
         } else if (!empty($id_cliente) && !empty($id_planta)) {
-            $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id_plantas=:idplantas');
+            $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id_plantas=:idplantas AND (estado = 1 OR estado = 0);');
             $stmt->bindParam(':idplantas', $id_planta);
         }
 
@@ -100,7 +101,8 @@ class Camaras
                                     FROM cctv_camaras AS c
                                     JOIN cctv_plantas p ON c.id_plantas = p.id
                                     JOIN cctv_clientes clientes ON p.id_clientes = clientes.id
-                                    WHERE clientes.id = :id_cliente;');
+                                    WHERE clientes.id = :id_cliente
+                                    AND (c.estado = 1 OR c.estado = 0);');
         $stmt->bindParam(':id_cliente', $id_cliente);
         if ($stmt->execute()) {
             $result = $stmt->fetchAll();
@@ -114,7 +116,7 @@ class Camaras
     {
         $database = new Database();
         $conn = $database->getConnection();
-        $stmt = $conn->prepare('SELECT * FROM cctv_camaras');
+        $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE estado = 1 OR estado = 0');
         if ($stmt->execute()) {
             $result = $stmt->fetchAll();
             return $result;
