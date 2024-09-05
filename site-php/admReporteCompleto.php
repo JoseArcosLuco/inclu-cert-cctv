@@ -6,6 +6,7 @@ require_once('./includes/Clientes.class.php');
 require_once('./includes/Users.class.php');
 require_once('./includes/Operadores.class.php');
 
+$clientes = Clientes::get_all_clients();
 $plantas = Plantas::get_all_plantas();
 $usuarios = Users::get_all_users();
 $operadores = Operadores::get_all_operadores_without_turno();
@@ -14,8 +15,24 @@ $operadores = Operadores::get_all_operadores_without_turno();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
-            <div class="card-header p-3 d-flex justify-content-between align-items-center">
+            <div class="card-header p-3 d-flex justify-content-start align-items-center gap-4">
                 <a href="<?php echo $base_url ?>/formularios.php?form=reporteCompletoForm&token=<?php echo $token; ?>" class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5">Agregar Reporte<i class="material-icons" style="height: 20px; width:20px;">add</i></a>
+                <label class="card-title col-2 p-0">Cliente:
+                    <select class="form-select" name="cliente" id="cliente">
+                        <option value="" selected>Ver Todos</option>
+                        <?php foreach ($clientes as $cliente): ?>
+                            <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <label class="card-title col-2 p-0">Planta:
+                    <select class="form-select" name="planta" id="planta" disabled>
+                        <option value="">Seleccione un Cliente</option>
+                    </select>
+                </label>
+                <label class="card-title col-2 p-0">Fecha:
+                    <input type="date" class="form-control" name="date" id="date">
+                </label>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -223,6 +240,45 @@ $operadores = Operadores::get_all_operadores_without_turno();
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
+    $('#cliente').change(function() {
+        let id = $(this).val();
+        if (id !== '') {
+            $('#planta').prop('disabled', false);
+        } else {
+            $('#planta').prop('disabled', true);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/reporteCompleto.php",
+            data: {
+                action: 'updateClienteSelect',
+                id: id
+            },
+            dataType: "json",
+            success: function(data) {
+                $('#planta').empty();
+                $('#planta').append('<option value="">Seleccione</option>');
+                data.forEach(function(planta) {
+                    $('#planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                });
+
+                tablaReporte.ajax.reload();
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        })
+    });
+
+    $('#planta').change(function() {
+        tablaReporte.ajax.reload();
+    });
+
+    $('#date').change(function() {
+        tablaReporte.ajax.reload();
+    });
+
     var plantas = <?php echo json_encode($plantas); ?>;
     var plantasMap = {};
 
@@ -350,7 +406,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         modal.find('.modal-body').append('<p class="col-6">Planta: ' + plantasMap[data.id_planta] + '</p>');
         modal.find('.modal-body').append('<p>Autor Reporte: ' + usuariosMap[data.id_usuario] + '</p>');
         modal.find('.modal-body').append('<p>N° de Cámara: ' + data.id_camaras + '</p>');
-        modal.find('.modal-body').append('<p>Estado: ' + renderEstado(data.estado) +'</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + renderEstado(data.estado) + '</p>');
         modal.find('.modal-body').append('<p>Operador Encargado: ' + usuariosMap[data.id_operador] + '</p>');
         modal.find('.modal-body').append('<p>Visual: ' + renderVisual(data.visual) + '</p>');
         modal.find('.modal-body').append('<p>Analíticas: ' + renderAnaliticas(data.analiticas) + '</p>');
@@ -394,8 +450,13 @@ $operadores = Operadores::get_all_operadores_without_turno();
             "ajax": {
                 "url": "./ajax_handler/reporteCompleto.php",
                 "type": 'POST',
-                "data": {
-                    action: 'get_reportes'
+                "data": function(d) {
+                    return {
+                        action: 'get_reportes',
+                        cliente: $('#cliente').val(),
+                        planta: $('#planta').val(),
+                        fecha: $('#date').val()
+                    }
                 },
                 "dataSrc": ""
             },

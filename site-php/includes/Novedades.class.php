@@ -51,7 +51,7 @@
         public static function get_all_plantas($id){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes=:id');
+            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes=:id AND (estado = 1 OR estado = 0)');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();

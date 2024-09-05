@@ -11,10 +11,13 @@ if (isset($_POST)) {
         case 'create_camara':
             $idPlanta = $_POST['id_planta'];
             $nombre = $_POST['nombre'];
+            $modelo = $_POST['modelo'];
+            $tipoCamara = $_POST['tipo_camara'];
+            $sn = $_POST['sn'];
             $estado = $_POST['estado'];
 
-            $response = Camaras::create_camaras($idPlanta, $nombre, $estado);
-            
+            $response = Camaras::create_camaras($idPlanta, $nombre, $modelo, $tipoCamara, $sn, $estado);
+
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
@@ -27,9 +30,22 @@ if (isset($_POST)) {
 
             echo json_encode($response);
             break;
-        
+
+        case 'updateClienteSelect':
+            $id = $_POST['id'];
+
+            $response = Camaras::get_plantas_by_cliente_id($id);
+
+            echo json_encode($response);
+            break;
+
         case 'get_camaras':
-            $response = Camaras::get_all_camaras_without_plantaId();
+
+            $id_planta = $_POST['planta'];
+            $id_cliente = $_POST['cliente'];
+
+            $response = Camaras::get_all_camaras($id_cliente, $id_planta);
+
             echo json_encode($response);
             break;
 
@@ -39,8 +55,8 @@ if (isset($_POST)) {
             $nombre = $_POST['nombre'];
             $estado = $_POST['estado'];
 
-            $response = Camaras::update_camaras($id,$idPlanta, $nombre, $estado);
-            
+            $response = Camaras::update_camaras($id, $idPlanta, $nombre, $estado);
+
             if ($response['status']) {
                 $database = new Database();
                 $conn = $database->getConnection();
@@ -59,7 +75,6 @@ if (isset($_POST)) {
             $response = Camaras::delete_camaras_by_id($id);
             echo json_encode($response);
             break;
-        // Otros casos para update, delete, etc.
+            // Otros casos para update, delete, etc.
     }
 }
-?>

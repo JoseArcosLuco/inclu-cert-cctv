@@ -2,7 +2,9 @@
 include("./includes/Database.class.php");
 
 require_once('./includes/Plantas.class.php');
+require_once('./includes/Clientes.class.php');
 
+$clientes = Clientes::get_all_clients();
 $plantas = Plantas::get_all_plantas();
 
 ?>
@@ -10,8 +12,23 @@ $plantas = Plantas::get_all_plantas();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
-            <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar Cámara<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+            <div class="card-header d-flex align-items-center ms-2 mb-3 justify-content-start gap-2">
+                <div class="col-2">
+                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-start gap-2 fs-5" id="addUser">Agregar Cámara<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                </div>
+                <label class="card-title col-2 p-0">Cliente:
+                    <select class="form-select" name="id_cliente" id="id_cliente">
+                        <option value="" selected>Ver Todos</option>
+                        <?php foreach ($clientes as $cliente): ?>
+                            <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <label class="card-title col-2 p-0">Planta:
+                    <select class="form-select" name="id_planta" id="id_planta" disabled>
+                        <option value="">Seleccione un Cliente</option>
+                    </select>
+                </label>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -25,6 +42,15 @@ $plantas = Plantas::get_all_plantas();
                             </th>
                             <th>
                                 Nombre
+                            </th>
+                            <th>
+                                Modelo
+                            </th>
+                            <th>
+                                Tipo de Cámara
+                            </th>
+                            <th>
+                                SN
                             </th>
                             <th class="text-center">
                                 Estado
@@ -52,10 +78,33 @@ $plantas = Plantas::get_all_plantas();
                     <form id="formCamara" name="formCamara">
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Nombre:
                                             <input type="text" class="form-control" id="nombre" name="nombre">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Modelo:
+                                            <input type="text" class="form-control" id="modelo" name="modelo">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Tipo Cámara:
+                                            <input type="text" class="form-control" id="tipo_camara" name="tipo_camara">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">SN:
+                                            <input type="text" class="form-control" id="sn" name="sn">
                                         </label>
                                     </div>
                                 </div>
@@ -65,7 +114,7 @@ $plantas = Plantas::get_all_plantas();
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Planta:
-                                                <select class="form-select" name="id_planta" id="id_planta">
+                                                <select class="form-select" name="id_plantas" id="id_plantas">
                                                     <?php foreach ($plantas as $planta) : ?>
                                                         <option value="<?php echo $planta['id'] ?>"><?php echo htmlspecialchars($planta['nombre']); ?></option>
                                                     <?php endforeach; ?>
@@ -113,6 +162,41 @@ $plantas = Plantas::get_all_plantas();
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+    $('#id_cliente').change(function() {
+        let id = $(this).val();
+        if (id !== '') {
+            $('#id_planta').prop('disabled', false);
+        } else {
+            $('#id_planta').prop('disabled', true);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/camaras.php",
+            data: {
+                action: 'updateClienteSelect',
+                id: id
+            },
+            dataType: "json",
+            success: function(data) {
+                $('#id_planta').empty();
+                $('#id_planta').append('<option value="">Seleccione</option>');
+                data.forEach(function(planta) {
+                    $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                });
+
+                tablaCamaras.ajax.reload();
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        })
+    });
+
+    $('#id_planta').change(function() {
+        tablaCamaras.ajax.reload();
+    });
+
     //Crear Camara
     $("#addUser").click(function() {
         $('#formCamara').attr('data-action', 'create_camara');
@@ -126,8 +210,11 @@ $plantas = Plantas::get_all_plantas();
         var data = tablaCamaras.row($(this).parents('tr')).data();
         $('#formCamara').attr('data-action', 'edit_camara');
         $('#formCamara').attr('data-id', data.id);
-        $('#id_planta').val(data.id_plantas);
+        $('#id_plantas').val(data.id_plantas);
         $('#nombre').val(data.nombre);
+        $('#modelo').val(data.modelo);
+        $('#tipo_camara').val(data.tipo_camara);
+        $('#sn').val(data.sn);
         $('#estado').val(data.estado);
         $('#modalCRUD .modal-title').text('Editar Cámara');
 
@@ -154,6 +241,9 @@ $plantas = Plantas::get_all_plantas();
         modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
         modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_plantas] + '</p>');
         modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
+        modal.find('.modal-body').append('<p>Modelo: ' + data.modelo || 'Desconocido'+ '</p>');
+        modal.find('.modal-body').append('<p>Tipo de Cámara: ' + data.tipo_camara || 'Desconocido' + '</p>');
+        modal.find('.modal-body').append('<p>SN: ' + data.sn || 'Desconocido' + '</p>');
         modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
@@ -199,8 +289,13 @@ $plantas = Plantas::get_all_plantas();
             "ajax": {
                 "url": "./ajax_handler/camaras.php",
                 "type": 'POST',
-                "data": {
-                    action: 'get_camaras'
+                "data": function(d) {
+                    let data = {
+                        action: 'get_camaras'
+                    };
+                    data.cliente = $('#id_cliente').val();
+                    data.planta = $('#id_planta').val();
+                    return data;
                 },
                 "dataSrc": ""
             },
@@ -220,6 +315,24 @@ $plantas = Plantas::get_all_plantas();
                     "data": "nombre",
                     "createdCell": function(td) {
                         $(td).addClass('text-capitalize');
+                    }
+                },
+                {
+                    "data": "modelo",
+                    "render": function(data){
+                        return data || 'Desconocido';
+                    }
+                },
+                {
+                    "data": "tipo_camara",
+                    "render": function(data){
+                        return data || 'Desconocido';
+                    }
+                },
+                {
+                    "data": "sn",
+                    "render": function(data){
+                        return data || 'Desconocido';
                     }
                 },
                 {
@@ -257,11 +370,13 @@ $plantas = Plantas::get_all_plantas();
         var formData = {
             action: action,
             id: id,
-            id_planta: $.trim($("#id_planta").val()),
+            id_planta: $.trim($("#id_plantas").val()),
             nombre: $.trim($("#nombre").val()),
+            modelo: $.trim($("#modelo").val()),
+            tipo_camara: $.trim($("#tipo_camara").val()),
+            sn: $.trim($("#sn").val()),
             estado: $.trim($("#estado").val())
         };
-        console.log(formData);
         $.ajax({
             type: "POST",
             url: "./ajax_handler/camaras.php",
@@ -276,6 +391,9 @@ $plantas = Plantas::get_all_plantas();
                             "id": data.camara.id,
                             "id_plantas": data.camara.id_plantas,
                             "nombre": data.camara.nombre,
+                            "modelo": data.camara.modelo,
+                            "tipo_camara": data.camara.tipo_camara,
+                            "sn": data.camara.sn,
                             "estado": data.camara.estado,
                         }).draw().node();
                         $(newRow).attr('data-id', data.camara.id);
@@ -288,6 +406,9 @@ $plantas = Plantas::get_all_plantas();
                             "id": id,
                             "id_plantas": formData.id_planta,
                             "nombre": formData.nombre,
+                            "modelo": formData.modelo,
+                            "tipo_camara": formData.tipo_camara,
+                            "sn": formData.sn,
                             "estado": formData.estado
                         }).draw();
                         $('#modalCRUD').modal('hide');
