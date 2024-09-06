@@ -15,8 +15,20 @@ $usuarios = Users::get_all_users();
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <div class="col-6 col-md-8">
+                <div class="col-6 col-md-8 d-flex align-items-center gap-4">
                     <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5 w-min-content" id="addUser">Agregar Reporte Novedades<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                    <button class='btn btn-success p-2'
+                        id="btnExcel"
+                        title="Exportar a Excel">
+                        <svg class='bi bi-file-earmark-excel-fill'
+                            height='24' width='24'
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 26 26'
+                            xml:space='preserve'>
+                            <path style='fill:#fff'
+                                d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                        </svg>
+                    </button>
                 </div>
                 <label class="col-6 col-md-4 col-form-label p-0">Novedad:
                     <select class="form-select d-flex" id="tipo_novedad" name="novedad">
@@ -55,6 +67,9 @@ $usuarios = Users::get_all_users();
                             </th>
                             <th>
                                 Autor Reporte
+                            </th>
+                            <th>
+                                Tipo Novedad
                             </th>
                             <th>
                                 Estado
@@ -165,7 +180,7 @@ $usuarios = Users::get_all_users();
                                 <div class="col-md-12 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Tipo de Novedad:
-                                            <select class="form-select" name="id_novedad" id="id_novedad" requiere>
+                                            <select class="form-select" name="id_novedad" id="id_novedad" requiered>
                                                 <option value="">Seleccione</option>
                                                 <option value="1">Diaria</option>
                                                 <option value="2">Semanal</option>
@@ -227,6 +242,15 @@ $usuarios = Users::get_all_users();
     usuarios.forEach(function(usuario) {
         usuariosMap[usuario.id] = usuario.nombres + ' ' + usuario.apellidos;
     });
+
+    function renderTipoNovedad(data) {
+        let tipoNovedad = {
+            1: 'Diaria',
+            2: 'Semanal'
+        };
+
+        return tipoNovedad[data] || 'Desconocido';
+    }
 
     //Crear Reporte
     $("#addUser").click(function() {
@@ -320,6 +344,33 @@ $usuarios = Users::get_all_users();
                 }
             });
         });
+    });
+
+    $('#btnExcel').click(function() {
+        var data = tablaReporte.rows().data().toArray();
+
+        var exportData = data.map(function(rowData) {
+            return {
+                "ID": rowData.id,
+                "Cliente": clienteMap[rowData.id_cliente] || 'Desconocido',
+                "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
+                "Fecha Inicial": moment(rowData.fecha).format('DD/MM/YYYY'),
+                "Hora Inicial": moment(rowData.fecha).format('HH:mm'),
+                "Fecha Termino": moment(rowData.fecha_fin).format('DD/MM/YYYY'),
+                "Hora Termino": moment(rowData.fecha_fin).format('HH:mm'),
+                "Observaciones": rowData.observacion,
+                "Autor": usuariosMap[rowData.id_usuario] || 'Desconocido',
+                "Tipo Novedad": renderTipoNovedad(rowData.tipo_novedad),
+                "Estado": (rowData.estado ? 'Activo' : 'Inactivo')
+            };
+        });
+
+        var worksheet = XLSX.utils.json_to_sheet(exportData);
+
+        var workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'ReporteNovedades');
+
+        XLSX.writeFile(workbook, 'ReporteNovedades.xlsx');
     });
 
     $(document).ready(function() {
@@ -447,13 +498,21 @@ $usuarios = Users::get_all_users();
                     }
                 },
                 {
+                    "data": "tipo_novedad",
+                    "render": renderTipoNovedad
+                },
+                {
                     "data": "estado",
                     "render": function(data) {
                         return data == 1 ? 'Activo' : 'Inactivo'; //editar estado del robo en función de los requerimientos
                     }
                 },
                 {
-                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    "data": null,
+                    "render": function(data) {
+                        return "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    }
+                    
                 }
             ],
             "createdRow": function(row, data, dataIndex) {

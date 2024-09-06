@@ -14,7 +14,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4 col-12">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <div class="dropdown col-6 col-md-8">
+                <div class="dropdown col-6 col-md-8 d-flex align-items-center gap-4">
                     <button class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-start gap-1 fs-5" data-bs-toggle="dropdown" aria-expanded="false">
                         Agregar Reporte
                     </button>
@@ -30,6 +30,18 @@ $operadores = Operadores::get_all_operadores_without_turno();
                             </li>
                         <?php endforeach; ?>
                     </ul>
+                    <button class='btn btn-success p-2'
+                        id="btnExcel"
+                        title="Exportar a Excel">
+                        <svg class='bi bi-file-earmark-excel-fill'
+                            height='24' width='24'
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 26 26'
+                            xml:space='preserve'>
+                            <path style='fill:#fff'
+                                d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                        </svg>
+                    </button>
                 </div>
                 <label class="card-title col-md-4 col-6 p-0">Cliente:
                     <select class="form-select d-flex" name="cliente" id="cliente">
@@ -62,7 +74,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                             <th class="text-center">
                                 N° de Camaras en Linea
                             </th>
-                            <th class="text-center">
+                            <th class="text-start">
                                 Estado
                             </th>
                             <th>
@@ -129,7 +141,14 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Canal:
-                                                <input type="number" class="form-control" name="canal" id="canal" requiered>
+                                                <select name="canal" id="canal" class="form-select">
+                                                    <option value="">Seleccione</option>
+                                                    <option value="1">En Línea</option>
+                                                    <option value="2">Intermitente / Baja Señal</option>
+                                                    <option value="3">Reconector Abierto</option>
+                                                    <option value="4">Pérdida De Red</option>
+                                                    <option value="5">Pérdida De Conexión / Sin Confirmar</option>
+                                                </select>
                                             </label>
                                         </div>
                                     </div>
@@ -208,7 +227,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
         $('#camaras_online').val($data.camaras_online);
         $('#canal').val($data.canal);
         $('#observacion').val($data.observacion);
-        $('#estado').val($data.estado);
         $('#modalCRUD .modal-title').text('Editar Reporte');
 
         $('#modalCRUD').modal('show');
@@ -229,7 +247,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
 
         $("#formReporte").submit(function(e) {
             e.preventDefault();
-            console.log($data);
             var formData = {
                 action: 'edit_reporte',
                 id: $data.id,
@@ -284,7 +301,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
         var data = tablaReporte.row($row).data();
         var reporteId = data.id;
         var modal = $('#warningModal .modal-dialog .modal-content');
-        console.log(data);
 
         modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
         modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
@@ -325,11 +341,43 @@ $operadores = Operadores::get_all_operadores_without_turno();
         });
     });
 
+    $('#btnExcel').click(function() {
+        var data = tablaReporte.rows().data().toArray();
+        var exportData = data.map(function(rowData) {
+            return {
+                "ID": rowData.id,
+                "Cliente": clientesMap[rowData.id_cliente] || 'Desconocido',
+                "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
+                "Operador": operadoresMap[rowData.id_operador] || 'Desconocido',
+                "Fecha Registro": rowData.fecha ? moment(rowData.fecha).format('DD/MM/YYYY') : 'Sin Fecha',
+                "N° de Cámaras": rowData.camaras,
+                "N° de Cámaras en Línea": rowData.camaras_online,
+                "Porcentaje de Visualización":Math.round((rowData.camaras_online / rowData.camaras) * 100) + '%',
+                "Observaciones": rowData.observacion,
+                "Estado": renderEstado(rowData.canal)
+            };
+        });
+
+        var worksheet = XLSX.utils.json_to_sheet(exportData);
+
+        var workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'ReportePeriodico');
+
+        XLSX.writeFile(workbook, 'ReportePeriodico.xlsx');
+    });
+
     var plantas = <?php echo json_encode($plantas); ?>;
     var plantasMap = {};
 
     plantas.forEach(function(planta) {
         plantasMap[planta.id] = planta.nombre;
+    });
+
+    var clientes = <?php echo json_encode($clientes); ?>;
+    var clientesMap = {};
+
+    clientes.forEach(function(cliente) {
+        clientesMap[cliente.id] = cliente.nombre;
     });
 
     var operadores = <?php echo json_encode($operadores); ?>;
@@ -338,6 +386,17 @@ $operadores = Operadores::get_all_operadores_without_turno();
     operadores.forEach(function(operador) {
         operadoresMap[operador.id] = operador.nombre;
     });
+
+    function renderEstado(data) {
+        const estados = {
+            1: 'En Linea',
+            2: 'Intermitente/ Baja señal',
+            3: 'Reconector Abierto',
+            4: 'Pérdida De Red',
+            5: 'Pérdida De Conexión / Sin Confirmar',
+        };
+        return estados[data] || 'Desconocido';
+    }
 
     $('#cliente').on('change', function() {
         tablaReporte.ajax.reload();
@@ -402,24 +461,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 {
                     "data": "canal",
-                    "render": function(data){
-                        switch (data) {
-                            case 1:
-                                return 'En Linea';
-                            case 2:
-                                return 'Intermitente/ Baja señal';
-                            case 3:
-                                return 'Reconector abierto';
-                            case 4:
-                                return 'Pérdida de red';
-                            case 5:
-                                return 'Pérdida de conexión sin confirmar';
-                            default:
-                                return 'Sin confirmar!';
-                        }
-                    },
+                    "render": renderEstado,
                     "createdCell": function(td) {
-                        $(td).addClass('text-center');
+                        $(td).addClass('text-start text-capitalize');
                     }
                 },
                 {
