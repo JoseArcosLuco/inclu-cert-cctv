@@ -90,9 +90,9 @@ class ReporteCompleto
                 GROUP_CONCAT(op.id_users) as operador
                 FROM cctv_camaras cam
                 LEFT JOIN cctv_plantas p ON cam.id_plantas = p.id
-                LEFT JOIN cctv_turnos t ON p.id_clientes = t.id
-                LEFT JOIN cctv_operadores op ON t.id = op.id_turnos
-                WHERE cam.id_plantas = :id_plantas AND op.estado = 1 AND (p.estado = 1 OR p.estado = 0)
+                LEFT JOIN cctv_turnos t ON p.id = t.id_plantas
+                LEFT JOIN cctv_operadores op ON t.id = op.id_turnos AND op.estado = 1
+                WHERE cam.id_plantas = :id_plantas AND (cam.estado = 1 OR cam.estado = 0)
                 GROUP BY cam.id;';
         $stmt = $conn->prepare($sql);
         $stmt->bindParam(':id_plantas', $id_plantas);

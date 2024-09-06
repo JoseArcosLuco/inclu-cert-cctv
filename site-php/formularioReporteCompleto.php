@@ -170,100 +170,114 @@ $users = Users::get_all_users();
 
                         let operadoresArray = new Set();
                         data.forEach(function(item) {
-                            let operadores = item.operador.split(',');
-                            operadores.forEach(function(operador) {
-                                operadoresArray.add(operador);
-                            });
+                            if (item.operador == null) {
+                                item.operador = null;
+                            } else {
+                                let operadores = item.operador.split(',');
+                                operadores.forEach(function(operador) {
+                                    operadoresArray.add(operador);
+                                });
+                            }
                         });
                         info.empty();
                         $('#initialValue').prop('hidden', true);
                         info.prop('hidden', false);
 
-                        $.each(data, function(index, camara) {
+                        if (data.length === 0) {
                             info.append(`
-                            <form class="form mb-5" id="form_${camara.id}">
-                                <div class="container">
-                                    <h5 class="text-center text-black bg-info rounded p-2 fw-bold">${camara.nombre}</h5>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Operador:
-                                                <select class="form-select" name="turno" id="turno_${camara.id}" required>
-                                                    <option value="">Seleccione</option>
-                                                    ${Array.from(operadoresArray).map((operador) => `<option value="${operador}">${usuariosMap[operador]}</option>`).join('')}
-                                                </select>
-                                            </label>
+                                <p class="text-center text-white bg-danger rounded p-4 fw-bold">Esta planta no posee Cámaras aun. Agregue Cámaras a la planta <a href="<?php echo $base_url ?>./formularios.php?form=camaras&token=<?php echo $token; ?>">aquí.</a></p>
+                                `);
+                        } else if (data[0].operador == null) {
+                            info.append(`
+                                <p class="text-center text-white bg-danger rounded p-4 fw-bold">Esta planta no posee ningún Operador. Agregue operadores a la planta <a href="<?php echo $base_url ?>/formularios.php?form=turnos&token=<?php echo $token; ?>">aquí.</a></p>
+                                `);
+                        } else {
+                            $.each(data, function(index, camara) {
+                                info.append(`
+                                <form class="form mb-5" id="form_${camara.id}">
+                                    <div class="container">
+                                        <h5 class="text-center text-black bg-info rounded p-2 fw-bold">${camara.nombre}</h5>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Operador:
+                                                    <select class="form-select" name="turno" id="turno_${camara.id}" required>
+                                                        <option value="">Seleccione</option>
+                                                        ${Array.from(operadoresArray).map((operador) => `<option value="${operador}">${usuariosMap[operador]}</option>`).join('')}
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">N° Cámara / NVR:
+                                                    <input type="number" class="form-control" id="camaras_${camara.id}" value="${camara.id}" disabled required>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Estado:
+                                                    <select class="form-select" id="estado_${camara.id}" required>
+                                                        <option value="">Seleccione</option>
+                                                        <option value="1">En Línea</option>
+                                                        <option value="2">Intermitente</option>
+                                                        <option value="3">Sin Conexión</option>
+                                                    </select>
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">N° Cámara / NVR:
-                                                <input type="number" class="form-control" id="camaras_${camara.id}" value="${camara.id}" disabled required>
-                                            </label>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Visual:
+                                                    <select class="form-select" id="visual_${camara.id}">
+                                                        <option value="">Seleccione</option>
+                                                        <option value="1">Clara</option>
+                                                        <option value="2">Desenfocada</option>
+                                                        <option value="3">Obstruida</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Analíticas:
+                                                    <select class="form-select" id="analiticas_${camara.id}">
+                                                        <option value="">Seleccione</option>
+                                                        <option value="1">Activas</option>
+                                                        <option value="2">Inactivas</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Recorrido:
+                                                    <select class="form-select" id="recorrido_${camara.id}">
+                                                        <option value="">Seleccione</option>
+                                                        <option value="1">Activo</option>
+                                                        <option value="2">Inactivo</option>
+                                                    </select>
+                                                </label>
+                                            </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Estado:
-                                                <select class="form-select" id="estado_${camara.id}" required>
-                                                    <option value="">Seleccione</option>
-                                                    <option value="1">En Línea</option>
-                                                    <option value="2">Intermitente</option>
-                                                    <option value="3">Sin Conexión</option>
-                                                </select>
-                                            </label>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Evento:
+                                                    <select class="form-select" id="evento_${camara.id}">
+                                                        <option value="">Seleccione</option>
+                                                        <option value="1">Activo</option>
+                                                        <option value="2">Inactivo</option>
+                                                    </select>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Grabaciones:
+                                                    <input type="number" class="form-control grabaciones-input" id="grabaciones_${camara.id}">
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label w-100">Observación:
+                                                    <textarea class="form-control" id="observacion_${camara.id}" rows="1"></textarea>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Visual:
-                                                <select class="form-select" id="visual_${camara.id}">
-                                                    <option value="">Seleccione</option>
-                                                    <option value="1">Clara</option>
-                                                    <option value="2">Desenfocada</option>
-                                                    <option value="3">Obstruida</option>
-                                                </select>
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Analíticas:
-                                                <select class="form-select" id="analiticas_${camara.id}">
-                                                    <option value="">Seleccione</option>
-                                                    <option value="1">Activas</option>
-                                                    <option value="2">Inactivas</option>
-                                                </select>
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Recorrido:
-                                                <select class="form-select" id="recorrido_${camara.id}">
-                                                    <option value="">Seleccione</option>
-                                                    <option value="1">Activo</option>
-                                                    <option value="2">Inactivo</option>
-                                                </select>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Evento:
-                                                <select class="form-select" id="evento_${camara.id}">
-                                                    <option value="">Seleccione</option>
-                                                    <option value="1">Activo</option>
-                                                    <option value="2">Inactivo</option>
-                                                </select>
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Grabaciones:
-                                                <input type="number" class="form-control grabaciones-input" id="grabaciones_${camara.id}">
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label class="form-label w-100">Observación:
-                                                <textarea class="form-control" id="observacion_${camara.id}" rows="1"></textarea>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            `);
-                        });
+                                </form>
+                                `);
+                            });
+                        }
 
                         $('.grabaciones-input').on('change', function() {
                             const value = parseInt($(this).val());
