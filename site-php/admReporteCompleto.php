@@ -17,6 +17,18 @@ $operadores = Operadores::get_all_operadores_without_turno();
         <div class="card mb-4">
             <div class="card-header p-3 d-flex justify-content-start align-items-center gap-4">
                 <a href="<?php echo $base_url ?>/formularios.php?form=reporteCompletoForm&token=<?php echo $token; ?>" class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5">Agregar Reporte<i class="material-icons" style="height: 20px; width:20px;">add</i></a>
+                <button class='btn btn-success p-2' 
+                id="btnExcel"
+                title="Exportar a Excel">
+                    <svg class='bi bi-file-earmark-excel-fill'
+                        height='24' width='24'
+                        xmlns='http://www.w3.org/2000/svg'
+                        viewBox='0 0 26 26'
+                        xml:space='preserve'>
+                        <path style='fill:#fff'
+                            d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                    </svg>
+                </button>
                 <label class="card-title col-2 p-0">Cliente:
                     <select class="form-select" name="cliente" id="cliente">
                         <option value="" selected>Ver Todos</option>
@@ -239,6 +251,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
     $('#cliente').change(function() {
         let id = $(this).val();
@@ -441,6 +454,35 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 }
             });
         });
+    });
+
+    $('#btnExcel').click(function() {
+        var data = tablaReporte.rows().data().toArray();
+
+        var exportData = data.map(function(rowData) {
+            return {
+                "ID": rowData.id,
+                "Fecha": moment(rowData.fecha).format('DD-MM-YYYY'),
+                "Autor": usuariosMap[rowData.id_usuario] || 'Desconocido',
+                "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
+                "N° Cámara": rowData.id_camaras,
+                "Observaciones": rowData.observacion,
+                "Estado": renderEstado(rowData.estado),
+                "Operador": usuariosMap[rowData.id_operador] || 'Desconocido',
+                "Visual": renderVisual(rowData.visual),
+                "Analíticas": renderAnaliticas(rowData.analiticas),
+                "Recorrido": renderRecorrido(rowData.recorrido),
+                "Evento": renderEvento(rowData.evento),
+                "Grabaciones": rowData.grabaciones
+            };
+        });
+
+        var worksheet = XLSX.utils.json_to_sheet(exportData);
+
+        var workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'ReporteCompleto');
+
+        XLSX.writeFile(workbook, 'ReporteCompleto.xlsx');
     });
 
     $(document).ready(function() {

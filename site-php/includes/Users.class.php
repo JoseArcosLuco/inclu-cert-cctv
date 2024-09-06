@@ -112,6 +112,18 @@
             }
         }
 
+        public static function countUsers(){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $stmt = $conn->prepare('SELECT COUNT(id) FROM cctv_users WHERE estado = 1');
+            if($stmt->execute()){
+                $result = $stmt->fetchColumn();
+                return $result;
+            } else {
+                return 0;
+            }
+        }
+
         public static function update_users($id, $idperfil, $nombres, $apellidos, $email, $password, $codigogoogle2fa, $estado){
             $database = new Database();
             $conn = $database->getConnection();

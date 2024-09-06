@@ -93,7 +93,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 1-->
                             <div class="small-box text-bg-primary">
                                 <div class="inner">
-                                    <h3>150</h3>
+                                    <h3 id="total_reportes">0</h3>
                                     <p>Nuevos Reportes</p>
                                 </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"></path>
@@ -104,7 +104,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 2-->
                             <div class="small-box text-bg-success">
                                 <div class="inner">
-                                    <h3>53<sup class="fs-5">%</sup></h3>
+                                    <h3 id="porcentaje" style="display: inline-block;">0</h3><sup class="fs-5">%</sup>
                                     <p>Operatividad de camaras</p>
                                 </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"></path>
@@ -115,7 +115,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 3-->
                             <div class="small-box text-bg-warning">
                                 <div class="inner">
-                                    <h3>44</h3>
+                                    <h3 id="countUsers">0</h3>
                                     <p>Usuarios Registrados</p>
                                 </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"></path>
@@ -126,7 +126,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         <div class="col-lg-3 col-6"> <!--begin::Small Box Widget 4-->
                             <div class="small-box text-bg-danger">
                                 <div class="inner">
-                                    <h3>65</h3>
+                                    <h3 id="countPlantas">0</h3>
                                     <p>Puestos de vigilancia</p>
                                 </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"></path>
@@ -136,7 +136,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                             </div> <!--end::Small Box Widget 4-->
                         </div> <!--end::Col-->
                     </div> <!--end::Row--> <!--begin::Row-->
-                    
+
                     <div class="row">
                         <div class="col-lg-6 connectedSortable">
                             <div class="card direct-chat direct-chat-primary mb-4">
@@ -147,20 +147,20 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                                         </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" title="Contacts" data-lte-toggle="chat-pane"> <i class="bi bi-chat-text-fill"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!-- Conversations are loaded here -->
-                                        <div class="direct-chat-messages"> <!-- Message. Default to the start -->
-                                            <div class="direct-chat-msg">
-                                                <?php foreach ($novedadesSemanales as $novedadesSemanalesList): ?>
-                                                    <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
+                                    <div class="direct-chat-messages"> <!-- Message. Default to the start -->
+                                        <div class="direct-chat-msg">
+                                            <?php foreach ($novedadesSemanales as $novedadesSemanalesList): ?>
+                                                <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
                                                         <?php echo $novedadesSemanalesList['nombreusuario']; ?>&nbsp;<?php echo $novedadesSemanalesList['apellidousuario']; ?>
                                                     </span> <span class="direct-chat-timestamp float-end">
                                                         <?php echo $novedadesSemanalesList['fecha']; ?>
                                                     </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user9-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
-                                                    <div class="direct-chat-text">
-                                                        Planta: <?php echo $novedadesSemanalesList['nombreplanta']; ?> - <?php echo $novedadesSemanalesList['observacion']; ?>
-                                                    </div> <!-- /.direct-chat-text -->
-                                                <?php endforeach; ?>
-                                            </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
-                                        </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
+                                                <div class="direct-chat-text">
+                                                    Planta: <?php echo $novedadesSemanalesList['nombreplanta']; ?> - <?php echo $novedadesSemanalesList['observacion']; ?>
+                                                </div> <!-- /.direct-chat-text -->
+                                            <?php endforeach; ?>
+                                        </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
+                                    </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
                                     <div class="direct-chat-contacts">
                                         <ul class="contacts-list">
                                             <li> <a href="#"> <img class="contacts-list-img" src="./assets/img/user1-128x128.jpg" alt="User Avatar">
@@ -177,7 +177,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                                 </div> <!-- /.card-body -->
                             </div>
                         </div>
-                    
+
                         <div class="col-lg-6 connectedSortable">
                             <div class="card direct-chat direct-chat-primary mb-4">
                                 <div class="card-header">
@@ -187,22 +187,22 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                                         </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" title="Contacts" data-lte-toggle="chat-pane"> <i class="bi bi-chat-text-fill"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!-- Conversations are loaded here -->
-                                    
+
                                     <div class="direct-chat-messages"> <!-- Message. Default to the start -->
                                         <div class="direct-chat-msg">
                                             <?php foreach ($novedadesDiarias as $novedadesDiariasList): ?>
                                                 <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
-                                                    <?php echo $novedadesDiariasList['nombreusuario']; ?>&nbsp;<?php echo $novedadesDiariasList['apellidousuario']; ?>
+                                                        <?php echo $novedadesDiariasList['nombreusuario']; ?>&nbsp;<?php echo $novedadesDiariasList['apellidousuario']; ?>
                                                     </span> <span class="direct-chat-timestamp float-end">
                                                         <?php echo $novedadesDiariasList['fecha']; ?>
                                                     </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user9-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
                                                 <div class="direct-chat-text">
-                                                        Planta: <?php echo $novedadesDiariasList['nombreplanta']; ?> - <?php echo $novedadesDiariasList['observacion']; ?>
+                                                    Planta: <?php echo $novedadesDiariasList['nombreplanta']; ?> - <?php echo $novedadesDiariasList['observacion']; ?>
                                                 </div> <!-- /.direct-chat-text -->
                                             <?php endforeach; ?>
                                         </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
                                     </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
-                                    
+
                                     <div class="direct-chat-contacts">
                                         <ul class="contacts-list">
                                             <li> <a href="#"> <img class="contacts-list-img" src="./assets/img/user1-128x128.jpg" alt="User Avatar">
@@ -231,25 +231,25 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                                         </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" title="Contacts" data-lte-toggle="chat-pane"> <i class="bi bi-chat-text-fill"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!-- Conversations are loaded here -->
-                                        <div class="direct-chat-messages"> <!-- Message. Default to the start -->
-                                            <div class="direct-chat-msg">
+                                    <div class="direct-chat-messages"> <!-- Message. Default to the start -->
+                                        <div class="direct-chat-msg">
                                             <?php foreach ($cortesInternetActivos as $cortesInternetActivosList): ?>
                                                 <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
-                                                    <?php echo $cortesInternetActivosList['nombreusuario']; ?>&nbsp;<?php echo $cortesInternetActivosList['apellidousuario']; ?>
+                                                        <?php echo $cortesInternetActivosList['nombreusuario']; ?>&nbsp;<?php echo $cortesInternetActivosList['apellidousuario']; ?>
                                                     </span> <span class="direct-chat-timestamp float-end">
                                                         <?php echo $cortesInternetActivosList['fecha']; ?>
                                                     </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user9-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
                                                 <div class="direct-chat-text">
-                                                    <i class="bi bi-power"></i>   Planta: <?php echo $cortesInternetActivosList['nombreplanta']; ?> - <?php echo $cortesInternetActivosList['observacion']; ?>
+                                                    <i class="bi bi-power"></i> Planta: <?php echo $cortesInternetActivosList['nombreplanta']; ?> - <?php echo $cortesInternetActivosList['observacion']; ?>
                                                 </div> <!-- /.direct-chat-text -->
-                                            <?php endforeach; ?>    
-                                            </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
-                                        </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
-                                    
+                                            <?php endforeach; ?>
+                                        </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
+                                    </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
+
                                 </div> <!-- /.card-body -->
                             </div>
                         </div>
-                    
+
                         <div class="col-lg-6 connectedSortable">
                             <div class="card direct-chat direct-chat-primary mb-4">
                                 <div class="card-header">
@@ -259,22 +259,22 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                                         </span> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" title="Contacts" data-lte-toggle="chat-pane"> <i class="bi bi-chat-text-fill"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!-- Conversations are loaded here -->
-                                    
+
                                     <div class="direct-chat-messages"> <!-- Message. Default to the start -->
                                         <div class="direct-chat-msg">
                                             <?php foreach ($cortesEnergiaActivos as $cortesEnergiaActivosList): ?>
                                                 <div class="direct-chat-infos clearfix"> <span class="direct-chat-name float-start">
-                                                    <?php echo $cortesEnergiaActivosList['nombreusuario']; ?>&nbsp;<?php echo $cortesEnergiaActivosList['apellidousuario']; ?>
+                                                        <?php echo $cortesEnergiaActivosList['nombreusuario']; ?>&nbsp;<?php echo $cortesEnergiaActivosList['apellidousuario']; ?>
                                                     </span> <span class="direct-chat-timestamp float-end">
                                                         <?php echo $cortesEnergiaActivosList['fecha']; ?>
                                                     </span> </div> <!-- /.direct-chat-infos --> <img class="direct-chat-img" src="./assets/img/user9-128x128.jpg" alt="message user image"> <!-- /.direct-chat-img -->
                                                 <div class="direct-chat-text">
-                                                    <i class="bi bi-power"></i>   Planta: <?php echo $cortesEnergiaActivosList['nombreplanta']; ?> - <?php echo $cortesEnergiaActivosList['observacion']; ?>
+                                                    <i class="bi bi-power"></i> Planta: <?php echo $cortesEnergiaActivosList['nombreplanta']; ?> - <?php echo $cortesEnergiaActivosList['observacion']; ?>
                                                 </div> <!-- /.direct-chat-text -->
                                             <?php endforeach; ?>
                                         </div> <!-- /.direct-chat-msg --> <!-- Message to the end -->
                                     </div> <!-- /.direct-chat-messages--> <!-- Contacts are loaded here -->
-                                    
+
                                     <div class="direct-chat-contacts">
                                         <ul class="contacts-list">
                                             <li> <a href="#"> <img class="contacts-list-img" src="./assets/img/user1-128x128.jpg" alt="User Avatar">
@@ -292,7 +292,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row"> <!-- Start col -->
                         <div class="col-lg-6 connectedSortable">
                             <div class="card mb-4">
@@ -598,7 +598,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
 
         const storedTheme = localStorage.getItem('theme');
 
-        if (storedTheme === 'light'){
+        if (storedTheme === 'light') {
             tema = 'light';
             color = '#595959';
         } else {
@@ -793,7 +793,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             xaxis: {
                 categories: fechasCategorias,
                 labels: {
-                    style:{
+                    style: {
                         colors: color,
                         fontSize: '12px'
                     }
@@ -804,7 +804,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                     text: 'Eventos',
                 },
                 labels: {
-                    style:{
+                    style: {
                         colors: color,
                         fontSize: '12px'
                     }
@@ -901,6 +901,25 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js" integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js" integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY=" crossorigin="anonymous"></script> <!-- jsvectormap -->
     <script>
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/dashboard.php",
+            data: {
+                action: 'updateCardsWithoutCliente'
+            },
+            dataType: "json",
+            success: function(data) {
+                console.log(data)
+                $('#countUsers').text(data.countUsers);
+                $('#countPlantas').text(data.countPlantas);
+                $('#total_reportes').text(data.countReportes);
+                $('#porcentaje').text(data.porcentaje);
+            },
+            error: function(data) {
+                console.log('Usuarios activos: ', data);
+            }
+        })
+
         $('#id_cliente').change(function() {
             let id = $(this).val();
             $('#id_planta').prop('disabled', false);
@@ -914,18 +933,29 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 datatype: "json",
                 success: function(data) {
+                    console.log(data)
                     let reportes = [];
                     let plantas = [];
+                    let contadorReportes = 0;
                     $('#id_planta').empty();
                     $('#id_planta').append('<option value="">Seleccionar</option>');
-                    data.forEach(function(planta) {
+
+                    let plantasData = Array.isArray(data) ? data : Object.values(data).filter(item => typeof item === 'object');
+
+                    plantasData.forEach(function(planta) {
                         $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
                         plantas.push(planta.nombre)
                         reportes.push(planta.reportes)
+                        contadorReportes += planta.contadorReporte
                     });
 
                     $('#grafico_torta').text('Reportes por Planta');
-                    
+
+                    $('#total_reportes').text(contadorReportes);
+                    $('#countPlantas').text(data.countPlantas);
+                    $('#porcentaje').text(data.porcentaje);
+
+
                     pie_chart.updateOptions({
                         labels: plantas,
                         series: reportes
@@ -935,7 +965,8 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                     console.log(data);
                 }
             })
-        })
+        });
+
         $('#id_planta').on('change', function() {
             let id_planta = $('#id_planta').val();
 
@@ -948,6 +979,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data);
                     let robos = data[0].robos;
                     let internet = data[0].cortes_internet;
                     let energia = data[0].cortes_energia;
@@ -964,6 +996,17 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                             data: newData
                         }]
                     });
+
+                    if (data.countReportes == false) {
+                        $('#total_reportes').text(0);
+                    } else {
+                        $('#total_reportes').text(data.countReportes);
+                    };
+                    if (data.porcentaje == null) {
+                        $('#porcentaje').text(0);
+                    } else {
+                        $('#porcentaje').text(data.porcentaje);
+                    };
                 }
             })
         });
@@ -1083,6 +1126,17 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                             categories: fechasUnicas
                         }
                     });
+
+                    if (data.countReportes == false) {
+                        $('#total_reportes').text(0);
+                    } else {
+                        $('#total_reportes').text(data.countReportes);
+                    };
+                    if (data.porcentaje == null) {
+                        $('#porcentaje').text(0);
+                    } else {
+                        $('#porcentaje').text(data.porcentaje);
+                    };
                 }
             });
         });

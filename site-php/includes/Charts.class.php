@@ -23,6 +23,36 @@ class ChartData
         }
     }
 
+    public static function porcentajeReportes($id_cliente, $id_planta){
+        $database = new Database();
+        $conn = $database->getConnection();
+        if (!empty($id_cliente)) {
+            $sql = "SELECT ROUND(SUM(camaras_online) / SUM(camaras) * 100, 1) AS porcentaje
+                    FROM cctv_reporte_diario rd
+                    INNER JOIN cctv_plantas p ON p.id = rd.id_planta WHERE p.id_clientes = :id_cliente;";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindValue(':id_cliente', $id_cliente);
+                    
+        } else if (!empty($id_planta)) {
+            $sql = "SELECT ROUND(SUM(camaras_online) / SUM(camaras) * 100, 1) AS porcentaje
+                    FROM cctv_reporte_diario
+                    WHERE id_planta = :id_planta;";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindValue(':id_planta', $id_planta);
+
+        } else {
+            $sql = "SELECT ROUND(SUM(camaras_online) / SUM(camaras) * 100, 1) AS porcentaje
+                    FROM cctv_reporte_diario;
+                    ";
+                    $stmt = $conn->prepare($sql);
+        }
+        if ($stmt->execute()) {
+            return $stmt->fetchColumn();
+        } else {
+            return 0;
+        }
+    }
+
     public static function obtenerDatosClientes($id)
     {
         $database = new Database();
@@ -31,7 +61,8 @@ class ChartData
             SELECT 
                 p.id as id, 
                 p.nombre as nombre,
-                COALESCE(r.robo, 0) + COALESCE(i.internet, 0) + COALESCE(e.energia, 0) as reportes
+                COALESCE(r.robo, 0) + COALESCE(i.internet, 0) + COALESCE(e.energia, 0) as reportes,
+                COALESCE(grc.reporte_camaras, 0) + COALESCE(rd.reporte_diario, 0) as contadorReporte
             FROM 
             cctv_plantas p
             LEFT JOIN (
@@ -49,6 +80,17 @@ class ChartData
                 FROM cctv_reporte_corte_energia
                 GROUP BY id_planta
             ) e ON p.id = e.id_planta
+            LEFT JOIN (
+                SELECT r.id_planta, COUNT(*) as reporte_camaras
+                FROM cctv_gestion_reporte_completo_camaras rc
+                JOIN cctv_gestion_reporte_completo r ON rc.id_gestion = r.id
+                GROUP BY r.id_planta
+            ) grc ON p.id = grc.id_planta
+            LEFT JOIN (
+                SELECT id_planta, COUNT(*) as reporte_diario
+                FROM cctv_reporte_diario
+                GROUP BY id_planta
+            ) rd ON p.id = rd.id_planta
             WHERE 
             p.id_clientes = :id
             ";
@@ -56,6 +98,100 @@ class ChartData
         $stmt->bindParam(':id', $id);
         if ($stmt->execute()) {
             return $stmt->fetchAll();
+        } else {
+            return [];
+        }
+    }
+
+    public static function countReportesPlantas($id_planta, $fecha_inicio, $fecha_fin){
+        $database = new Database();
+        $conn = $database->getConnection();
+        if (!empty($id_planta)){
+            $sql = "SELECT 
+                        COALESCE(grc.reporte_camaras, 0) + COALESCE(rd.reporte_diario, 0)
+                    FROM 
+                        cctv_plantas p
+                    LEFT JOIN (
+                        SELECT r.id_planta, COUNT(*) AS reporte_camaras
+                        FROM cctv_gestion_reporte_completo_camaras rc
+                        JOIN cctv_gestion_reporte_completo r ON rc.id_gestion = r.id
+                        GROUP BY r.id_planta
+                    ) grc ON p.id = grc.id_planta                
+                    LEFT JOIN (
+                        SELECT id_planta, COUNT(*) AS reporte_diario
+                        FROM cctv_reporte_diario
+                        GROUP BY id_planta
+                    ) rd ON p.id = rd.id_planta
+                    WHERE p.id = :id_planta;
+                    ";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id_planta', $id_planta);
+
+        } else if (!empty($fecha_inicio) && !empty($fecha_fin)){
+            $sql = "SELECT 
+                    COALESCE(grc.reporte_camaras, 0) + COALESCE(rd.reporte_diario, 0)
+                FROM 
+                    cctv_plantas p
+                LEFT JOIN (
+                    SELECT r.id_planta, COUNT(*) AS reporte_camaras
+                    FROM cctv_gestion_reporte_completo_camaras rc
+                    JOIN cctv_gestion_reporte_completo r ON rc.id_gestion = r.id
+                    WHERE r.fecha_registro BETWEEN :fecha_inicio AND :fecha_fin
+                    GROUP BY r.id_planta
+                ) grc ON p.id = grc.id_planta                
+                LEFT JOIN (
+                    SELECT id_planta, COUNT(*) AS reporte_diario
+                    FROM cctv_reporte_diario
+                    WHERE fecha BETWEEN :fecha_inicio AND :fecha_fin
+                    GROUP BY id_planta
+                ) rd ON p.id = rd.id_planta;
+                ";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':fecha_inicio', $fecha_inicio);
+            $stmt->bindParam(':fecha_fin', $fecha_fin);
+
+        }  else if (!empty($fecha_inicio) && empty($fecha_fin)){
+            $sql = "SELECT 
+                    COALESCE(grc.reporte_camaras, 0) + COALESCE(rd.reporte_diario, 0)
+                FROM 
+                    cctv_plantas p
+                LEFT JOIN (
+                    SELECT r.id_planta, COUNT(*) AS reporte_camaras
+                    FROM cctv_gestion_reporte_completo_camaras rc
+                    JOIN cctv_gestion_reporte_completo r ON rc.id_gestion = r.id
+                    WHERE r.fecha_registro = :fecha_inicio
+                    GROUP BY r.id_planta
+                ) grc ON p.id = grc.id_planta                
+                LEFT JOIN (
+                    SELECT id_planta, COUNT(*) AS reporte_diario
+                    FROM cctv_reporte_diario
+                    WHERE fecha = :fecha_inicio
+                    GROUP BY id_planta
+                ) rd ON p.id = rd.id_planta;
+                ";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':fecha_inicio', $fecha_inicio);
+
+        } else {
+            $sql = "SELECT
+                    COALESCE(grc.reporte_camaras, 0) + COALESCE(rd.reporte_diario, 0)
+                FROM 
+                    cctv_plantas p
+                LEFT JOIN (
+                    SELECT r.id_planta, COUNT(*) AS reporte_camaras
+                    FROM cctv_gestion_reporte_completo_camaras rc
+                    JOIN cctv_gestion_reporte_completo r ON rc.id_gestion = r.id
+                ) grc ON p.id = grc.id_planta
+                LEFT JOIN (
+                    SELECT id_planta, COUNT(*) AS reporte_diario
+                    FROM cctv_reporte_diario
+                ) rd ON p.id = rd.id_planta;
+                ";
+
+            $stmt = $conn->prepare($sql);
+        }
+        if ($stmt->execute()) {
+            return $stmt->fetchColumn();
         } else {
             return [];
         }

@@ -93,6 +93,23 @@
             }
         }
 
+        public static function countPlantas($id_cliente){
+            $database = new Database();
+            $conn = $database->getConnection();
+            if (!empty($id_cliente)){
+                $stmt = $conn->prepare('SELECT COUNT(id) FROM cctv_plantas WHERE id_clientes = :id AND (estado = 1 OR estado = 0)');
+                $stmt->bindParam(':id',$id_cliente);
+            } else {
+            $stmt = $conn->prepare('SELECT COUNT(id) FROM cctv_plantas WHERE estado = 1 OR estado = 0');
+            }
+            if($stmt->execute()){
+                $result = $stmt->fetchColumn();
+                return $result;
+            } else {
+                return 0;
+            }
+        }
+
         public static function get_plantas_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
