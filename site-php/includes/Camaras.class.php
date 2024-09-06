@@ -8,7 +8,7 @@ class Camaras
         $database = new Database();
         $conn = $database->getConnection();
         $stmt = $conn->prepare('INSERT INTO cctv_camaras (id_plantas,nombre,estado, modelo, tipo_camara,sn)
-                VALUES(:idplantas ,:nombre, :modelo, :tipoCamara, :sn, :estado)');
+                VALUES(:idplantas ,:nombre,:estado, :modelo, :tipoCamara, :sn)');
         
         $stmt->bindParam(':idplantas', $idplantas);
         $stmt->bindParam(':nombre', $nombre);
