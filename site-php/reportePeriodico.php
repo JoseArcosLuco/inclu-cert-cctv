@@ -13,8 +13,8 @@ $operadores = Operadores::get_all_operadores_without_turno();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4 col-12">
-            <div class="card-header d-flex align-items-center justify-content-between">
-                <div class="dropdown col-6 col-md-8 d-flex align-items-center gap-4">
+            <div class="card-header card-header p-3 d-flex justify-content-start align-items-center gap-4">
+                <div class="dropdown">
                     <button class="btn btn-success dropdown-toggle d-flex align-items-center justify-content-start gap-1 fs-5" data-bs-toggle="dropdown" aria-expanded="false">
                         Agregar Reporte
                     </button>
@@ -30,20 +30,20 @@ $operadores = Operadores::get_all_operadores_without_turno();
                             </li>
                         <?php endforeach; ?>
                     </ul>
-                    <button class='btn btn-success p-2'
-                        id="btnExcel"
-                        title="Exportar a Excel">
-                        <svg class='bi bi-file-earmark-excel-fill'
-                            height='24' width='24'
-                            xmlns='http://www.w3.org/2000/svg'
-                            viewBox='0 0 26 26'
-                            xml:space='preserve'>
-                            <path style='fill:#fff'
-                                d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
-                        </svg>
-                    </button>
                 </div>
-                <label class="card-title col-md-4 col-6 p-0">Cliente:
+                <button class='btn btn-success p-2'
+                    id="btnExcel"
+                    title="Exportar a Excel">
+                    <svg class='bi bi-file-earmark-excel-fill'
+                        height='24' width='24'
+                        xmlns='http://www.w3.org/2000/svg'
+                        viewBox='0 0 26 26'
+                        xml:space='preserve'>
+                        <path style='fill:#fff'
+                            d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                    </svg>
+                </button>
+                <label class="card-title col-2 p-0">Cliente:
                     <select class="form-select d-flex" name="cliente" id="cliente">
                         <option value="" selected>Ver Todos</option>
                         <?php foreach ($clientes as $cliente): ?>
@@ -51,6 +51,18 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         <?php endforeach; ?>
                     </select>
                 </label>
+                <label class="card-title col-2 p-0">Planta:
+                    <select class="form-select d-flex" name="filtro_planta" id="filtro_planta" disabled> 
+                        <option value="">Seleccione Cliente</option>
+                    </select>
+                </label>
+                <label class="card-title col-2 p-0">Fecha:
+                    <input type="date" class="form-control" name="filtro_fecha" id="filtro_fecha" required>
+                </label>
+
+                <button id="clean" class="btn btn-secondary p-2" title="Limpiar Filtros">
+                    <i class="material-icons">filter_alt_off</i>
+                </button>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -84,7 +96,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                 % de Visualización
                             </th>
                             <th class="text-center">
-                               N° Robos
+                                N° Robos
                             </th>
                             <th class="text-center">
                                 N° Reconector abierto
@@ -353,6 +365,29 @@ $operadores = Operadores::get_all_operadores_without_turno();
         });
     });
 
+    $('#tabla tbody').on('click', '.btnInfo', function() {
+        const $row = $(this).closest('tr');
+        const data = tablaReporte.row($row).data();
+        const modal = $('#warningModal .modal-dialog .modal-content');
+
+        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Información</h5>');
+        modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
+        modal.find('.modal-body').append('<p>Fecha: ' + moment(data.fecha).format('DD/MM/YYYY') + '</p>');
+        modal.find('.modal-body').append('<p>Operador: ' + operadoresMap[data.id_operador] + '</p>');
+        modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_planta] + '</p>');
+        modal.find('.modal-body').append('<p>N° de Cámaras: ' + data.camaras + '</p>');
+        modal.find('.modal-body').append('<p>N° de Cámaras en Línea: ' + data.camaras_online + '</p>');
+        modal.find('.modal-body').append('<p>Estado: ' + renderEstado(data.canal) + '</p>');
+        modal.find('.modal-body').append('<p>Observación: ' + data.observacion + '</p>');
+        modal.find('.modal-body').append('<p>Porcentaje de Visualización: ' + Math.round(( data.camaras_online / data.camaras ) * 100) + '%' + '</p>');
+        modal.find('.modal-body').append('<p>N° Robos: ' + data.cantidad_robos + '</p>');
+        modal.find('.modal-body').append('<p>N° Reconector abierto: ' +  + '</p>');
+        modal.find('.modal-body').append('<p>N° Perdidas de internet: ' + data.cantidad_corte_internet + '</p>');
+        modal.find('.modal-body').append('<p>N° Perdidas de red: ' + data.cantidad_corte_energia + '</p>');
+        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>');
+        $('#warningModal').modal('show');
+    });
+
     $('#btnExcel').click(function() {
         var data = tablaReporte.rows().data().toArray();
         var exportData = data.map(function(rowData) {
@@ -364,7 +399,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 "Fecha Registro": rowData.fecha ? moment(rowData.fecha).format('DD/MM/YYYY') : 'Sin Fecha',
                 "N° de Cámaras": rowData.camaras,
                 "N° de Cámaras en Línea": rowData.camaras_online,
-                "Porcentaje de Visualización":Math.round((rowData.camaras_online / rowData.camaras) * 100) + '%',
+                "Porcentaje de Visualización": Math.round((rowData.camaras_online / rowData.camaras) * 100) + '%',
                 "Observaciones": rowData.observacion,
                 "Estado": renderEstado(rowData.canal)
             };
@@ -411,6 +446,59 @@ $operadores = Operadores::get_all_operadores_without_turno();
     }
 
     $('#cliente').on('change', function() {
+        const id_cliente = $('#cliente').val();
+
+        $.ajax({
+            type: 'POST',
+            url: './ajax_handler/reportes.php',
+            data: {
+                action: 'get_plantas',
+                id_cliente: id_cliente
+            },
+            dataType: 'json',
+            success: function(data) {
+                var $plantaSelect = $('#filtro_planta');
+                $plantaSelect.empty();
+                $plantaSelect.append('<option value="">Seleccione</option>');
+                $.each(data, function(index, planta) {
+                    $plantaSelect.append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                });
+            }
+        })
+        
+        if ($('#cliente').val() === '') {
+            $('#filtro_planta').prop('disabled', true);
+        } else {
+            $('#filtro_planta').prop('disabled', false);
+        }
+        tablaReporte.ajax.reload();
+    });
+
+    $('#filtro_fecha').on('change', function() {
+        if ($('#filtro_fecha').val() === '') {
+            tablaReporte.columns([2, 6, 7]).visible(true);
+        } else {
+            tablaReporte.columns([2, 6, 7]).visible(false);
+        }
+
+        tablaReporte.ajax.reload();
+    });
+
+    $('#filtro_planta').on('change', function() {
+        if ($('#filtro_planta').val() === '') {
+            tablaReporte.columns([2, 6, 7]).visible(true);
+        } else {
+            tablaReporte.columns([2, 6, 7]).visible(false);
+        }
+
+        tablaReporte.ajax.reload();
+    });
+
+    $('#clean').on('click', function() {
+        $('#cliente').val('');
+        $('#filtro_fecha').val('');
+        $('#filtro_planta').val('');
+        tablaReporte.columns([2, 6, 7]).visible(true);
         tablaReporte.ajax.reload();
     });
 
@@ -425,6 +513,8 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         action: 'get_reportes'
                     };
                     data.cliente = $('#cliente').val();
+                    data.fecha = $('#filtro_fecha').val();
+                    data.planta = $('#filtro_planta').val();
                     return data;
                 },
                 "dataSrc": ""
@@ -495,7 +585,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                     }
                 },
                 {
-                    "data": null,
+                    "data": "cantidad_robos",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
@@ -507,19 +597,19 @@ $operadores = Operadores::get_all_operadores_without_turno();
                     }
                 },
                 {
-                    "data": null,
+                    "data": "cantidad_corte_energia",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
                 },
                 {
-                    "data": null,
+                    "data": "cantidad_corte_internet",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
                 },
                 {
-                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-info btn-sm btnInfo'><i class='material-icons'>info</i></button><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
                 }
             ],
             "createdRow": function(row, data, dataIndex) {
