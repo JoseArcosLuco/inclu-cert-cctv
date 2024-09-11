@@ -84,6 +84,18 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                 % de Visualización
                             </th>
                             <th class="text-center">
+                               N° Robos
+                            </th>
+                            <th class="text-center">
+                                N° Reconector abierto
+                            </th>
+                            <th class="text-center">
+                                N° Perdidas de red
+                            </th>
+                            <th class="text-center">
+                                N° Perdidas de internet
+                            </th>
+                            <th class="text-center">
                                 Opciones
                             </th>
                         </tr>
@@ -478,6 +490,30 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         }
                         return '%' + porcentaje;
                     },
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": null,
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": null,
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": null,
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": null,
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
