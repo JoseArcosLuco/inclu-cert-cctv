@@ -66,7 +66,9 @@ if (isset($_POST)) {
 
         case 'get_reportes':
             $id_cliente = $_POST['cliente'];
-            $response = Reportes::get_all_reportes($id_cliente);
+            $fecha = $_POST['fecha'];
+            $planta = $_POST['planta'];
+            $response = Reportes::get_all_reportes($id_cliente, $fecha, $planta);
             echo json_encode($response);
             break;
 
