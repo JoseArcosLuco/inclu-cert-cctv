@@ -144,7 +144,7 @@
                 $id_cliente = $_POST['id_cliente'];
                 $database = new Database();
                 $conn = $database->getConnection();
-                $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id_cliente');
+                $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id_cliente AND (estado = 1 OR estado = 0)');
                 $stmt->bindParam(':id_cliente', $id_cliente);
                 $stmt->execute();
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -156,7 +156,7 @@
                 $id_plantas = $_POST['id_plantas'];
                 $database = new Database();
                 $conn = $database->getConnection();
-                $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id_plantas = :id_plantas');
+                $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id_plantas = :id_plantas AND (estado = 1 OR estado = 0)');
                 $stmt->bindParam(':id_plantas', $id_plantas);
                 $stmt->execute();
                 $response = $stmt->fetchAll(PDO::FETCH_ASSOC);

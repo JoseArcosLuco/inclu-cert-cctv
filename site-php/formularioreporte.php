@@ -62,7 +62,7 @@ $clientes = Clientes::get_all_clients();
                             <div class="mb-3"> 
                                 <label class="form-label">Planta</label> 
                                 <select class="form-control" name="planta" id="planta" required>
-                                    <option value="">Seleccione un Cliente</option>
+                                    <option value="">Seleccione un Planta</option>
                                 </select>
                             </div>
                             <div class="mb-3"> 
