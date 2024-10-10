@@ -107,7 +107,7 @@ if (isset($_GET['form'])) {
             <div class="sidebar-wrapper">
                 <nav class="mt-2"> <!--begin::Sidebar Menu-->
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveI!='' || $menuActiveFr!='' || $menuActivePeriodico != ''|| $menuActiveRobo != ''|| $menuActiveCorteEnergia != ''|| $menuActiveCorteInternet != '' || $menuActiveNovedades != ''|| $menuActiveReporteCompleto != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
+                        <li class="nav-item <?php if($menuActiveD!='' || $menuActiveFr!='' || $menuActiveReporteCompleto != ''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-speedometer"></i>
                                 <p>
                                     Dashboard
                                     <i class="nav-arrow bi bi-chevron-right"></i>
@@ -120,10 +120,10 @@ if (isset($_GET['form'])) {
                                 </li>
                                 
                                 <?php if ($idPerfil === 1): ?>
-                                    <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveI;?>"> <i class="nav-icon bi bi-circle"></i>
+                                    <!-- <li class="nav-item"> <a href="<?php //echo $base_url?>/formularios.php?form=informe&token=<?php //echo $token;?>" class="nav-link <?php //echo $menuActiveI;?>"> <i class="nav-icon bi bi-circle"></i>
                                             <p>Informes</p>
                                         </a> 
-                                    </li>
+                                    </li> -->
                                 <?php endif; ?>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveFr;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes CCTV</p>
@@ -131,36 +131,36 @@ if (isset($_GET['form'])) {
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=reporteCompleto&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveReporteCompleto;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Completos</p>
                                     </a> </li>
-                                <li class="nav-item"> 
-                                    <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
+                                <!-- <li class="nav-item"> 
+                                    <a href="<?php //echo $base_url?>/formularios.php?form=periodico&token=<?php //echo $token;?>" class="nav-link <?php //echo $menuActivePeriodico;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Informes Periódicos</p>
                                     </a> 
-                                </li>
-                                <li class="nav-item"> 
-                                    <a href="<?php echo $base_url?>/formularios.php?form=robo&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveRobo;?>"> 
+                                </li> -->
+                                <!-- <li class="nav-item"> 
+                                    <a href="<?php //echo $base_url?>/formularios.php?form=robo&token=<?php //echo $token;?>" class="nav-link <?php //echo $menuActiveRobo;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Robos</p>
                                     </a> 
                                 </li>
                                 <li class="nav-item"> 
-                                    <a href="<?php echo $base_url?>/formularios.php?form=corte_energia&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteEnergia;?>"> 
+                                    <a href="<?php //echo $base_url?>/formularios.php?form=corte_energia&token=<?php //echo $token;?>" class="nav-link <?php //echo $menuActiveCorteEnergia;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Corte Energía</p>
                                     </a> 
                                 </li>
                                 <li class="nav-item"> 
-                                    <a href="<?php echo $base_url?>/formularios.php?form=corte_internet&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteInternet;?>"> 
+                                    <a href="<?php //echo $base_url?>/formularios.php?form=corte_internet&token=<?php //echo $token;?>" class="nav-link <?php //echo $menuActiveCorteInternet;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Corte Internet</p>
                                     </a> 
                                 </li>
                                 <li class="nav-item"> 
-                                    <a href="<?php echo $base_url?>/formularios.php?form=novedades&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveNovedades;?>"> 
+                                    <a href="<?php //echo $base_url?>/formularios.php?form=novedades&token=<?php //echo $token;?>" class="nav-link <?php //echo $menuActiveNovedades;?>"> 
                                         <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes Novedades</p>
                                     </a> 
-                                </li>
+                                </li> -->
                             </ul>
                         </li>
                         <li class="nav-item <?php if($menuActiveClientes!='' || $menuActiveTp!='' || $menuActiveC!='' || $menuActiveP!='' || $menuActiveU!='' || $menuActiveJ!=''|| $menuActiveCam!=''|| $menuActivePerfil!=''|| $menuActiveTurnos!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -235,10 +235,85 @@ if (isset($_GET['form'])) {
                                 <?php endif; ?>
                             </ul>
                         </li>
-                        
+                        <li class="nav-item <?php if($menuActiveRobo!='' || $menuActiveCorteEnergia!='' || $menuActiveCorteInternet!='' || $menuActiveNovedades!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
+                                <p>
+                                    Gestión Incidencias
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=robo&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveRobo;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Reportes Robos</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=corte_energia&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteEnergia;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Reportes Corte Energía</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
+                                
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=corte_internet&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteInternet;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Reportes Corte Internet</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=novedades&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveNovedades;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Reportes Novedades</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item <?php if($menuActivePeriodico!='' || $menuActiveI!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-pencil-square"></i>
+                                <p>
+                                    Informes
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Informes Periódicos</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
+                                <?php if ($idPerfil === 1): ?>
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=informe&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveI;?>"> <i class="nav-icon bi bi-circle"></i>
+                                            <p>Informes Plantas</p>
+                                        </a> 
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
+                        <li class="nav-item"> 
+                            <a href="<?php echo $base_url?>/logout.php" class="nav-link"> <i class="nav-icon bi bi-door-closed"></i>
+                                <p>
+                                    Cerrar Sesión
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
+                            </a>
+                        </li>
                         <!-- <li class="nav-item"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-clipboard-fill"></i>
                                 <p>
                                     Layout Options
+                             
                                     <span class="nav-badge badge text-bg-secondary me-3">6</span> <i class="nav-arrow bi bi-chevron-right"></i>
                                 </p>
                             </a>
