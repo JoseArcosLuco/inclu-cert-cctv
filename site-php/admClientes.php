@@ -203,20 +203,7 @@ include("./includes/Database.class.php");
                 success: function(response) {
                     if (response.status) {
                         // Remover la fila de la tabla
-                        tablaClientes.row($row).remove().draw()  ;
-
-                    } else if (response.clientes) {
-                        let modalDelete = $('#cantDeleteModal .modal-dialog .modal-content');
-                        let clientes = response.clientes
-                        let listaPlantas = '';
-                        for (let i in clientes) {
-                            listaPlantas += '<p class="mb-1 p-1 border-bottom">ID: ' + clientes[i].id + ' - Nombre: ' + clientes[i].nombre + '</p>';
-                        }
-                        let mensaje = '<p class="bg-danger p-2 border rounded text-white">No se puede eliminar este Cliente porque tiene las siguientes Plantas asociadas:' + listaPlantas + '</p>';
-
-                        modalDelete.find('.modal-body').html(mensaje);
-                        modalDelete.find('.modal-footer a').prop("href", "<?php echo $base_url ?>/formularios.php?form=plantas&token=<?php echo $token; ?>");
-                        $('#cantDeleteModal').modal('show');
+                        tablaClientes.row($row).remove().draw();
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {

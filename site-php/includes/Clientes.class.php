@@ -47,38 +47,25 @@
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes = :id');
+            $stmt = $conn->prepare('UPDATE cctv_clientes SET estado = 3 WHERE id = :id');
             $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            $clientesPlanta = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if (empty($clientesPlanta)) {
-                $stmt = $conn->prepare('DELETE FROM cctv_clientes WHERE id=:id');
-                $stmt->bindParam(':id',$id);
-                if($stmt->execute()){
-                    return [
-                        'status' => true,
-                        'message' => 'Cliente eliminado correctamente.'
-                    ];
-                } else {
-                    return [
-                        'status' => false,
-                        'message' => 'Error al eliminar Cliente..'
-                    ];
-                }
+            if($stmt->execute()){
+                return [
+                    'status' => true,
+                    'message' => 'Cliente '.$id.' eliminado correctamente.',
+                ];
             } else {
                 return [
                     'status' => false,
-                    'message' => 'No se puede eliminar el cliente '.$id.' porque tiene las siguientes plantas asociadas: ',
-                    'clientes' => $clientesPlanta
+                    'message' => 'No se ha podido eliminar el cliente.'
                 ];
-            }
+            };
         }
 
         public static function get_all_clients(){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_clientes');
+            $stmt = $conn->prepare('SELECT * FROM cctv_clientes WHERE (estado = 1 OR estado = 0)');
             if($stmt->execute()){
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
