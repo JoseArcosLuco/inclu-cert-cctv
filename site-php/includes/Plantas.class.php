@@ -134,9 +134,8 @@
             $conn = $database->getConnection();
             $stmt = $conn->prepare('SELECT  COUNT(c.id) as camaras, p.*
                                     FROM cctv_plantas p 
-                                    LEFT JOIN cctv_camaras c ON p.id = c.id_plantas
+                                    LEFT JOIN cctv_camaras c ON p.id = c.id_plantas AND (c.estado = 1 OR c.estado = 0)
                                     WHERE id_clientes=:id AND (p.estado = 1 OR p.estado = 0)
-                                    AND (c.estado = 1 OR c.estado = 0)
                                     GROUP BY p.id');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
