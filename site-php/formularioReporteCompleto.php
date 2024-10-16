@@ -175,7 +175,6 @@ $users = Users::get_all_users();
                                 sinOperador = true;
                             } else {
                                 let operadores = item.operador.split(',');
-                                console.log(operadores);
                                 operadores.forEach(function(operador) {
                                     operadoresArray.add(operador);
                                 });
@@ -206,8 +205,9 @@ $users = Users::get_all_users();
                                                 </label>
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label w-100">N° Cámara / NVR:
-                                                    <input type="number" class="form-control" id="camaras_${camara.id}" value="${camara.id}" disabled required>
+                                                <label class="form-label w-100">Cámara:
+                                                    <input type="text" class="form-control" id="camaraName_${camara.id}" value="${camara.nombre}" disabled required>
+                                                    <input type="hidden" class="form-control" id="camaras_${camara.id}" value="${camara.id}" required>
                                                 </label>
                                             </div>
                                             <div class="col-md-4">

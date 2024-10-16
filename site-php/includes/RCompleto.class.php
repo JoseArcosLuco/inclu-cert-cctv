@@ -113,15 +113,17 @@ class ReporteCompleto
         $query = 'SELECT rp.*, 
                         r.id_planta as id_planta, 
                         r.id_usuario as id_usuario, 
-                        r.fecha_registro as fecha
+                        r.fecha_registro as fecha,
+                        c.nombre as camaraNombre
                 FROM cctv_gestion_reporte_completo_camaras rp
-                INNER JOIN cctv_gestion_reporte_completo r ON r.id = rp.id_gestion';
+                INNER JOIN cctv_gestion_reporte_completo r ON r.id = rp.id_gestion
+                INNER JOIN cctv_camaras c ON c.id = rp.id_camaras AND (c.estado = 1 OR c.estado = 0)';
 
         $conditions = [];
         $params = [];
 
         if (!empty($id_cliente)) {
-            $conditions[] = 'r.id_planta IN (SELECT p.id FROM cctv_plantas p WHERE p.id_clientes = :id_cliente)';
+            $conditions[] = 'r.id_planta IN (SELECT p.id FROM cctv_plantas p WHERE p.id_clientes = :id_cliente AND (p.estado = 1 OR p.estado = 0))';
             $params[':id_cliente'] = $id_cliente;
         }
 

@@ -63,7 +63,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                 Planta
                             </th>
                             <th class="text-start">
-                                N° Cámara
+                                Cámara
                             </th>
                             <th>
                                 Observaciones
@@ -527,9 +527,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
                     }
                 },
                 {
-                    "data": "id_camaras",
+                    "data": "camaraNombre",
                     "createdCell": function(td, cellData, rowData, row, col) {
-                        $(td).addClass('text-center');
+                        $(td).addClass('text-start');
                     }
                 },
                 {
