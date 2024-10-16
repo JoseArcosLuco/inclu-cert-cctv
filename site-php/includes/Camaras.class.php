@@ -69,13 +69,16 @@ class Camaras
         $conn = $database->getConnection();
 
         if (empty($id_cliente) && empty($id_planta)) {
-            $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE (estado = 1 OR estado = 0);');
+            $stmt = $conn->prepare('SELECT c.* FROM cctv_camaras as c
+                                    JOIN cctv_plantas p ON c.id_plantas = p.id AND (p.estado = 1 OR p.estado = 0)
+                                    JOIN cctv_clientes clientes ON p.id_clientes = clientes.id AND (clientes.estado = 1 OR clientes.estado = 0)
+                                    WHERE (c.estado = 1 OR c.estado = 0);');
 
         } else if (!empty($id_cliente) && empty($id_planta)) {
             $stmt = $conn->prepare('SELECT c.* 
                                     FROM cctv_camaras AS c
                                     JOIN cctv_plantas p ON c.id_plantas = p.id
-                                    JOIN cctv_clientes clientes ON p.id_clientes = clientes.id
+                                    JOIN cctv_clientes clientes ON p.id_clientes = clientes.id AND (clientes.estado = 1 OR clientes.estado = 0)
                                     WHERE clientes.id = :id_cliente
                                     AND (c.estado = 1 OR c.estado = 0);');
             $stmt->bindParam(':id_cliente', $id_cliente);

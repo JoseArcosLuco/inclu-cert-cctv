@@ -72,7 +72,7 @@ $plantas = Plantas::get_all_plantas();
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between align-items-center">
                         <h5 class="modal-title" id="exampleModalLabel">Agregar Cámaras</h5>
-                        <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                        <button type="button" class="btn-close border-0 rounded-2" data-bs-dismiss="modal" aria-label="Close">
                         </button>
                     </div>
                     <form id="formCamara" name="formCamara">
@@ -113,10 +113,11 @@ $plantas = Plantas::get_all_plantas();
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group">
                                         <div class="form-group">
-                                            <label class="col-form-label w-100">Planta:
-                                                <select class="form-select" name="id_plantas" id="id_plantas">
-                                                    <?php foreach ($plantas as $planta) : ?>
-                                                        <option value="<?php echo $planta['id'] ?>"><?php echo htmlspecialchars($planta['nombre']); ?></option>
+                                            <label class="col-form-label w-100">Cliente:
+                                                <select class="form-select" name="cliente" id="cliente">
+                                                    <option value="">Seleccionar</option>
+                                                    <?php foreach ($clientes as $cliente) : ?>
+                                                        <option value="<?php echo $cliente['id'] ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </label>
@@ -124,6 +125,19 @@ $plantas = Plantas::get_all_plantas();
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="col-form-label w-100">Planta:
+                                                <select class="form-select" name="id_plantas" id="id_plantas" disabled>
+                                                    <option value="">Seleccione un Cliente</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Estado:
                                             <select class="form-select" name="estado" id="estado">
@@ -193,14 +207,69 @@ $plantas = Plantas::get_all_plantas();
         })
     });
 
+    $('#cliente').change(function() {
+        var id = $(this).val();
+
+        if (id !== '') {
+            $('#id_plantas').prop('disabled', false);
+        } else {
+            $('#id_plantas').prop('disabled', true);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "./ajax_handler/cortesInternet.php",
+            data: {
+                action: 'get_plantas',
+                id: id
+            },
+            datatype: "json",
+            success: function(data) {
+                $('#id_plantas').empty();
+                $('#id_plantas').append('<option value="">Seleccionar</option>');
+                data.forEach(function(planta) {
+                    $('#id_plantas').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                });
+            }
+        })
+    })
+
     $('#id_planta').change(function() {
         tablaCamaras.ajax.reload();
     });
 
     //Crear Camara
     $("#addUser").click(function() {
+
+        const cliente = $('#id_cliente').val();
+        const planta = $('#id_planta').val();
+
         $('#formCamara').attr('data-action', 'create_camara');
         $('#formCamara')[0].reset();
+        if (cliente !== '') {
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/cortesInternet.php",
+                data: {
+                    action: 'get_plantas',
+                    id: cliente
+                },
+                datatype: "json",
+                success: function(data) {
+                    $('#id_plantas').empty();
+                    $('#id_plantas').append('<option value="">Seleccionar</option>');
+                    data.forEach(function(planta) {
+                        $('#id_plantas').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                    });
+                    $('#cliente').val(cliente);
+                    $('#id_plantas').prop('disabled', false);
+                    if (planta !== '') {
+                        $('#id_plantas').val(planta);
+                    }
+                }
+            })
+        }
+
         $('#modalCRUD .modal-title').text('Agregar Cámaras');
         $('#modalCRUD').modal('show');
     });
@@ -241,7 +310,7 @@ $plantas = Plantas::get_all_plantas();
         modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
         modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_plantas] + '</p>');
         modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
-        modal.find('.modal-body').append('<p>Modelo: ' + data.modelo || 'Desconocido'+ '</p>');
+        modal.find('.modal-body').append('<p>Modelo: ' + data.modelo || 'Desconocido' + '</p>');
         modal.find('.modal-body').append('<p>Tipo de Cámara: ' + data.tipo_camara || 'Desconocido' + '</p>');
         modal.find('.modal-body').append('<p>SN: ' + data.sn || 'Desconocido' + '</p>');
         modal.find('.modal-body').append('<p>Estado: ' + (data.estado ? 'Activo' : 'Inactivo') + '</p>');
@@ -319,19 +388,19 @@ $plantas = Plantas::get_all_plantas();
                 },
                 {
                     "data": "modelo",
-                    "render": function(data){
+                    "render": function(data) {
                         return data || 'Desconocido';
                     }
                 },
                 {
                     "data": "tipo_camara",
-                    "render": function(data){
+                    "render": function(data) {
                         return data || 'Desconocido';
                     }
                 },
                 {
                     "data": "sn",
-                    "render": function(data){
+                    "render": function(data) {
                         return data || 'Desconocido';
                     }
                 },
