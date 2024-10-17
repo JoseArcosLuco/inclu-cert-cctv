@@ -40,7 +40,7 @@ if (isset($_GET['cliente'])) {
                                         <div class="col-md-2 mb-3">
                                             <div class="form-group">
                                                 <label class="col-form-label w-100">N° de Cámaras en Línea:
-                                                    <input class="form-control" type="number" name="camaras_online_<?php echo $planta['id']; ?>" id="camaras_online_<?php echo $planta['id']; ?>" required>
+                                                    <input class="form-control" type="number" min="0" step="1"  name="camaras_online_<?php echo $planta['id']; ?>" id="camaras_online_<?php echo $planta['id']; ?>" required>
                                                 </label>
                                             </div>
                                         </div>

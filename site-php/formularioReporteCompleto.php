@@ -169,9 +169,10 @@ $users = Users::get_all_users();
                         $('#totalCamarasValue').text(data.length);
 
                         let operadoresArray = new Set();
+                        let sinOperador = false;
                         data.forEach(function(item) {
-                            if (item.operador == null) {
-                                item.operador = null;
+                            if (item.operador === null) {
+                                sinOperador = true;
                             } else {
                                 let operadores = item.operador.split(',');
                                 operadores.forEach(function(operador) {
@@ -187,10 +188,6 @@ $users = Users::get_all_users();
                             info.append(`
                                 <p class="text-center text-white bg-danger rounded p-4 fw-bold">Esta planta no posee Cámaras aun. Agregue Cámaras a la planta <a href="<?php echo $base_url ?>./formularios.php?form=camaras&token=<?php echo $token; ?>">aquí.</a></p>
                                 `);
-                        } else if (data[0].operador == null) {
-                            info.append(`
-                                <p class="text-center text-white bg-danger rounded p-4 fw-bold">Esta planta no posee ningún Operador. Agregue operadores a la planta <a href="<?php echo $base_url ?>/formularios.php?form=turnos&token=<?php echo $token; ?>">aquí.</a></p>
-                                `);
                         } else {
                             $.each(data, function(index, camara) {
                                 info.append(`
@@ -202,13 +199,15 @@ $users = Users::get_all_users();
                                                 <label class="form-label w-100">Operador:
                                                     <select class="form-select" name="turno" id="turno_${camara.id}" required>
                                                         <option value="">Seleccione</option>
+                                                        ${sinOperador ? '<option value="0">Sin Operador</option>' : ''}
                                                         ${Array.from(operadoresArray).map((operador) => `<option value="${operador}">${usuariosMap[operador]}</option>`).join('')}
                                                     </select>
                                                 </label>
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label w-100">N° Cámara / NVR:
-                                                    <input type="number" class="form-control" id="camaras_${camara.id}" value="${camara.id}" disabled required>
+                                                <label class="form-label w-100">Cámara:
+                                                    <input type="text" class="form-control" id="camaraName_${camara.id}" value="${camara.nombre}" disabled required>
+                                                    <input type="hidden" class="form-control" id="camaras_${camara.id}" value="${camara.id}" required>
                                                 </label>
                                             </div>
                                             <div class="col-md-4">
