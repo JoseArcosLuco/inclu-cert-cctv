@@ -110,6 +110,7 @@ $clientes = Clientes::get_all_clients();
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Ciudad:
                                                 <select class="form-select" name="id_ciudad" id="id_ciudad" required>
+                                                    <option value="">Seleccione</option>
                                                     <?php foreach ($ciudades as $ciudad) : ?>
                                                         <option value="<?php echo $ciudad['id'] ?>"><?php echo htmlspecialchars($ciudad['nombre']); ?></option>
                                                     <?php endforeach; ?>
@@ -120,7 +121,7 @@ $clientes = Clientes::get_all_clients();
                                     <div class="col-md-6 mb-2">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Comuna:
-                                                <select class="form-select" name="id_comuna" id="id_comuna" required>
+                                                <select class="form-select" name="id_comuna" id="id_comuna" required disabled>
                                                     <option value="">Seleccione una Ciudad</option>
                                                 </select>
                                             </label>
@@ -400,6 +401,12 @@ $clientes = Clientes::get_all_clients();
 
         $('#id_ciudad').change(function() {
             var id_ciudad = $(this).val();
+
+            if (id_ciudad !== '') {
+                $('#id_comuna').prop('disabled', false).focus();
+            } else {
+                $('#id_comuna').prop('disabled', true);
+            }
 
             $.ajax({
                 type: 'POST',
