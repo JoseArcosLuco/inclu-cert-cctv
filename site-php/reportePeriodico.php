@@ -75,6 +75,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                 Fecha
                             </th>
                             <th>
+                                Hora
+                            </th>
+                            <th>
                                 Operador
                             </th>
                             <th>
@@ -97,9 +100,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
                             </th>
                             <th class="text-center">
                                 N° Robos
-                            </th>
-                            <th class="text-center">
-                                N° Reconector abierto
                             </th>
                             <th class="text-center">
                                 N° Perdidas de red
@@ -158,6 +158,13 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                     <div class="form-group">
                                         <label class="col-form-label w-100">Fecha:
                                             <input type="date" class="form-control" name="fecha" id="fecha" requiered>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Hora:
+                                            <input type="time" class="form-control" name="hora" id="hora" requiered>
                                         </label>
                                     </div>
                                 </div>
@@ -235,7 +242,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
 <script>
     //Editar Reporte
     $('#tabla tbody').on('click', '.btnEditar', function() {
-        var $data = tablaReporte.row($(this).parents('tr')).data();
+        const $data = tablaReporte.row($(this).parents('tr')).data();
+        const fecha = moment($data.fecha).format('YYYY-MM-DD');
+        const hora = moment($data.fecha).format('HH:mm');
         $('#id_cliente').prop('disabled', true);
         $('#id_planta').prop('disabled', true);
         $('#camaras').prop('disabled', true);
@@ -247,7 +256,8 @@ $operadores = Operadores::get_all_operadores_without_turno();
         $('#id_planta').append('<option value="<?php echo $planta['id'] ?>" ><?php echo htmlspecialchars($planta['nombre']); ?></option>');
         $('#id_planta').append('<?php endforeach; ?>');
         $('#id_planta').val($data.id_planta);
-        $('#fecha').val($data.fecha);
+        $('#fecha').val(fecha !== 'Invalid date' ? fecha : '');
+        $('#hora').val(hora !== '00:00' ? hora : '');
         $('#camaras_online').val($data.camaras_online);
         $('#canal').val($data.canal);
         $('#observacion').val($data.observacion);
@@ -274,7 +284,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
             var formData = {
                 action: 'edit_reporte',
                 id: $data.id,
-                fecha: $.trim($('#fecha').val()),
+                fecha: $.trim($('#fecha').val()) + ' ' + $.trim($('#hora').val()),
                 canal: $.trim($('#canal').val()),
                 camaras_online: $.trim($('#camaras_online').val()),
                 observacion: $.trim($('#observacion').val()),
@@ -391,12 +401,14 @@ $operadores = Operadores::get_all_operadores_without_turno();
     $('#btnExcel').click(function() {
         var data = tablaReporte.rows().data().toArray();
         var exportData = data.map(function(rowData) {
+            const hora = moment(rowData.fecha).format('HH:mm');
             return {
                 "ID": rowData.id,
                 "Cliente": clientesMap[rowData.id_cliente] || 'Desconocido',
                 "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
                 "Operador": operadoresMap[rowData.id_operador] || 'Desconocido',
                 "Fecha Registro": rowData.fecha ? moment(rowData.fecha).format('DD/MM/YYYY') : 'Sin Fecha',
+                "Hora Registro": hora !== '00:00' ? hora : 'Sin Hora',
                 "N° de Cámaras": rowData.camaras,
                 "N° de Cámaras en Línea": rowData.camaras_online,
                 "Porcentaje de Visualización": Math.round((rowData.camaras_online / rowData.camaras) * 100) + '%',
@@ -476,9 +488,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
 
     $('#filtro_fecha').on('change', function() {
         if ($('#filtro_fecha').val() === '') {
-            tablaReporte.columns([2, 6, 7]).visible(true);
+            tablaReporte.columns([3, 6, 7]).visible(true);
         } else {
-            tablaReporte.columns([2, 6, 7]).visible(false);
+            tablaReporte.columns([3, 6, 7]).visible(false);
         }
 
         tablaReporte.ajax.reload();
@@ -486,9 +498,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
 
     $('#filtro_planta').on('change', function() {
         if ($('#filtro_planta').val() === '') {
-            tablaReporte.columns([2, 6, 7]).visible(true);
+            tablaReporte.columns([3, 6, 7]).visible(true);
         } else {
-            tablaReporte.columns([2, 6, 7]).visible(false);
+            tablaReporte.columns([3, 6, 7]).visible(false);
         }
 
         tablaReporte.ajax.reload();
@@ -498,7 +510,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         $('#cliente').val('');
         $('#filtro_fecha').val('');
         $('#filtro_planta').val('');
-        tablaReporte.columns([2, 6, 7]).visible(true);
+        tablaReporte.columns([3, 6, 7]).visible(true);
         tablaReporte.ajax.reload();
     });
 
@@ -529,6 +541,16 @@ $operadores = Operadores::get_all_operadores_without_turno();
                     "data": "fecha",
                     render: function(data) {
                         return moment(data).format('DD/MM/YYYY');
+                    },
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": "fecha",
+                    render: function(data) {
+                        const hora = moment(data).format('HH:mm');
+                        return hora === '00:00' ? 'Sin Hora' : hora;
                     },
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
@@ -586,12 +608,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 {
                     "data": "cantidad_robos",
-                    "createdCell": function(td) {
-                        $(td).addClass('text-center');
-                    }
-                },
-                {
-                    "data": null,
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }

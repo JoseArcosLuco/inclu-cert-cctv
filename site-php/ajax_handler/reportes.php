@@ -13,7 +13,7 @@ if (isset($_POST)) {
             $idCliente = $_POST['id_cliente'];
             $idPlanta = $_POST['id_planta'];
             $idOperador = $_POST['id_operador'];
-            $fecha = date('Y-m-d');
+            $fecha = date('Y-m-d H:i:s');
             $camaras = $_POST['camaras'];
             $camarasOnline = $_POST['camaras_online'];
             $canal = $_POST['canal'];
