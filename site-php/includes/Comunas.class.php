@@ -32,7 +32,10 @@
         public static function get_all_comunas($idciudad){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_comunas WHERE id_ciudad=:idciudad');
+            $stmt = $conn->prepare('SELECT * FROM cctv_comunas 
+                                    WHERE id_ciudad=:idciudad
+                                    ORDER BY nombre
+                                    ');
             $stmt->bindParam(':idciudad',$idciudad);
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
