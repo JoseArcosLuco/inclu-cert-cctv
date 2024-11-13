@@ -25,29 +25,41 @@ if (isset($_GET['cliente'])) {
                 </div>
                 <!--end::Header--> 
                 <!--begin::Card-body-->
-                <div class=" card-body">
+                <div class="card-body w-100  d-flex flex-wrap row align-items-center justify-content-start">
                         <?php foreach ($plantas as $planta): ?>
-                            <form id="formReporte_<?php echo $planta['id']; ?>" name="formReporte_<?php echo $planta['id']; ?>">
-                                <div class="row align-items-center">
-                                    <h4 class="m-0 fw-medium text-capitalize"><?php echo $planta['nombre']; ?></h1>
-                                        <div class="col-md-2 mb-3">
+                            <form class="col-12 col-md-4 mb-3" id="formReporte_<?php echo $planta['id']; ?>" name="formReporte_<?php echo $planta['id']; ?>">
+                                <div class="d-flex flex-column justify-content-between align-items-start bg-secondary-subtle rounded p-4">
+                                    <h4 class="m-0 mb-3 fw-medium text-capitalize"><?php echo $planta['nombre']; ?></h1>
+                                        <div class="col-12 mb-3">
                                             <div class="form-group">
-                                                <label class="col-form-label w-100">N° de Cámaras:
-                                                    <input class="form-control" type="number" name="camaras_<?php echo $planta['id']; ?>" id="camaras_<?php echo $planta['id']; ?>" disabled required value="<?php echo $planta['camaras']; ?>">
+                                                <label class="col-form-label w-100 d-flex gap-2 jusitify-content-between">N° de Cámaras:
+                                                    <input
+                                                        class="form-control"
+                                                        type="text"
+                                                        name="camaras_<?php echo $planta['id']; ?>"
+                                                        id="camaras_<?php echo $planta['id']; ?>"
+                                                        disabled
+                                                        required
+                                                        value="<?php echo $planta['camaras']; ?>">
+                                                    <?php if ($planta['camaras'] == 0) {
+                                                        echo '<a title="Agregar Cámaras" class="btn btn-info " href="' . $base_url . 'formularios.php?form=camaras&token=' . $token . '"><i class="material-icons">add</i></a>';
+                                                    } ?>
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 mb-3">
+                                        <div class="col-12 mb-3">
                                             <div class="form-group">
                                                 <label class="col-form-label w-100">N° de Cámaras en Línea:
-                                                    <input class="form-control" type="number" min="0" step="1"  name="camaras_online_<?php echo $planta['id']; ?>" id="camaras_online_<?php echo $planta['id']; ?>" required>
+                                                    <input class="form-control" type="number" min="0" step="1" name="camaras_online_<?php echo $planta['id']; ?>" id="camaras_online_<?php echo $planta['id']; ?>" required>
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 mb-3">
+                                        <div class="col-12 mb-3">
                                             <div class="form-group">
                                                 <label class="col-form-label w-100">Estado:
-                                                    <!--input class="form-control" type="number" name="canal_<?//php echo $planta['id']; ?>" id="canal_<?//php echo $planta['id']; ?>" required-->
+                                                    <!--input class="form-control" type="number" name="canal_<? //php echo $planta['id']; 
+                                                                                                                ?>" id="canal_<? //php echo $planta['id']; 
+                                                                                                                                ?>" required-->
                                                     <select class="form-select" name="canal_<?php echo $planta['id']; ?>" id="canal_<?php echo $planta['id']; ?>" required>
                                                         <option value="">Seleccione</option>
                                                         <option value="1">En Linea</option>
@@ -59,10 +71,10 @@ if (isset($_GET['cliente'])) {
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-2 mb-3">
+                                        <div class="col-12 mb-3">
                                             <div class="form-group">
                                                 <label class="col-form-label w-100">Operador:
-                                                    <select class="form-select" name="id_operador_<?php echo $planta['id']; ?>" id="id_operador_<?php echo $planta['id']; ?>" required>
+                                                    <select class="form-select w-100" name="id_operador_<?php echo $planta['id']; ?>" id="id_operador_<?php echo $planta['id']; ?>" required>
                                                         <option value="">Seleccione</option>
                                                         <?php foreach ($operadores as $operador): ?>
                                                             <option value="<?php echo $operador['id'] ?>"><?php echo htmlspecialchars($operador['nombre']); ?></option>
@@ -71,7 +83,7 @@ if (isset($_GET['cliente'])) {
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 mb-3">
+                                        <div class="col-12 mb-3">
                                             <div class="form-group">
                                                 <label class="col-form-label w-100">Observación:
                                                     <textarea name="observacion_<?php echo $planta['id']; ?>" id="observacion_<?php echo $planta['id']; ?>" class="form-control" required></textarea>

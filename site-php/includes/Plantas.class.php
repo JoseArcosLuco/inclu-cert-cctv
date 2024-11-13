@@ -72,7 +72,9 @@
         public static function get_all_plantas(){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE estado = 1 OR estado = 0');
+            $stmt = $conn->prepare('SELECT p.* FROM cctv_plantas p
+                                    INNER JOIN cctv_clientes cli ON p.id_clientes = cli.id AND (cli.estado = 1 OR cli.estado = 0)
+                                    WHERE p.estado = 1 OR p.estado = 0');
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
                 return $result;
@@ -84,7 +86,10 @@
         public static function get_all_plantas_short_data(){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT id, id_comuna, id_comisarias, id_tipo_planta, id_clientes, nombre, grupo, ubicacion, estado FROM cctv_plantas WHERE estado = 1 OR estado = 0');
+            $stmt = $conn->prepare('SELECT p.id, p.id_comuna, p.id_comisarias, p.id_tipo_planta, p.id_clientes, p.nombre, p.grupo, p.ubicacion, p.estado 
+                                    FROM cctv_plantas p
+                                    INNER JOIN cctv_clientes cli ON p.id_clientes = cli.id AND (cli.estado = 1 OR cli.estado = 0)
+                                    WHERE p.estado = 1 OR p.estado = 0');
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
                 return $result;
@@ -115,13 +120,17 @@
             $conn = $database->getConnection();
             $stmt = $conn->prepare('SELECT p.* ,
                                     ciudad.id as id_ciudad,
-                                    ciudad.nombre as nombre_ciudad
+                                    ciudad.nombre as nombre_ciudad,
+                                    COUNT(cam.id) as camaras
                                     FROM cctv_plantas p
                                     LEFT JOIN cctv_comunas comuna ON p.id_comuna = comuna.id
                                     LEFT JOIN cctv_ciudad ciudad ON comuna.id_ciudad = ciudad.id
-                                    WHERE p.id=:id AND (p.estado = 1 OR p.estado = 0);');
+                                    INNER JOIN cctv_camaras cam ON p.id = cam.id_plantas AND (cam.estado = 1 OR cam.estado = 0)
+                                    INNER JOIN cctv_clientes cli ON cli.id = p.id_clientes AND (cli.estado = 1 OR cli.estado = 0)
+                                    WHERE p.id=:id AND (p.estado = 1 OR p.estado = 0)');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
+                
                 $result = $stmt->fetchAll();
                 return $result;
             } else {
