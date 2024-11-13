@@ -108,6 +108,9 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                 N° Perdidas de internet
                             </th>
                             <th class="text-center">
+                                Reconectores Abiertos
+                            </th>
+                            <th class="text-center">
                                 Opciones
                             </th>
                         </tr>
@@ -620,6 +623,12 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 {
                     "data": "cantidad_corte_internet",
+                    "createdCell": function(td) {
+                        $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": "reconectores_abiertos",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
                     }
