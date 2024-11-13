@@ -110,6 +110,7 @@ $clientes = Clientes::get_all_clients();
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Ciudad:
                                                 <select class="form-select" name="id_ciudad" id="id_ciudad" required>
+                                                    <option value="">Seleccione</option>
                                                     <?php foreach ($ciudades as $ciudad) : ?>
                                                         <option value="<?php echo $ciudad['id'] ?>"><?php echo htmlspecialchars($ciudad['nombre']); ?></option>
                                                     <?php endforeach; ?>
@@ -120,7 +121,7 @@ $clientes = Clientes::get_all_clients();
                                     <div class="col-md-6 mb-2">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Comuna:
-                                                <select class="form-select" name="id_comuna" id="id_comuna" required>
+                                                <select class="form-select" name="id_comuna" id="id_comuna" required disabled>
                                                     <option value="">Seleccione una Ciudad</option>
                                                 </select>
                                             </label>
@@ -224,7 +225,7 @@ $clientes = Clientes::get_all_clients();
                                     <div class="col-md-4 mb-2">
                                         <div class="form-group">
                                             <label class="col-form-label w-100">Cantidad de Cámaras:
-                                                <input class="form-control" type="number" id="cantidadCamaras" name="cantidadCamaras"></input>
+                                                <input class="form-control" type="number" id="cantidadCamaras" name="cantidadCamaras" disabled></input>
                                             </label>
                                         </div>
                                     </div>
@@ -401,6 +402,12 @@ $clientes = Clientes::get_all_clients();
         $('#id_ciudad').change(function() {
             var id_ciudad = $(this).val();
 
+            if (id_ciudad !== '') {
+                $('#id_comuna').prop('disabled', false).focus();
+            } else {
+                $('#id_comuna').prop('disabled', true);
+            }
+
             $.ajax({
                 type: 'POST',
                 url: './ajax_handler/plantas.php',
@@ -436,17 +443,17 @@ $clientes = Clientes::get_all_clients();
     //Editar Planta
     $('#tabla tbody').on('click', '.btnEditar', function() {
         $('#modalCRUD .modal-title').text('Editar Planta');
-        var $row = $(this).closest('tr');
-        var data = tablaPlantas.row($row).data();
-        var plantaId = data.id;
+        const $row = $(this).closest('tr');
+        const data = tablaPlantas.row($row).data();
         $.ajax({
             type: 'POST',
             url: './ajax_handler/plantas.php',
             data: {
                 action: 'get_plantas_by_id',
-                id: plantaId
+                id: data.id
             },
             success: function(response) {
+                console.log(response)
                 $('#formPlantas').attr('data-action', 'edit_planta');
                 $('#formPlantas').attr('data-id', response[0].id);
                 $('#nombre').val(response[0].nombre);
@@ -465,9 +472,9 @@ $clientes = Clientes::get_all_clients();
                 $('#emailEncargado').val(response[0].encargado_email);
                 $('#mapa').val(response[0].mapa);
                 $('#estado').val(response[0].estado);
-                $('#marcaDispositivos').val(response[0].marca_dispositivos);
+                $('#marcaDispositivos').val(response[0].marca_dispositivos ?? null);
                 $('#modelosDispositivos').val(response[0].modelos_dispositivos);
-                $('#cantidadCamaras').val(response[0].cantidad_camaras);
+                $('#cantidadCamaras').val(response[0].camaras);
                 $('#modeloCamaras').val(response[0].tipo_modelo_camaras);
                 $('#codificacionCamaras').val(response[0].codificacion_camaras);
                 $('#analiticas').val(response[0].analiticas);
@@ -549,10 +556,9 @@ $clientes = Clientes::get_all_clients();
 
         function pagina2(modal) {
             let response = modal.response;
-            console.log(response);
             modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Marca NVR: </span>'+ response[0].marca_dispositivos +'</p>');
             modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelos NVR: </span>'+ response[0].modelos_dispositivos +'</p>');
-            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cantidad Cámaras: </span>'+ response[0].cantidad_camaras +'</p>');
+            modal.find('#row1').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Cantidad Cámaras: </span>'+ response[0].camaras +'</p>');
             modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Modelo Cámaras: </span>' + response[0].tipo_modelo_camaras + '</p>');
             modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Codificación Cámaras: </span>' + response[0].codificacion_camaras + '</p>');
             modal.find('#row2').append('<p class="card-text col-6 col-md-4"><span class="fw-bold">Analíticas: </span>' + response[0].analiticas + '</p>');
@@ -801,7 +807,6 @@ $clientes = Clientes::get_all_clients();
             datatype: "json",
             encode: true,
             success: function(data) {
-                console.log(data)
                 if (data.status) {
                     if (action === 'create_planta') {
                         var newRow = tablaPlantas.row.add({
@@ -839,7 +844,6 @@ $clientes = Clientes::get_all_clients();
 
                     } else if (action === 'edit_planta') {
                         var row = tablaPlantas.row($('[data-id="' + id + '"]'));
-                        console.log(row.data());
                         row.data({
                             "id": id,
                             "nombre": data.planta.nombre,
