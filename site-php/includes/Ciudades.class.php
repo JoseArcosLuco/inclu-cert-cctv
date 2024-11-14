@@ -31,7 +31,8 @@
         public static function get_all_ciudades(){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT * FROM cctv_ciudad');
+            $stmt = $conn->prepare('SELECT * FROM cctv_ciudad
+                                    ORDER BY nombre ASC');
             if($stmt->execute()){
                 $result = $stmt->fetchAll();
                 return $result;

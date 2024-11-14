@@ -55,17 +55,24 @@
                         r.*, 
                         COUNT(DISTINCT rr.id) AS cantidad_robos,  
                         COUNT(DISTINCT ce.id) AS cantidad_corte_energia,  
-                        COUNT(DISTINCT ci.id) AS cantidad_corte_internet
+                        COUNT(DISTINCT ci.id) AS cantidad_corte_internet,
+                        (
+                        SELECT COUNT(energia.id) + COUNT(internet.id)
+                        FROM cctv_plantas planta 
+                        LEFT JOIN cctv_reporte_corte_energia energia ON energia.id_planta = planta.id AND DATE(energia.fecha) = DATE(r.fecha) AND energia.estado = 1
+                        LEFT JOIN cctv_reporte_corte_internet internet ON internet.id_planta = planta.id AND DATE(internet.fecha) = DATE(r.fecha) AND internet.estado = 1
+                        WHERE planta.id = r.id_planta
+                        ) AS reconectores_abiertos
                     FROM 
                         cctv_reporte_diario r
                     INNER JOIN 
                         cctv_plantas p ON p.id = r.id_planta
                     LEFT JOIN 
-                        cctv_reporte_robo rr ON rr.id_planta = p.id AND DATE(rr.fecha) = r.fecha
+                        cctv_reporte_robo rr ON rr.id_planta = p.id AND DATE(rr.fecha) = DATE(r.fecha)
                     LEFT JOIN 
-                        cctv_reporte_corte_energia ce ON ce.id_planta = p.id AND DATE(ce.fecha) = r.fecha
+                        cctv_reporte_corte_energia ce ON ce.id_planta = p.id AND DATE(ce.fecha) = DATE(r.fecha)
                     LEFT JOIN 
-                        cctv_reporte_corte_internet ci ON ci.id_planta = p.id AND DATE(ci.fecha) = r.fecha';
+                        cctv_reporte_corte_internet ci ON ci.id_planta = p.id AND DATE(ci.fecha) = DATE(r.fecha)';
         
             $conditions = [];
             $params = [];
