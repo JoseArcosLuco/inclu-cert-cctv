@@ -59,8 +59,8 @@
                         (
                         SELECT COUNT(energia.id) + COUNT(internet.id)
                         FROM cctv_plantas planta 
-                        LEFT JOIN cctv_reporte_corte_energia energia ON energia.id_planta = planta.id AND DATE(energia.fecha) = DATE(r.fecha) AND energia.estado = 1
-                        LEFT JOIN cctv_reporte_corte_internet internet ON internet.id_planta = planta.id AND DATE(internet.fecha) = DATE(r.fecha) AND internet.estado = 1
+                        LEFT JOIN cctv_reporte_corte_energia energia ON energia.id_planta = planta.id AND energia.estado = 1
+                        LEFT JOIN cctv_reporte_corte_internet internet ON internet.id_planta = planta.id AND internet.estado = 1
                         WHERE planta.id = r.id_planta
                         ) AS reconectores_abiertos
                     FROM 
@@ -97,7 +97,9 @@
             }
         
             $sql .= ' GROUP BY r.id, r.fecha;';
-        
+            
+            //echo('sql:.. '.$sql);
+
             $stmt = $conn->prepare($sql);
             
             foreach ($params as $key => $value) {
