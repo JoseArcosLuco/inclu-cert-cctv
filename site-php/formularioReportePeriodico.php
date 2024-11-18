@@ -25,7 +25,7 @@ if (isset($_GET['cliente'])) {
                 </div>
                 <!--end::Header--> 
                 <!--begin::Card-body-->
-                <div class="card-body w-100  d-flex flex-wrap row align-items-center justify-content-start">
+                <div class=" card-body w-100 d-flex flex-wrap row align-items-center justify-content-start">
                         <?php foreach ($plantas as $planta): ?>
                             <form class="col-12 col-md-4 mb-3" id="formReporte_<?php echo $planta['id']; ?>" name="formReporte_<?php echo $planta['id']; ?>">
                                 <div class="d-flex flex-column justify-content-between align-items-start bg-secondary-subtle rounded p-4">
@@ -145,9 +145,14 @@ if (isset($_GET['cliente'])) {
         $(document).ready(function() {
             <?php foreach ($plantas as $planta): ?>
                 $('#camaras_online_' + <?php echo $planta['id']; ?>).on('change', function() {
-                    let camarasOnline = $(this).val();
-                    let camaras = $('#camaras_' + <?php echo $planta['id']; ?>).val();
+                    let camarasOnline = parseInt($(this).val(), 10);
+                    let camaras = parseInt($('#camaras_' + <?php echo $planta['id']; ?>).val(), 10);
                     let modal = $('#warningModal .modal-dialog .modal-content');
+
+                    if (isNaN(camarasOnline) || isNaN(camaras)) {
+                        console.error("Error al convertir los valores de las cámaras a números.");
+                        return;
+                    }
 
                     if (camarasOnline > camaras) {
                         $('#camaras_online_<?php echo $planta['id']; ?>').val(camaras);
