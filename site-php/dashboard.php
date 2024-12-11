@@ -566,7 +566,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             cardHeader.style.cursor = "move";
         });
     </script> <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script> <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
     <script>
@@ -670,10 +670,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 show: true,
                 position: 'bottom',
                 labels: {
-                    colors: ["#fff", "#222936"],
+                    colors: color,
                 },
                 fontSize: '18px',
-                offsetY: 27,
             },
             theme: {
                 palette: 'palette4'
@@ -747,15 +746,14 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 palette: 'palette4',
             },
             tooltip: {
-                theme: tema
+                theme: 'dark',
             },
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ["#fff", "#222936"],
+                    colors: color,
                 },
                 fontSize: '18px',
-                offsetY: 12,
             }
         };
 
@@ -813,11 +811,10 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ["#fff", "#222936"],
+                    colors: color,
                     padding: 20,
                 },
                 fontSize: '18px',
-                offsetY: 25,
             },
             tooltip: {
                 theme: tema,
@@ -880,10 +877,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ['#fff', '#222936'],
+                    colors: color,
                 },
                 fontSize: '18px',
-                offsetY: 25,
             },
             tooltip: {
                 theme: tema,
@@ -909,7 +905,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             },
             dataType: "json",
             success: function(data) {
-                console.log(data)
                 $('#countUsers').text(data.countUsers);
                 $('#countPlantas').text(data.countPlantas);
                 $('#total_reportes').text(data.countReportes);
@@ -933,7 +928,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 datatype: "json",
                 success: function(data) {
-                    console.log(data)
                     let reportes = [];
                     let plantas = [];
                     let contadorReportes = 0;
@@ -979,7 +973,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
                     let robos = data[0].robos;
                     let internet = data[0].cortes_internet;
                     let energia = data[0].cortes_energia;
