@@ -10,8 +10,12 @@ if (isset($_POST)) {
     switch ($action) {
 
         case 'updateChart':
-            $response = ChartData::obtenerChartData();
-            echo json_encode($response);
+            $fecha_inicio = $_POST['fecha_inicio'];
+            $fecha_fin = $_POST['fecha_fin'];
+            $responseLineChart = ChartData::obtenerChartData($fecha_inicio, $fecha_fin);
+            $reponseNormalChart = ChartData::obtenerChartDataNormal();
+
+            echo json_encode([$responseLineChart, $reponseNormalChart]);
             break;
         
         case 'updateCardsWithoutCliente':
@@ -25,11 +29,12 @@ if (isset($_POST)) {
             break;
 
         case 'updateChartClientes':
-            $id_planta = '';
             $id_cliente = $_POST['id'];
-            $response = ChartData::obtenerDatosClientes($id_cliente);
+            $fecha_inicio = $_POST['fecha_inicio'];
+            $fecha_fin = $_POST['fecha_fin']; 
+            $response = ChartData::obtenerDatosClientes($id_cliente, $fecha_inicio, $fecha_fin);
             $response['countPlantas'] = Plantas::countPlantas($id_cliente);
-            $response['porcentaje'] = ChartData::porcentajeReportes($id_cliente, $id_planta);
+            $response['porcentaje'] = ChartData::porcentajeReportes($id_cliente, '');
             echo json_encode($response);
             break;
 

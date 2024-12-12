@@ -31,14 +31,16 @@ $id_usuario = isset($_SESSION["iduser"]) ? $_SESSION["iduser"] : '';
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet"> 
 </head> <!--end::Head--> <!--begin::Body-->
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
+<body class="sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper"> 
         <!--begin::Header-->
         <?php include("./header.php");?>
         <!--end::Header--> 
         
         <!--begin::Sidebar-->
-        <?php include "./main-sidebar.php";?>
+        <div id="sidebar-wrapper" class="position-relative" style="z-index: 2000; width: 250px">
+            <?php include_once("main-sidebar.php"); ?>
+        </div>
         <!--end::Sidebar--> 
         
         <!--begin::App Main-->
@@ -139,6 +141,18 @@ $id_usuario = isset($_SESSION["iduser"]) ? $_SESSION["iduser"] : '';
     <script src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.bootstrap5.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"></script>
     <script src="./js/adminlte.js"></script> <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script>
+        $('#sidebarToggler').on('click', function() {
+            let screenWidth = $(window).width();
+            if (screenWidth < 990) {
+                $('#sidebar-wrapper').css('width', '0px');
+            } else {
+                $('#sidebar-wrapper').animate({
+                    width: $('#sidebar-wrapper').width() == 250 ? 0 : 250
+                }, 300);
+            }
+        });
+    </script>
     <script>
         const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
         const Default = {
