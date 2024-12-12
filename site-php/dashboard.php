@@ -686,7 +686,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
         }
 
         function updateAreaChart(data) {
-            console.log('updatesalechart: ', data);
             const chartData = prepareLineChartData(data);
 
             sales_chart.updateOptions({
@@ -714,8 +713,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                     fecha_fin: $('#fecha_fin').val()
                 },
                 success: function(data) {
-                    console.log('CON FECHAS: ', data[0]);
-                    console.log('COUNT PLANTAS POR CLIENTES: ', data[1]);
                     $('#grafico_torta').text('Plantas por Cliente');
                     $('#grafico_linea').text('Total Incidencias por Cliente');
                     $('#grafico_barra').text('Plantas por Cliente');
@@ -1087,7 +1084,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 datatype: "json",
                 success: function(data) {
-                    console.log(data)
                     let reportes = [];
                     let plantas = [];
                     let fechas = [];
@@ -1100,7 +1096,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                     let plantasData = Array.isArray(data) ? data : Object.values(data).filter(item => typeof item === 'object');
 
                     plantasData.forEach(function(planta) {
-                        console.log(planta)
                         $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
                         plantas.push(planta.nombre);
                         reportes.push(planta.reportes);
@@ -1139,6 +1134,10 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                     $('#total_reportes').text(contadorReportes);
                     $('#countPlantas').text(data.countPlantas);
                     $('#porcentaje').text(data.porcentaje);
+
+                    $('#grafico_torta').text(`Incidencias de ${$('#id_cliente option:selected').text()}`);
+                    $('#grafico_linea').text(`Fechas de Incidencias de ${$('#id_cliente option:selected').text()}`);
+                    $('#grafico_barra').text(`Gráfico de barras de Incidencias de ${$('#id_cliente option:selected').text()}`);
 
                     pie_chart.updateOptions({
                         labels: plantas,
@@ -1241,6 +1240,51 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         }]
                     });
 
+                    chartBar.updateOptions({
+                        series: [{
+                            name: 'Reportes',
+                            data: [robos, internet, energia]
+                        }],
+                    });
+
+                    chartLine.updateOptions({
+                        series: [{
+                            name: ['Robos', 'Cortes Internet', 'Cortes Energía'],
+                            data: newData
+                        }]
+                    });
+                    chartBar.updateOptions({
+                        xaxis: {
+                            categories: ['Robos', 'Cortes Internet', 'Cortes Energía'],
+                            title: {
+                                text: 'Plantas'
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Reportes'
+                            },
+                            labels: {
+                                formatter: function(val) {
+                                    return val;
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Reportes',
+                            data: [robos, internet, energia]
+                        }],
+                        plotOptions: {
+                            bar: {
+                                distributed: true
+                            }
+                        }
+                    });
+
+                    $('#grafico_torta').text(`Incidencias de la Planta ${$('#id_planta option:selected').text()}`);
+                    $('#grafico_linea').text(`Fechas de Incidencias de ${$('#id_planta option:selected').text()}`);
+                    $('#grafico_barra').text(`Gráfico de barras de Incidencias de ${$('#id_planta option:selected').text()}`);
+
                     if (data.countReportes == false) {
                         $('#total_reportes').text(0);
                     } else {
@@ -1270,7 +1314,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 $('#fecha_fin').val(fechaFin);
             }
 
-            if (id_cliente !== '') {
+            if (id_cliente !== '' && id_planta === '') {
                 return onChangeIdClient();
             }
 
@@ -1289,6 +1333,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data)
                     let fechasRobos = data[0].fechas_robos ? data[0].fechas_robos.split(',') : [];
                     let fechasCortesInternet = data[0].fechas_internet ? data[0].fechas_internet.split(',') : [];
                     let fechasCortesEnergia = data[0].fechas_energia ? data[0].fechas_energia.split(',') : [];

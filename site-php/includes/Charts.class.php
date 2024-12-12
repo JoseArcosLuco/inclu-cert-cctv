@@ -272,11 +272,11 @@ class ChartData
         $sql = "
         SELECT 
             COUNT(DISTINCT internet.id) as cortes_internet,
-            GROUP_CONCAT(DISTINCT internet.fecha ORDER BY internet.fecha ASC) as fechas_internet,
+            GROUP_CONCAT(DISTINCT DATE(internet.fecha) ORDER BY internet.fecha ASC) as fechas_internet,
             COUNT(DISTINCT energia.id) as cortes_energia,
-            GROUP_CONCAT(DISTINCT energia.fecha ORDER BY energia.fecha ASC) as fechas_energia,
+            GROUP_CONCAT(DISTINCT DATE(energia.fecha) ORDER BY energia.fecha ASC) as fechas_energia,
             COUNT(DISTINCT robo.id) as robos,
-            GROUP_CONCAT(DISTINCT robo.fecha ORDER BY robo.fecha ASC) as fechas_robos
+            GROUP_CONCAT(DISTINCT DATE(robo.fecha) ORDER BY robo.fecha ASC) as fechas_robos
         FROM 
             cctv_plantas planta
         LEFT JOIN 
