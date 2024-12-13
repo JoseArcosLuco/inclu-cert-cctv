@@ -31,18 +31,36 @@ $operadores = Operadores::get_all_operadores_without_turno();
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                <button class='btn btn-success p-2'
-                    id="btnExcel"
-                    title="Exportar a Excel">
-                    <svg class='bi bi-file-earmark-excel-fill'
-                        height='24' width='24'
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 26 26'
-                        xml:space='preserve'>
-                        <path style='fill:#fff'
-                            d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
-                    </svg>
-                </button>
+                <div class="dropdown">
+                    <button class='btn btn-success p-2 dropdown-toggle'
+                    title="Exportar a Excel"
+                    data-bs-toggle="dropdown" 
+                    aria-expanded="false"
+                    >
+                        <svg class='bi bi-file-earmark-excel-fill'
+                            height='24' width='24'
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 26 26'
+                            xml:space='preserve'>
+                            <path style='fill:#fff'
+                                d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="dropdown-item"
+                                id="btnExcelActual">
+                                Exportar tabla actual
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item"
+                                id="btnExcelSelected">
+                                Exportar elementos seleccionados
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 <label class="card-title col-2 p-0">Cliente:
                     <select class="form-select d-flex" name="cliente" id="cliente">
                         <option value="" selected>Ver Todos</option>
@@ -68,6 +86,15 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 <table class="table table-striped table-hover w-100" id="tabla">
                     <thead>
                         <tr>
+                            <th class="text-center" style="max-width: 70px;">
+                                <svg class='bi bi-file-earmark-excel-fill'
+                                height='18' width='18'
+                                viewBox='0 0 26 26'
+                                xml:space='preserve'>
+                                <path style='fill:#fff'
+                                    d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                                </svg>
+                            </th>
                             <th class="text-center">
                                 ID
                             </th>
@@ -401,7 +428,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         $('#warningModal').modal('show');
     });
 
-    $('#btnExcel').click(function() {
+    $('#btnExcelActual').click(function() {
         var data = tablaReporte.rows().data().toArray();
         var exportData = data.map(function(rowData) {
             const hora = moment(rowData.fecha).format('HH:mm');
@@ -426,6 +453,40 @@ $operadores = Operadores::get_all_operadores_without_turno();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'ReportePeriodico');
 
         XLSX.writeFile(workbook, 'ReportePeriodico.xlsx');
+    });
+
+    $('#btnExcelSelected').click(function() {
+        let selectedData = [];
+        $('#tabla tbody input.form-check-input:checked').each(function() {
+            let row = $(this).closest('tr');
+            let rowData = tablaReporte.row(row).data();
+
+            const hora = rowData.fecha ? moment(rowData.fecha).format('HH:mm') : 'Sin Hora';
+            selectedData.push({
+                "ID": rowData.id,
+                "Cliente": clientesMap[rowData.id_cliente] || 'Desconocido',
+                "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
+                "Operador": operadoresMap[rowData.id_operador] || 'Desconocido',
+                "Fecha Registro": rowData.fecha ? moment(rowData.fecha).format('DD/MM/YYYY') : 'Sin Fecha',
+                "Hora Registro": hora !== '00:00' ? hora : 'Sin Hora',
+                "N° de Cámaras": rowData.camaras,
+                "N° de Cámaras en Línea": rowData.camaras_online,
+                "Porcentaje de Visualización": rowData.camaras ? Math.round((rowData.camaras_online / rowData.camaras) * 100) + '%' : 'N/A',
+                "Observaciones": rowData.observacion,
+                "Estado": renderEstado(rowData.canal)
+            });
+        });
+
+        if (selectedData.length === 0) {
+            alert('Por favor, selecciona al menos una fila para exportar.');
+            return;
+        }
+
+        let worksheet = XLSX.utils.json_to_sheet(selectedData);
+
+        let workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'ReportePeriodicoSeleccionados');
+        XLSX.writeFile(workbook, 'ReportePeriodicoSeleccionados.xlsx');
     });
 
     var plantas = <?php echo json_encode($plantas); ?>;
@@ -534,7 +595,14 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 "dataSrc": ""
             },
-            "columns": [{
+            "columns": [
+                {
+                    "data": null,
+                    "defaultContent": "<input type='checkbox' class='form-check-input'/>",
+                    "orderable": false,
+                    "className": "text-center"
+                },
+                {
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
@@ -640,7 +708,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
             "createdRow": function(row, data, dataIndex) {
                 $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
-            "order": [[0, "desc"]],
+            "order": [[1, "desc"]],
             "language": {
                 "url": "./assets/json/espanol.json"
             }
