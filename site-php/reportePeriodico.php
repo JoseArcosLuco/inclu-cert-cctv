@@ -640,6 +640,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
             "createdRow": function(row, data, dataIndex) {
                 $(row).attr('data-id', data.id); // Añadir atributo data-id
             },
+            "order": [[0, "desc"]],
             "language": {
                 "url": "./assets/json/espanol.json"
             }

@@ -21,7 +21,7 @@ if (isset($_GET['cliente'])) {
                 <!--begin::Header-->
                 <div class="card-header d-flex justify-content-start align-items-center">
                     <div class="card-title col-6 col-md-8 fw-bold">Ingreso Reporte Diario</div>
-                    <div class="card-title col-6 col-md-4 fw-bold d-flex justify-content-end""><?php echo $cliente['nombre']; ?></div>
+                    <div class="card-title col-6 col-md-4 fw-bold d-flex justify-content-end"><?php echo $cliente['nombre']; ?></div>
                 </div>
                 <!--end::Header--> 
                 <!--begin::Card-body-->
@@ -42,7 +42,7 @@ if (isset($_GET['cliente'])) {
                                                         required
                                                         value="<?php echo $planta['camaras']; ?>">
                                                     <?php if ($planta['camaras'] == 0) {
-                                                        echo '<a title="Agregar Cámaras" class="btn btn-info " href="' . $base_url . 'formularios.php?form=camaras&token=' . $token . '"><i class="material-icons">add</i></a>';
+                                                        echo '<a title="Agregar Cámaras" class="btn btn-info " href="' . $base_url . '/formularios.php?form=camaras&token=' . $token . '"><i class="material-icons">add</i></a>';
                                                     } ?>
                                                 </label>
                                             </div>
@@ -172,7 +172,19 @@ if (isset($_GET['cliente'])) {
             });
 
             $('#btnGuardar').click(function() {
+                let camaras = parseInt($('#camaras_' + <?php echo $planta['id']; ?>).val(), 10);
+                let modal = $('#warningModal .modal-dialog .modal-content');
                 <?php foreach ($plantas as $planta): ?>
+                    
+                    //validamos que la planta tenga por lo menos datos para insertar
+                    if (camaras==0){
+                        modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Error en la Planta <?php echo $planta['nombre']; ?></h5>');
+                        modal.find('.modal-body').append('<p class="bg-danger text-white text-center p-2 rounded mb-1">Necesita Agregar Camaras.</p> <p class="text-center p-2 m-0">Por favor, seleccione una valor menor o igual a ' + camaras + '.</p>');
+                        modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>');
+                        $('#warningModal').modal('show');
+                        return false;
+                    }
+                    
                     var formData = {
                         action: 'create_reporte',
                         id_cliente: <?php echo $cliente['id']; ?>,

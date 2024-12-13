@@ -96,7 +96,7 @@
                 $sql .= ' WHERE ' . implode(' AND ', $conditions);
             }
         
-            $sql .= ' GROUP BY r.id, r.fecha;';
+            $sql .= ' GROUP BY r.id, r.fecha ORDER BY r.id DESC;';
             
             //echo('sql:.. '.$sql);
 
