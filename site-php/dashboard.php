@@ -39,18 +39,20 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css" integrity="sha256-Qsx5lrStHZyR9REqhUF8iQt73X06c8LGIUPzpOhwRrI=" crossorigin="anonymous"><!--end::Third Party Plugin(Bootstrap Icons)--><!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="./css/adminlte.css"><!--end::Required Plugin(AdminLTE)--><!-- apexcharts -->
     <link rel="icon" href="./assets/img/inclusive.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous"><!-- jsvectormap -->
+    <link href="https://cdn.jsdelivr.net/npm/apexcharts@3.54.1/dist/apexcharts.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
 </head> <!--end::Head--> <!--begin::Body-->
 
-<body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
+<body class="sidebar-expand-lg bg-body-tertiary"> <!--begin::App Wrapper-->
     <div class="app-wrapper">
         <!--begin::Header-->
         <?php include_once("header.php"); ?>
         <!--end::Header-->
 
         <!--begin::Sidebar-->
-        <?php include_once("main-sidebar.php"); ?>
+        <div id="sidebar-wrapper" class="position-relative" style="z-index: 2000; width: 250px">
+            <?php include_once("main-sidebar.php"); ?>
+        </div>
         <!--end::Sidebar-->
 
         <!--begin::App Main-->
@@ -59,29 +61,47 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             <!--begin::App Content Header-->
             <?php include_once("content-header.php"); ?>
             <!--end::App Content Header--> <!--begin::Row-->
-            <div class="row ms-2 mb-3 justify-content-start">
-                <div class="col-sm-2">
-                    <p class="m-0">Cliente:</p>
-                    <select class="form-select" name="id_cliente" id="id_cliente" required>
-                        <option value="">Seleccione</option>
-                        <?php foreach ($clientes as $cliente): ?>
-                            <option value="<?php echo $cliente['id'] ?>"><?php echo $cliente['nombre']; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <p class="m-0">Planta:</p>
-                    <select class="form-select" name="id_planta" id="id_planta" disabled required>
-                        <option value="">Seleccione</option>
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <p class="m-0">Fecha inicio:</p>
-                    <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" required>
-                </div>
-                <div class="col-sm-2">
-                    <p class="m-0">Fecha fin:</p>
-                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" required>
+            <div class="accordion accordion-flush position-sticky top-0" id="accordionExample" style="z-index: 1000;">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Filtros
+                    </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="row py-2 justify-content-start">
+                                <div class="col-sm-2">
+                                    <p class="m-0">Cliente:</p>
+                                    <select class="form-select" name="id_cliente" id="id_cliente" required>
+                                    <option value="">Seleccione</option>
+                                    <?php foreach ($clientes as $cliente): ?>
+                                        <option value="<?php echo $cliente['id'] ?>"><?php echo $cliente['nombre']; ?></option>
+                                    <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0">Planta:</p>
+                                    <select class="form-select" name="id_planta" id="id_planta" disabled required>
+                                    <option value="">Seleccione</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0">Fecha inicio:</p>
+                                    <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" required>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="m-0">Fecha fin:</p>
+                                    <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" required>
+                                </div>
+                                <div class="col-sm-2 align-self-end">
+                                    <button class="btn btn-secondary py-0 px-2" title="Limpiar" id="filterOff">
+                                        <svg fill="#fff" width="20" height="40" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" stroke="#fff"><g stroke-width="0"/><g stroke-linecap="round" stroke-linejoin="round"/><path d="M23.9 18.6 10.3 5.1h22.2c.8-.1 1.5.5 1.5 1.3v1.2c0 .5-.2 1-.6 1.4z" class="clr-i-solid clr-i-solid-path-1"/><path d="M33.5 31 4.1 1.6 2.6 3l2.1 2.1H3.5C2.7 5 2 5.6 2 6.4v1.2c0 .5.2 1 .6 1.4L14 20.5v10.1l8 3.4V22.4l10.1 10.1z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -350,7 +370,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         <div class="col-lg-4 connectedSortable">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h3 class="card-title">Gráfico De Lineas</h3>
+                                    <h3 class="card-title" id="grafico_linea">Gráfico De Lineas</h3>
                                     <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!--begin::Row-->
@@ -365,7 +385,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         <div class="col-lg-4 connectedSortable">
                             <div class="card mb-4">
                                 <div class="card-header">
-                                    <h3 class="card-title">Gráfico De Barra</h3>
+                                    <h3 class="card-title" id="grafico_barra">Gráfico De Barra</h3>
                                     <div class="card-tools"> <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse"> <i data-lte-icon="expand" class="bi bi-plus-lg"></i> <i data-lte-icon="collapse" class="bi bi-dash-lg"></i> </button> <button type="button" class="btn btn-tool" data-lte-toggle="card-remove"> <i class="bi bi-x-lg"></i> </button> </div>
                                 </div> <!-- /.card-header -->
                                 <div class="card-body"> <!--begin::Row-->
@@ -566,7 +586,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             cardHeader.style.cursor = "move";
         });
     </script> <!-- apexcharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8=" crossorigin="anonymous"></script> <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.54.1/dist/apexcharts.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
     <script>
@@ -606,32 +626,162 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             color = '#d7d7d7';
         }
 
-        let clientes = [];
-        let total = [];
-        $.ajax({
-            type: "POST",
-            url: "./ajax_handler/dashboard.php",
-            data: {
-                action: 'updateChart'
-            },
-            success: function(data) {
-                $('#grafico_torta').text('Plantas por Cliente');
-                data.forEach(function(cliente) {
-                    clientes.push(cliente.nombre)
-                    total.push(cliente.total_plantas)
-                });
+        $('#filterOff').on('click', function() {
+            $('#fecha_inicio').val(fechaInicio);
+            $('#fecha_fin').val(fechaFin);
+            $('#id_planta').val('');
+            $('#id_planta').prop('disabled', true);
+            $('#id_cliente').val('');
+            initialData();
+        });
 
-                pie_chart.resetSeries();
-
-                pie_chart.updateOptions({
-                    labels: clientes,
-                    series: total
-                })
-            },
-            error: function(data) {
-                console.log(data)
+        $('#sidebarToggler').on('click', function() {
+            let screenWidth = $(window).width();
+            if (screenWidth < 990) {
+                $('#sidebar-wrapper').css('width', '0px');
+            } else {
+                $('#sidebar-wrapper').animate({
+                    width: $('#sidebar-wrapper').width() == 250 ? 0 : 250
+                }, 300);
             }
         });
+
+        function prepareLineChartData(data) {
+            const fechasUnicas = [];
+            const clientesMap = {};
+
+            data.forEach(entry => {
+                const { cliente, fecha, total_reportes } = entry;
+
+                if (!fechasUnicas.includes(fecha)) {
+                    fechasUnicas.push(fecha);
+                }
+
+                if (!clientesMap[cliente]) {
+                    clientesMap[cliente] = [];
+                }
+
+                clientesMap[cliente].push({
+                    fecha: fecha,
+                    total_reportes: total_reportes
+                });
+            });
+
+            const series = Object.keys(clientesMap).map(cliente => {
+                const dataSeries = fechasUnicas.map(fecha => {
+                    const reporte = clientesMap[cliente].find(item => item.fecha === fecha);
+                    return reporte ? reporte.total_reportes : 0;
+                });
+
+                return {
+                    name: cliente,
+                    data: dataSeries
+                };
+            });
+
+            return {
+                fechas: fechasUnicas,
+                series: series
+            };
+        }
+
+        function updateAreaChart(data) {
+            const chartData = prepareLineChartData(data);
+
+            sales_chart.updateOptions({
+                xaxis: {
+                    categories: chartData.fechas,
+                    title: {
+                        text: 'Fechas'
+                    }
+                },
+                series: chartData.series
+            });
+        }
+
+
+        let clientes = [];
+        let total = [];
+
+        function initialData() {
+            $.ajax({
+                type: "POST",
+                url: "./ajax_handler/dashboard.php",
+                data: {
+                    action: 'updateChart',
+                    fecha_inicio: $('#fecha_inicio').val(),
+                    fecha_fin: $('#fecha_fin').val()
+                },
+                success: function(data) {
+                    $('#grafico_torta').text('Plantas por Cliente');
+                    $('#grafico_linea').text('Total Incidencias por Cliente');
+                    $('#grafico_barra').text('Plantas por Cliente');
+                    clientes = [];
+                    total = [];
+                    totalReportes = [];
+                    data[1].forEach(function(cliente) {
+                        clientes.push(cliente.nombre)
+                        total.push(cliente.total_plantas)
+                        totalReportes.push(cliente.total_cortes_energia + cliente.total_cortes_internet + cliente.total_robos)
+                    });
+
+                    pie_chart.resetSeries();
+
+                    pie_chart.updateOptions({
+                        labels: clientes,
+                        series: total
+                    })
+
+                    chartBar.updateOptions({
+                        xaxis: {
+                            title: {
+                                text: 'Clientes'
+                            },
+                            categories: clientes
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Plantas'
+                            }
+                        },
+                        series: [
+                            {
+                                name: 'Plantas',
+                                data: total
+                            }
+                        ],
+                        plotOptions: {
+                            bar: {
+                                distributed: true
+                            }
+                        }
+                    });
+                    const chartData = prepareLineChartData(data[0]);
+
+                    updateAreaChart(data[0]);
+
+                    chartLine.updateOptions({
+                        xaxis: {
+                            categories: chartData.fechas,
+                            title: {
+                                text: 'Fechas'
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Total de Reportes'
+                            }
+                        },
+                        series: chartData.series
+                    });
+                },
+                error: function(data) {
+                    console.log(data)
+                }
+            });
+        }
+
+        initialData();
 
         const sales_chart_options = {
             series: [{
@@ -670,10 +820,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 show: true,
                 position: 'bottom',
                 labels: {
-                    colors: ["#fff", "#222936"],
+                    colors: color,
                 },
                 fontSize: '18px',
-                offsetY: 27,
             },
             theme: {
                 palette: 'palette4'
@@ -692,8 +841,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         fontSize: '14px'
                     }
                 },
-                type: "datetime",
-                categories: fechasCategorias,
             },
             yaxis: {
                 show: true,
@@ -747,15 +894,14 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 palette: 'palette4',
             },
             tooltip: {
-                theme: tema
+                theme: 'dark',
             },
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ["#fff", "#222936"],
+                    colors: color,
                 },
                 fontSize: '18px',
-                offsetY: 12,
             }
         };
 
@@ -813,11 +959,10 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ["#fff", "#222936"],
+                    colors: color,
                     padding: 20,
                 },
                 fontSize: '18px',
-                offsetY: 25,
             },
             tooltip: {
                 theme: tema,
@@ -880,10 +1025,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             legend: {
                 position: 'bottom',
                 labels: {
-                    colors: ['#fff', '#222936'],
+                    colors: color,
                 },
                 fontSize: '18px',
-                offsetY: 25,
             },
             tooltip: {
                 theme: tema,
@@ -909,7 +1053,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             },
             dataType: "json",
             success: function(data) {
-                console.log(data)
                 $('#countUsers').text(data.countUsers);
                 $('#countPlantas').text(data.countPlantas);
                 $('#total_reportes').text(data.countReportes);
@@ -920,23 +1063,33 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             }
         })
 
-        $('#id_cliente').change(function() {
-            let id = $(this).val();
+        function onChangeIdClient() {
+            let id = $('#id_cliente').val();
             $('#id_planta').prop('disabled', false);
+
+            if (id === '') {
+                $('#id_planta').prop('disabled', true);
+                $('#id_planta').val('');
+                return initialData();
+            }
 
             $.ajax({
                 type: "POST",
                 url: "./ajax_handler/dashboard.php",
                 data: {
                     action: 'updateChartClientes',
-                    id: id
+                    id: id,
+                    fecha_inicio: $('#fecha_inicio').val(),
+                    fecha_fin: $('#fecha_fin').val()
                 },
                 datatype: "json",
                 success: function(data) {
-                    console.log(data)
                     let reportes = [];
                     let plantas = [];
+                    let fechas = [];
+                    let clientesMap = {};
                     let contadorReportes = 0;
+
                     $('#id_planta').empty();
                     $('#id_planta').append('<option value="">Seleccionar</option>');
 
@@ -944,31 +1097,122 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
 
                     plantasData.forEach(function(planta) {
                         $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
-                        plantas.push(planta.nombre)
-                        reportes.push(planta.reportes)
-                        contadorReportes += planta.contadorReporte
+                        plantas.push(planta.nombre);
+                        reportes.push(planta.reportes);
+                        contadorReportes += planta.contadorReporte;
+
+                        const fechaRobo = planta.fecha_robo ? moment(planta.fecha_robo).format('DD-MM-YYYY') : 'Sin Fecha';
+                        const fechaInternet = planta.fecha_internet ? moment(planta.fecha_internet).format('DD-MM-YYYY') : 'Sin Fecha';
+                        const fechaEnergia = planta.fecha_energia ? moment(planta.fecha_energia).format('DD-MM-YYYY') : 'Sin Fecha';
+
+                        [fechaRobo, fechaInternet, fechaEnergia].forEach(fecha => {
+                            if (!fechas.includes(fecha)) {
+                                fechas.push(fecha);
+                            }
+                        });
+                        if (!clientesMap[planta.nombre]) {
+                            clientesMap[planta.nombre] = [];
+                        }
+                        clientesMap[planta.nombre].push({
+                            fecha: fechaRobo || fechaInternet || fechaEnergia,
+                            total_reportes: planta.reportes
+                        });
                     });
 
-                    $('#grafico_torta').text('Reportes por Planta');
+                    const series = Object.keys(clientesMap).map(cliente => {
+                        const dataSeries = fechas.map(fecha => {
+                            const reporte = clientesMap[cliente].find(item => item.fecha === fecha);
+                            return reporte ? reporte.total_reportes : 0;
+                        });
+
+                        return {
+                            name: cliente,
+                            data: dataSeries
+                        };
+                    });
 
                     $('#total_reportes').text(contadorReportes);
                     $('#countPlantas').text(data.countPlantas);
                     $('#porcentaje').text(data.porcentaje);
 
+                    $('#grafico_torta').text(`Incidencias de ${$('#id_cliente option:selected').text()}`);
+                    $('#grafico_linea').text(`Fechas de Incidencias de ${$('#id_cliente option:selected').text()}`);
+                    $('#grafico_barra').text(`Gráfico de barras de Incidencias de ${$('#id_cliente option:selected').text()}`);
 
                     pie_chart.updateOptions({
                         labels: plantas,
                         series: reportes
-                    })
+                    });
+
+                    chartBar.updateOptions({
+                        xaxis: {
+                            categories: plantas,
+                            title: {
+                                text: 'Plantas'
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Reportes'
+                            }
+                        },
+                        series: [{
+                            name: 'Reportes',
+                            data: reportes
+                        }],
+                        plotOptions: {
+                            bar: {
+                                distributed: true
+                            }
+                        }
+                    });
+
+                    chartLine.updateOptions({
+                        xaxis: {
+                            categories: fechas,
+                            title: {
+                                text: 'Fechas'
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Total de Reportes'
+                            }
+                        },
+                        series: series
+                    });
+
+                    sales_chart.updateOptions({
+                        xaxis: {
+                            categories: fechas,
+                            title: {
+                                text: 'Fechas'
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Total de Reportes'
+                            }
+                        },
+                        series: series 
+                    });
                 },
                 error: function(data) {
                     console.log(data);
                 }
-            })
+            });
+        }
+
+        $('#id_cliente').change(function() {
+            return onChangeIdClient();
         });
 
         $('#id_planta').on('change', function() {
             let id_planta = $('#id_planta').val();
+
+            if (id_planta === '') {
+                return onChangeIdClient();
+            }
 
             $.ajax({
                 url: "./ajax_handler/dashboard.php",
@@ -979,7 +1223,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
                     let robos = data[0].robos;
                     let internet = data[0].cortes_internet;
                     let energia = data[0].cortes_energia;
@@ -997,6 +1240,51 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                         }]
                     });
 
+                    chartBar.updateOptions({
+                        series: [{
+                            name: 'Reportes',
+                            data: [robos, internet, energia]
+                        }],
+                    });
+
+                    chartLine.updateOptions({
+                        series: [{
+                            name: ['Robos', 'Cortes Internet', 'Cortes Energía'],
+                            data: newData
+                        }]
+                    });
+                    chartBar.updateOptions({
+                        xaxis: {
+                            categories: ['Robos', 'Cortes Internet', 'Cortes Energía'],
+                            title: {
+                                text: 'Plantas'
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Reportes'
+                            },
+                            labels: {
+                                formatter: function(val) {
+                                    return val;
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Reportes',
+                            data: [robos, internet, energia]
+                        }],
+                        plotOptions: {
+                            bar: {
+                                distributed: true
+                            }
+                        }
+                    });
+
+                    $('#grafico_torta').text(`Incidencias de la Planta ${$('#id_planta option:selected').text()}`);
+                    $('#grafico_linea').text(`Fechas de Incidencias de ${$('#id_planta option:selected').text()}`);
+                    $('#grafico_barra').text(`Gráfico de barras de Incidencias de ${$('#id_planta option:selected').text()}`);
+
                     if (data.countReportes == false) {
                         $('#total_reportes').text(0);
                     } else {
@@ -1011,8 +1299,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             })
         });
 
-        $('#id_planta, #fecha_inicio, #fecha_fin').on('change', function() {
+        $('#fecha_inicio, #fecha_fin').on('change', function() {
             let id_planta = $('#id_planta').val();
+            let id_cliente = $('#id_cliente').val();
             let fecha_inicio = $('#fecha_inicio').val() + ' 00:00:00';
             let fecha_fin = $('#fecha_fin').val() + ' 23:59:59';
 
@@ -1023,6 +1312,14 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 $('#warningModal').modal('show');
                 $('#fecha_inicio').val(fechaInicio);
                 $('#fecha_fin').val(fechaFin);
+            }
+
+            if (id_cliente !== '' && id_planta === '') {
+                return onChangeIdClient();
+            }
+
+            if (id_planta === '' && fecha_inicio !== '' || id_planta === '' && fecha_fin !== '') {
+                return initialData();
             }
 
             $.ajax({
@@ -1036,6 +1333,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data)
                     let fechasRobos = data[0].fechas_robos ? data[0].fechas_robos.split(',') : [];
                     let fechasCortesInternet = data[0].fechas_internet ? data[0].fechas_internet.split(',') : [];
                     let fechasCortesEnergia = data[0].fechas_energia ? data[0].fechas_energia.split(',') : [];
