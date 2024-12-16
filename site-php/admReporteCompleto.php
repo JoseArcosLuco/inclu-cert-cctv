@@ -17,18 +17,36 @@ $operadores = Operadores::get_all_operadores_without_turno();
         <div class="card mb-4">
             <div class="card-header p-3 d-flex justify-content-start align-items-center gap-4">
                 <a href="<?php echo $base_url ?>/formularios.php?form=reporteCompletoForm&token=<?php echo $token; ?>" class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5">Agregar Reporte<i class="material-icons" style="height: 20px; width:20px;">add</i></a>
-                <button class='btn btn-success p-2' 
-                id="btnExcel"
-                title="Exportar a Excel">
-                    <svg class='bi bi-file-earmark-excel-fill'
-                        height='24' width='24'
-                        xmlns='http://www.w3.org/2000/svg'
-                        viewBox='0 0 26 26'
-                        xml:space='preserve'>
-                        <path style='fill:#fff'
-                            d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
-                    </svg>
-                </button>
+                <div class="dropdown">
+                    <button class='btn btn-success p-2 dropdown-toggle'
+                    title="Exportar a Excel"
+                    data-bs-toggle="dropdown" 
+                    aria-expanded="false"
+                    >
+                        <svg class='bi bi-file-earmark-excel-fill'
+                            height='24' width='24'
+                            xmlns='http://www.w3.org/2000/svg'
+                            viewBox='0 0 26 26'
+                            xml:space='preserve'>
+                            <path style='fill:#fff'
+                                d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <button class="dropdown-item"
+                                id="btnExcelActual">
+                                Exportar tabla actual
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item"
+                                id="btnExcelSelected">
+                                Exportar elementos seleccionados
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 <label class="card-title col-2 p-0">Cliente:
                     <select class="form-select" name="cliente" id="cliente">
                         <option value="" selected>Ver Todos</option>
@@ -50,6 +68,15 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 <table class="table table-striped table-hover w-100" id="tabla">
                     <thead>
                         <tr>
+                            <th class="text-center" style="max-width: 70px;">
+                                <svg class='bi bi-file-earmark-excel-fill'
+                                height='18' width='18'
+                                viewBox='0 0 26 26'
+                                xml:space='preserve'>
+                                <path style='fill:#fff'
+                                    d='M25 3h-9v3h3v2h-3v2h3v2h-3v2h3v2h-3v2h3v2h-3v3h9l1-1V4l-1-1zm-1 17h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4v-2h4v2zm0-4h-4V6h4v2zM0 3v20l15 3V0L0 3zm9 15-1-3v-1l-1 1-1 3H3l3-5-3-5h3l1 3 1 1v-1l2-3h2l-3 5 3 5H9z' />
+                                </svg>
+                            </th>
                             <th class="text-center" style="max-width: 70px;">
                                 ID
                             </th>
@@ -365,7 +392,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
     //Editar Reporte
     $('#tabla tbody').on('click', '.btnEditar', function() {
         const data = tablaReporte.row($(this).parents('tr')).data();
-        console.log(data)
         $('#id_planta').prop('disabled', true);
         $('#formReporte').attr('data-action', 'edit_reporte');
         $('#formReporte').attr('data-id', data.id);
@@ -409,7 +435,6 @@ $operadores = Operadores::get_all_operadores_without_turno();
     $('#tabla tbody').on('click', '.btnBorrar', function() {
         let $row = $(this).closest('tr');
         let data = tablaReporte.row($row).data();
-        console.log(data)
         let reporteId = data.id;
         let modal = $('#warningModal .modal-dialog .modal-content');
 
@@ -455,7 +480,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
         });
     });
 
-    $('#btnExcel').click(function() {
+    $('#btnExcelActual').click(function() {
         var data = tablaReporte.rows().data().toArray();
 
         var exportData = data.map(function(rowData) {
@@ -464,7 +489,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 "Fecha": moment(rowData.fecha).format('DD-MM-YYYY'),
                 "Autor": usuariosMap[rowData.id_usuario] || 'Desconocido',
                 "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
-                "N° Cámara": rowData.id_camaras,
+                "Nombre Cámara": rowData.camaraNombre,
                 "Observaciones": rowData.observacion,
                 "Estado": renderEstado(rowData.estado),
                 "Operador": usuariosMap[rowData.id_operador] || 'Desconocido',
@@ -484,6 +509,40 @@ $operadores = Operadores::get_all_operadores_without_turno();
         XLSX.writeFile(workbook, 'ReporteCompleto.xlsx');
     });
 
+    $('#btnExcelSelected').click(function() {
+        let selectedData = [];
+        $('#tabla tbody input.form-check-input:checked').each(function() {
+            let row = $(this).closest('tr');
+            let rowData = tablaReporte.row(row).data();
+            selectedData.push({
+                "ID": rowData.id,
+                "Fecha": moment(rowData.fecha).format('DD-MM-YYYY'),
+                "Autor": usuariosMap[rowData.id_usuario] || 'Desconocido',
+                "Planta": plantasMap[rowData.id_planta] || 'Desconocido',
+                "Nombre Cámara": rowData.camaraNombre,
+                "Observaciones": rowData.observacion,
+                "Estado": renderEstado(rowData.estado),
+                "Operador": usuariosMap[rowData.id_operador] || 'Desconocido',
+                "Visual": renderVisual(rowData.visual),
+                "Analíticas": renderAnaliticas(rowData.analiticas),
+                "Recorrido": renderRecorrido(rowData.recorrido),
+                "Evento": renderEvento(rowData.evento),
+                "Grabaciones": rowData.grabaciones
+            });
+        });
+
+        if (selectedData.length === 0) {
+            alert('Por favor, selecciona al menos una fila para exportar.');
+            return;
+        }
+
+        let worksheet = XLSX.utils.json_to_sheet(selectedData);
+
+        let workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'ReporteCompletoSeleccionados');
+        XLSX.writeFile(workbook, 'ReporteCompletoSeleccionados.xlsx');
+    });
+
     $(document).ready(function() {
 
         tablaReporte = $('#tabla').DataTable({
@@ -501,8 +560,15 @@ $operadores = Operadores::get_all_operadores_without_turno();
                 },
                 "dataSrc": ""
             },
-
-            "columns": [{
+            "order":[[1, "desc"]],
+            "columns": [
+                {
+                    "data": null,
+                    "defaultContent": "<input type='checkbox' class='form-check-input'/>",
+                    "orderable": false,
+                    "className": "text-center"
+                },
+                {
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
