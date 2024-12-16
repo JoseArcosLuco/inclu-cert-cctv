@@ -453,7 +453,6 @@ $clientes = Clientes::get_all_clients();
                 id: data.id
             },
             success: function(response) {
-                console.log(response)
                 $('#formPlantas').attr('data-action', 'edit_planta');
                 $('#formPlantas').attr('data-id', response[0].id);
                 $('#nombre').val(response[0].nombre);
@@ -499,16 +498,15 @@ $clientes = Clientes::get_all_clients();
 
     $('#tabla tbody').on('click', '.btnInfo', function() {
         let modal = $('#additionalModal .modal-dialog .modal-content');
-        var $row = $(this).closest('tr');
-        var data = tablaPlantas.row($row).data();
-        var plantaId = data.id;
+        let $row = $(this).closest('tr');
+        let data = tablaPlantas.row($row).data();
 
         $.ajax({
             type: 'POST',
             url: './ajax_handler/plantas.php',
             data: {
                 action: 'get_plantas_by_id',
-                id: plantaId
+                id: data.id
             },
             success: function(response) {
                 $('#additionalModal').modal('show');
@@ -784,21 +782,21 @@ $clientes = Clientes::get_all_clients();
             encargado_telefono: $.trim($("#telEncargado").val()),
             mapa: $.trim($("#mapa").val()),
             estado: $.trim($("#estado").val()),
-            marcaDispositivos: $.trim($("#marcaDispositivos").val()) || null,
-            modelosDispositivos: $.trim($("#modelosDispositivos").val()) || null,
-            cantidadCamaras: $.trim($("#cantidadCamaras").val()) || null,
-            modeloCamaras: $.trim($("#modeloCamaras").val()) || null,
-            codificacionCamaras: $.trim($("#codificacionCamaras").val()) || null,
-            analiticas: $.trim($("#analiticas").val()) || null,
-            sensores: $.trim($("#sensores").val()) || null,
-            tamanoGrabacion: $.trim($("#tamanoGrabacion").val()) || null,
-            diasGrabacion: $.trim($("#diasGrabacion").val()) || null,
-            alarmaVoceo: $.trim($("#alarmaVoceo").val()) || null,
-            sirenas: $.trim($("#sirenas").val()) || null,
-            internet: $.trim($("#internet").val()) || null,
-            proveedorInternet: $.trim($("#proveedorInternet").val()) || null,
-            p2p: $.trim($("#p2p").val()) || null,
-            autoregistro: $.trim($("#autoregistro").val()) || null,
+            marcaDispositivos: $.trim($("#marcaDispositivos").val()),
+            modelosDispositivos: $.trim($("#modelosDispositivos").val()),
+            cantidadCamaras: $.trim($("#cantidadCamaras").val()),
+            modeloCamaras: $.trim($("#modeloCamaras").val()),
+            codificacionCamaras: $.trim($("#codificacionCamaras").val()),
+            analiticas: $.trim($("#analiticas").val()),
+            sensores: $.trim($("#sensores").val()),
+            tamanoGrabacion: $.trim($("#tamanoGrabacion").val()),
+            diasGrabacion: $.trim($("#diasGrabacion").val()),
+            alarmaVoceo: $.trim($("#alarmaVoceo").val()),
+            sirenas: $.trim($("#sirenas").val()),
+            internet: $.trim($("#internet").val()),
+            proveedorInternet: $.trim($("#proveedorInternet").val()),
+            p2p: $.trim($("#p2p").val()),
+            autoregistro: $.trim($("#autoregistro").val()),
         };
         $.ajax({
             type: "POST",
