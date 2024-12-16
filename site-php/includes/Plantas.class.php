@@ -118,20 +118,30 @@
         public static function get_plantas_by_id($id){
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('SELECT p.* ,
-                                    ciudad.id as id_ciudad,
-                                    ciudad.nombre as nombre_ciudad,
-                                    COUNT(cam.id) as camaras
-                                    FROM cctv_plantas p
-                                    LEFT JOIN cctv_comunas comuna ON p.id_comuna = comuna.id
-                                    LEFT JOIN cctv_ciudad ciudad ON comuna.id_ciudad = ciudad.id
-                                    INNER JOIN cctv_camaras cam ON p.id = cam.id_plantas AND (cam.estado = 1 OR cam.estado = 0)
-                                    INNER JOIN cctv_clientes cli ON cli.id = p.id_clientes AND (cli.estado = 1 OR cli.estado = 0)
-                                    WHERE p.id=:id AND (p.estado = 1 OR p.estado = 0)');
+            $stmt = $conn->prepare('
+            SELECT 
+                p.*,
+                ciudad.id AS id_ciudad,
+                ciudad.nombre AS nombre_ciudad,
+                COUNT(CASE WHEN cam.estado IN (0, 1) THEN cam.id ELSE NULL END) AS camaras
+            FROM 
+                cctv_plantas p
+            LEFT JOIN 
+                cctv_comunas comuna ON p.id_comuna = comuna.id
+            LEFT JOIN 
+                cctv_ciudad ciudad ON comuna.id_ciudad = ciudad.id
+            LEFT JOIN 
+                cctv_camaras cam ON p.id = cam.id_plantas
+            LEFT JOIN 
+                cctv_clientes cli ON cli.id = p.id_clientes AND (cli.estado = 1 OR cli.estado = 0)
+            WHERE 
+                p.id = :id AND (p.estado = 1 OR p.estado = 0)
+            GROUP BY 
+                p.id, ciudad.id, ciudad.nombre;
+            ');
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
-                
-                $result = $stmt->fetchAll();
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $result;
             } else {
                 return [];
@@ -144,8 +154,8 @@
             $stmt = $conn->prepare('SELECT  COUNT(c.id) as camaras, p.*
                                     FROM cctv_plantas p 
                                     LEFT JOIN cctv_camaras c ON p.id = c.id_plantas AND (c.estado = 1 OR c.estado = 0)
-                                    WHERE id_clientes=:id AND (p.estado = 1 OR p.estado = 0)
-                                    GROUP BY p.id');
+                                    WHERE p.id_clientes = :id AND (p.estado = 1 OR p.estado = 0)
+                                    GROUP BY p.id'); 
             $stmt->bindParam(':id',$id);
             if($stmt->execute()){
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
