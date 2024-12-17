@@ -31,6 +31,12 @@ $jornadas = Jornada::get_all_jornadas();
                                 Jornada
                             </th>
                             <th>
+                                Hora Entrada
+                            </th>
+                            <th>
+                                Hora Salida
+                            </th>
+                            <th>
                                 Estado
                             </th>
                             <th class="text-center">
@@ -71,6 +77,22 @@ $jornadas = Jornada::get_all_jornadas();
                                                     <option value="<?php echo $planta['id']?>" ><?php echo htmlspecialchars($planta['nombre']);?></option>
                                                 <?php endforeach; ?>
                                             </select>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Hora Entrada:
+                                            <input type="time" class="form-control" id="horaEntrada" name="horaEntrada" required>
+                                        </label>
+                                    </div>
+                                </div>  
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group">
+                                        <label class="col-form-label w-100">Hora Salida:
+                                            <input type="time" class="form-control" id="horaSalida" name="horaSalida" required>
                                         </label>
                                     </div>
                                 </div>
@@ -124,6 +146,7 @@ $jornadas = Jornada::get_all_jornadas();
 </div> <!--end::App Content-->
 <!-- begin::Script -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 <script>
 
     //Crear Turnos
@@ -142,6 +165,8 @@ $jornadas = Jornada::get_all_jornadas();
         $('#nombre').val(data.nombre);
         $('#id_plantas').val(data.id_plantas);
         $('#id_jornada').val(data.id_jornada);
+        $('#horaEntrada').val(data.hora_entrada);
+        $('#horaSalida').val(data.hora_salida);
         $('#estado').val(data.estado);
         $('#modalCRUD .modal-title').text('Editar Turno');
 
@@ -169,6 +194,7 @@ $jornadas = Jornada::get_all_jornadas();
         modal.find('.modal-body').append('<p>Nombre: '+data.nombre+'</p>');
         modal.find('.modal-body').append('<p>Planta: '+plantasMap[data.id_plantas]+'</p>');
         modal.find('.modal-body').append('<p>Jornada: '+jornadasMap[data.id_jornada]+'</p>');
+        modal.find('.modal-body').append('<p>Horario: '+moment(data.hora_entrada, 'HH:mm:ss').format('HH:mm')+' - '+moment(data.hora_salida, 'HH:mm:ss').format('HH:mm')+'</p>');
         modal.find('.modal-body').append('<p>Estado: '+(data.estado ? 'Activo' : 'Inactivo')+'</p>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
         modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
@@ -247,6 +273,18 @@ $jornadas = Jornada::get_all_jornadas();
                         return jornadasMap[data] || 'Desconocido';
                     }
                 },
+                {   
+                    "data": "hora_entrada",
+                    "render": function(data) {
+                        return moment(data, 'HH:mm:ss').format('HH:mm') || 'Sin Hora';
+                    }
+                },
+                {   
+                    "data": "hora_salida",
+                    "render": function(data) {
+                        return moment(data, 'HH:mm:ss').format('HH:mm') || 'Sin Hora';
+                    }
+                },
                 {
                     "data": "estado",
                     "render": function(data) {
@@ -286,7 +324,9 @@ $jornadas = Jornada::get_all_jornadas();
             nombre: $.trim($("#nombre").val()),
             id_plantas: $.trim($("#id_plantas").val()),
             id_jornada: $.trim($("#id_jornada").val()),
-            estado: $.trim($("#estado").val())
+            estado: $.trim($("#estado").val()),
+            hora_entrada: $.trim($("#horaEntrada").val()),
+            hora_salida: $.trim($("#horaSalida").val())
         };
         $.ajax({
             type: "POST",
@@ -302,6 +342,8 @@ $jornadas = Jornada::get_all_jornadas();
                             "nombre": data.turno.nombre,
                             "id_plantas": data.turno.id_plantas,
                             "id_jornada": data.turno.id_jornada,
+                            "hora_entrada": data.turno.hora_entrada,
+                            "hora_salida": data.turno.hora_salida,
                             "estado": data.turno.estado,
                         }).draw().node();
                         $(newRow).attr('data-id', data.turno.id);
@@ -314,6 +356,8 @@ $jornadas = Jornada::get_all_jornadas();
                             "nombre": formData.nombre,
                             "id_plantas": formData.id_plantas,
                             "id_jornada": formData.id_jornada,
+                            "hora_entrada": formData.hora_entrada,
+                            "hora_salida": formData.hora_salida,
                             "estado": formData.estado
                         }).draw();
                         $('#modalCRUD').modal('hide');

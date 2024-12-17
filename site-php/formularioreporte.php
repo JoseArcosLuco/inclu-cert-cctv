@@ -40,7 +40,7 @@ $clientes = Clientes::get_all_clients();
                     <div class="card-header d-flex justify-content-start align-items-center">
                         <div class="card-title col-4 col-md-6">Ingreso Reporte Turno</div>
                         <div class="card-title d-flex align-items-center gap-1 col-8 col-md-6">Cliente:&nbsp;
-                            <select class="form-select form-select-sm" style="min-width: min-content !important;" name="id_cliente" id="id_cliente">
+                            <select class="form-select form-select-sm" style="min-width: min-content !important;" name="id_cliente" id="id_cliente" tabindex="1" autofocus>
                                 <option value="">Seleccione</option>
                                 <?php foreach ($clientes as $cliente): ?>
                                 <option value="<?php echo $cliente['id']?>" ><?php echo htmlspecialchars($cliente['nombre']);?></option>
@@ -67,7 +67,7 @@ $clientes = Clientes::get_all_clients();
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Jornada</label> 
-                                <select class="form-control" name="jornada" id="jornada" onchange="buscarhorario()" required">
+                                <select class="form-control" name="jornada" id="jornada" required">
                                     <option value="">Seleccione</option>
                                     <?php foreach ($dataJornadas as $row){  ?>
                                         <option value="<?php echo $row["id"]; ?>"><?php echo $row["nombre"]; ?></option>
@@ -80,9 +80,19 @@ $clientes = Clientes::get_all_clients();
                                     <option value="">Seleccione una Planta</option>
                                 </select>
                             </div>
-                            <div class="mb-3"> 
-                                <label class="form-label">Horario</label>
-                                <input type="text" class="form-control" id="horario" name="horario" readonly>
+                            <div class="mb-3">
+                                <label class="form-label" for="horario">Horario</label>
+                                <div class="d-flex align-items-center gap-1">
+                                    <input type="text" class="form-control" id="horario" name="horario" readonly>
+                                    <a 
+                                    class="btn btn-secondary btn-sm" 
+                                    href="<?php echo $base_url?>/formularios.php?form=turnos&token=<?php echo $token;?>"
+                                    target="_blank"
+                                    >
+                                        <i class="material-icons">open_in_new</i>
+                                        <span class="d-none">Ver horarios</span>
+                                    </a>
+                                </div>
                             </div>
                             <div class="row mb-3"> 
                                 <div class="col-4">
@@ -164,7 +174,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                var $plantaSelect = $('#planta');
+                let $plantaSelect = $('#planta');
                 $plantaSelect.empty();
                 $plantaSelect.append('<option value="">-Seleccione-</option>');
                 $.each(data, function(index, planta) {
@@ -179,8 +189,8 @@ $(document).ready(function() {
 
     function getTurnos() {
     
-        var id_plantas = $('#planta').val();
-        var id_jornada = $('#jornada').val();
+        let id_plantas = $('#planta').val();
+        let id_jornada = $('#jornada').val();
 
         $.ajax({
             type: 'POST',
@@ -191,7 +201,7 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(data) {
-                var $turnoSelect = $('#turno');
+                let $turnoSelect = $('#turno');
                 $turnoSelect.empty();
                 $turnoSelect.append('<option value="">-Seleccione-</option>');
                 $.each(data, function(index, turno) {
@@ -248,6 +258,7 @@ $(document).ready(function() {
 
 });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 <script>
     function buscarresponsables(){
         document.getElementById('acciones').value = 'buscarresponsables';
@@ -268,25 +279,41 @@ $(document).ready(function() {
         });
     }
 
-    function buscarhorario(){
-        if (document.getElementById('jornada').value === 1){
-            document.getElementById('horario').value = "08:00 A 20:00 HRS."
-        }else{
-            document.getElementById('horario').value = "20:00 A 08:00 HRS."
-        }
-    }
+    $("#turno").change(function() {
+        let turno_id = $(this).val();
+        let planta_id = $("#planta").val();
+
+        $.ajax({
+            url: 'formularioreporteback.php',
+            type: 'POST',
+            data: {
+                turno_id: turno_id,
+                acciones: 'get_turno_info'
+            },
+            dataType: 'json',
+            success: function(data) {
+                let horarioInput = $('#horario');
+                horarioInput.empty();
+                horarioInput.val(moment(data.hora_entrada, 'HH:mm:ss').format('HH:mm') + ' - ' + moment(data.hora_salida, 'HH:mm:ss').format('HH:mm'));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error en AJAX:', textStatus, errorThrown);
+            }
+        });
+    });
 
 
     $(document).on("submit","#dataForm",function(e){
         e.preventDefault();
         $('#submitBtn').attr("disabled", true);
         $("#submitBtn").attr("value", 'Enviando...');
-        const self = this;
         document.getElementById('acciones').value = 'grabarreporte';
+        let data = $(this).serialize();
+        console.log(data)
         $.ajax({
             type: 'post',
             url: 'formularioreporteback.php',
-            data: $(this).serialize(),
+            data: data,
             dataType: 'text',
             cache: false,
             async: true,

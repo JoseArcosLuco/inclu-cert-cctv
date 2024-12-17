@@ -107,6 +107,18 @@
                 echo json_encode($response);
                 break;
 
+            case 'get_turno_info':
+                $turno_id = $_POST['turno_id'];
+                $database = new Database();
+                $conn = $database->getConnection();
+                $stmt = $conn->prepare('SELECT hora_entrada, hora_salida FROM cctv_turnos WHERE id = :turno_id AND (estado = 1 OR estado = 0)');
+                $stmt->bindParam(':turno_id', $turno_id);
+                $stmt->execute();
+                $response = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                echo json_encode($response);
+                break;
+
             case 'buscarresponsables':
                     if(!empty($idplanta) && !empty($idturno)){
                         try {
