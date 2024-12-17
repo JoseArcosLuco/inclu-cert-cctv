@@ -12,9 +12,11 @@ if (isset($_POST)) {
             $nombre = $_POST['nombre'];
             $id_plantas = $_POST['id_plantas'];
             $id_jornada = $_POST['id_jornada'];
+            $hora_entrada = $_POST['hora_entrada'];
+            $hora_salida = $_POST['hora_salida'];
             $estado = $_POST['estado'];
 
-            $response = Turnos::create_turno($nombre,$id_plantas,$id_jornada,$estado);
+            $response = Turnos::create_turno($nombre,$id_plantas,$id_jornada, $hora_entrada, $hora_salida,$estado);
             
             if ($response['status']) {
                 $database = new Database();
@@ -39,9 +41,11 @@ if (isset($_POST)) {
             $nombre = $_POST['nombre'];
             $id_plantas = $_POST['id_plantas'];
             $id_jornada = $_POST['id_jornada'];
+            $hora_entrada = $_POST['hora_entrada'];
+            $hora_salida = $_POST['hora_salida'];
             $estado = $_POST['estado'];
 
-            $response = Turnos::update_turnos($id, $nombre, $id_plantas, $id_jornada, $estado);
+            $response = Turnos::update_turnos($id, $nombre, $id_plantas, $id_jornada, $estado, $hora_entrada, $hora_salida);
             
             if ($response['status']) {
                 $database = new Database();

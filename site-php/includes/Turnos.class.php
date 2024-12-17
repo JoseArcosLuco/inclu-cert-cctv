@@ -3,16 +3,18 @@
 
     class Turnos{
         
-        public static function create_turno($nombre,$id_plantas,$id_jornada,$estado){
+        public static function create_turno($nombre,$id_plantas,$id_jornada,$hora_entrada,$hora_salida,$estado){
             
             $database = new Database();
             $conn = $database->getConnection();
-            $stmt = $conn->prepare('INSERT INTO cctv_turnos(nombre,id_plantas,id_jornada,estado)
-                VALUES(:nombre,:id_plantas,:id_jornada,:estado)');
+            $stmt = $conn->prepare('INSERT INTO cctv_turnos(nombre,id_plantas,id_jornada,estado, hora_entrada, hora_salida)
+                VALUES(:nombre,:id_plantas,:id_jornada,:estado, :hora_entrada, :hora_salida)');
             $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':id_plantas',$id_plantas);
             $stmt->bindParam(':id_jornada',$id_jornada);
             $stmt->bindParam(':estado',$estado);
+            $stmt->bindParam(':hora_entrada',$hora_entrada);
+            $stmt->bindParam(':hora_salida',$hora_salida);
 
             if($stmt->execute()){
                 return [
@@ -61,15 +63,17 @@
             }
         }
 
-        public static function update_turnos($id, $nombre,$id_plantas, $id_jornada, $estado){
+        public static function update_turnos($id, $nombre,$id_plantas, $id_jornada, $estado, $hora_entrada, $hora_salida){
             $database = new Database();
             $conn = $database->getConnection();
 
-            $stmt = $conn->prepare('UPDATE cctv_turnos SET nombre=:nombre,id_plantas=:id_plantas, id_jornada=:id_jornada, estado=:estado WHERE id=:id');
+            $stmt = $conn->prepare('UPDATE cctv_turnos SET nombre=:nombre,id_plantas=:id_plantas, id_jornada=:id_jornada, estado=:estado, hora_entrada=:hora_entrada, hora_salida=:hora_salida WHERE id=:id');
             $stmt->bindParam(':nombre',$nombre);
             $stmt->bindParam(':id_plantas',$id_plantas);
             $stmt->bindParam(':id_jornada',$id_jornada);
             $stmt->bindParam(':estado',$estado);
+            $stmt->bindParam(':hora_entrada',$hora_entrada);
+            $stmt->bindParam(':hora_salida',$hora_salida);
             $stmt->bindParam(':id',$id);
 
             if($stmt->execute()){
