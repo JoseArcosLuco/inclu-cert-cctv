@@ -53,7 +53,11 @@ class Camaras
     {
         $database = new Database();
         $conn = $database->getConnection();
-        $stmt = $conn->prepare('SELECT * FROM cctv_plantas WHERE id_clientes=:id AND (estado = 1 OR estado = 0)');
+        $stmt = $conn->prepare('SELECT id, 
+                                    id_clientes, 
+                                    nombre 
+                                FROM cctv_plantas
+                                WHERE id_clientes=:id AND (estado = 1 OR estado = 0)');
         $stmt->bindParam(':id', $id);
         if ($stmt->execute()) {
             $result = $stmt->fetchAll();
@@ -69,13 +73,16 @@ class Camaras
         $conn = $database->getConnection();
 
         if (empty($id_cliente) && empty($id_planta)) {
-            $stmt = $conn->prepare('SELECT c.* FROM cctv_camaras as c
+            $stmt = $conn->prepare('SELECT c.*,
+                                        clientes.id as id_clientes
+                                    FROM cctv_camaras as c
                                     JOIN cctv_plantas p ON c.id_plantas = p.id AND (p.estado = 1 OR p.estado = 0)
                                     JOIN cctv_clientes clientes ON p.id_clientes = clientes.id AND (clientes.estado = 1 OR clientes.estado = 0)
                                     WHERE (c.estado = 1 OR c.estado = 0);');
 
         } else if (!empty($id_cliente) && empty($id_planta)) {
-            $stmt = $conn->prepare('SELECT c.* 
+            $stmt = $conn->prepare('SELECT c.*,
+                                        clientes.id as id_clientes
                                     FROM cctv_camaras AS c
                                     JOIN cctv_plantas p ON c.id_plantas = p.id
                                     JOIN cctv_clientes clientes ON p.id_clientes = clientes.id AND (clientes.estado = 1 OR clientes.estado = 0)
@@ -84,7 +91,14 @@ class Camaras
             $stmt->bindParam(':id_cliente', $id_cliente);
 
         } else if (!empty($id_cliente) && !empty($id_planta)) {
-            $stmt = $conn->prepare('SELECT * FROM cctv_camaras WHERE id_plantas=:idplantas AND (estado = 1 OR estado = 0);');
+            $stmt = $conn->prepare('SELECT cam.*,
+                                        clientes.id as id_clientes
+                                    FROM cctv_camaras cam 
+                                    JOIN cctv_plantas p ON cam.id_plantas = p.id
+                                    JOIN cctv_clientes clientes ON p.id_clientes = clientes.id
+                                    WHERE cam.id_plantas=:idplantas AND (cam.estado = 1 OR cam.estado = 0)
+                                    AND (clientes.estado = 1 OR clientes.estado = 0)
+                                    ;');
             $stmt->bindParam(':idplantas', $id_planta);
         }
 

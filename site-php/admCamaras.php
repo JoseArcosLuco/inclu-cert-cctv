@@ -12,7 +12,7 @@ $plantas = Plantas::get_all_plantas();
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
-            <div class="card-header d-flex align-items-center ms-2 mb-3 justify-content-start gap-2">
+            <div class="card-header d-flex align-items-end ms-2 mb-3 justify-content-start gap-2">
                 <div class="col-2">
                     <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-start gap-2 fs-5" id="addUser">Agregar Cámara<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
                 </div>
@@ -29,6 +29,9 @@ $plantas = Plantas::get_all_plantas();
                         <option value="">Seleccione un Cliente</option>
                     </select>
                 </label>
+                <button class="btn btn-secondary d-flex alignt-items-center jusitfy-content-center" id="limpiarFiltros" title="Limpiar Filtros">
+                    <i class="material-icons">filter_alt_off</i>
+                </button>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -36,6 +39,9 @@ $plantas = Plantas::get_all_plantas();
                         <tr>
                             <th class="text-center">
                                 ID
+                            </th>
+                            <th>
+                                Cliente
                             </th>
                             <th>
                                 Planta
@@ -238,6 +244,13 @@ $plantas = Plantas::get_all_plantas();
         tablaCamaras.ajax.reload();
     });
 
+    $('#limpiarFiltros').click(function() {
+        $('#id_cliente').val('');
+        $('#id_planta').val('');
+        $('#id_planta').prop('disabled', true);
+        tablaCamaras.ajax.reload();
+    })
+
     //Crear Camara
     $("#addUser").click(function() {
 
@@ -277,8 +290,13 @@ $plantas = Plantas::get_all_plantas();
     //Editar Camara
     $('#tabla tbody').on('click', '.btnEditar', function() {
         var data = tablaCamaras.row($(this).parents('tr')).data();
+        $('#id_plantas').prop('disabled', false);
         $('#formCamara').attr('data-action', 'edit_camara');
         $('#formCamara').attr('data-id', data.id);
+        $('#cliente').val(data.id_clientes);
+        $('#id_plantas').append('<?php foreach ($plantas as $planta): ?>');
+        $('#id_plantas').append('<option value="<?php echo $planta['id'] ?>" ><?php echo htmlspecialchars($planta['nombre']); ?></option>');
+        $('#id_plantas').append('<?php endforeach; ?>');
         $('#id_plantas').val(data.id_plantas);
         $('#nombre').val(data.nombre);
         $('#modelo').val(data.modelo);
@@ -308,6 +326,7 @@ $plantas = Plantas::get_all_plantas();
         modal.find('.modal-header').append('<h5 class="modal-title" id="warningModalLabel">Atención!</h5>');
         modal.find('.modal-body').append('<p>¿Seguro que deseas eliminar este registro? Esta acción no se puede revertir.</p>');
         modal.find('.modal-body').append('<p>ID: ' + data.id + '</p>');
+        modal.find('.modal-body').append('<p>Cliente: ' + clientesMap[data.id_clientes] + '</p>');
         modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_plantas] + '</p>');
         modal.find('.modal-body').append('<p>Nombre: ' + data.nombre + '</p>');
         modal.find('.modal-body').append('<p>Modelo: ' + data.modelo || 'Desconocido' + '</p>');
@@ -344,12 +363,18 @@ $plantas = Plantas::get_all_plantas();
         });
     });
 
-    var plantas = <?php echo json_encode($plantas); ?>;
-    var plantasMap = {};
+    let plantas = <?php echo json_encode($plantas); ?>;
+    let plantasMap = {};
 
-    // Convertir el array de perfiles a un mapa para un acceso más rápido
     plantas.forEach(function(planta) {
         plantasMap[planta.id] = planta.nombre;
+    });
+
+    let clientes = <?php echo json_encode($clientes); ?>;
+    let clientesMap = {};
+
+    clientes.forEach(function(cliente) {
+        clientesMap[cliente.id] = cliente.nombre;
     });
 
     $(document).ready(function() {
@@ -372,6 +397,12 @@ $plantas = Plantas::get_all_plantas();
                     "data": "id",
                     "createdCell": function(td) {
                         $(td).addClass('text-center');
+                    }
+                },
+                {
+                    "data": "id_clientes",
+                    "render": function(data) {
+                        return clientesMap[data] || 'Desconocido';
                     }
                 },
                 {
@@ -455,34 +486,35 @@ $plantas = Plantas::get_all_plantas();
             success: function(data) {
                 if (data.status) {
 
-                    if (action === 'create_camara') {
-                        var newRow = tablaCamaras.row.add({
-                            "id": data.camara.id,
-                            "id_plantas": data.camara.id_plantas,
-                            "nombre": data.camara.nombre,
-                            "modelo": data.camara.modelo,
-                            "tipo_camara": data.camara.tipo_camara,
-                            "sn": data.camara.sn,
-                            "estado": data.camara.estado,
-                        }).draw().node();
-                        $(newRow).attr('data-id', data.camara.id);
+                    // if (action === 'create_camara') {
+                    //     var newRow = tablaCamaras.row.add({
+                    //         "id": data.camara.id,
+                    //         "id_plantas": data.camara.id_plantas,
+                    //         "nombre": data.camara.nombre,
+                    //         "modelo": data.camara.modelo,
+                    //         "tipo_camara": data.camara.tipo_camara,
+                    //         "sn": data.camara.sn,
+                    //         "estado": data.camara.estado,
+                    //     }).draw().node();
+                    //     $(newRow).attr('data-id', data.camara.id);
+                    //     $('#modalCRUD').modal('hide');
+
+                    // } else if (action === 'edit_camara') {
+                    //     var row = tablaCamaras.row($('[data-id="' + id + '"]'));
+                    //     console.log(row.data());
+                    //     row.data({
+                    //         "id": id,
+                    //         "id_plantas": formData.id_planta,
+                    //         "nombre": formData.nombre,
+                    //         "modelo": formData.modelo,
+                    //         "tipo_camara": formData.tipo_camara,
+                    //         "sn": formData.sn,
+                    //         "estado": formData.estado
+                    //     }).draw();
+                    tablaCamaras.ajax.reload();
                         $('#modalCRUD').modal('hide');
 
-                    } else if (action === 'edit_camara') {
-                        var row = tablaCamaras.row($('[data-id="' + id + '"]'));
-                        console.log(row.data());
-                        row.data({
-                            "id": id,
-                            "id_plantas": formData.id_planta,
-                            "nombre": formData.nombre,
-                            "modelo": formData.modelo,
-                            "tipo_camara": formData.tipo_camara,
-                            "sn": formData.sn,
-                            "estado": formData.estado
-                        }).draw();
-                        $('#modalCRUD').modal('hide');
-
-                    }
+                    // }
 
                 } else {
                     alert(data.message);
