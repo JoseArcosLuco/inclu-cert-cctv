@@ -52,6 +52,7 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
@@ -95,10 +96,16 @@
                     "data": "observaciones"
                 },
                 {
-                    "data": "fecha_gestion"
+                    "data": "fecha_gestion",
+                    "render": function(data) {
+                        return moment(data, "YYYY-MM-DD HH:mm:ss").format('DD/MM/YYYY');
+                    }
                 },
                 {
-                    "data": "fecha_registro"
+                    "data": "fecha_registro",
+                    "render": function(data) {
+                        return moment(data, "YYYY-MM-DD").format('DD/MM/YYYY');
+                    }
                 },
                 {
                     "data": "estadoreporte"
@@ -171,7 +178,6 @@
         var data = tablaInforme.row($(this).parents('tr')).data();
         var data = tablaInforme.row($row).data();
         var formularioId = data.id;
-        alert(formularioId);
         window.open("reportetest.php?id_gestion_plantas=" + formularioId);
         //$('#formTurno').attr('data-action', 'edit_turno');
         //$('#formTurno').attr('data-id', data.id);
