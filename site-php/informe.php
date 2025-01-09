@@ -130,6 +130,7 @@
                     }
                 }
             },
+            "order": [[11, "desc"]],
             "language": {
                 "url": "./assets/json/espanol.json"
             }
