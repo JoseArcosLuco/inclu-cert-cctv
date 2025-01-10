@@ -76,7 +76,7 @@ $clientes = Clientes::get_all_clients();
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Turno</label> 
-                                <select class="form-control" name="turno" id="turno" onchange="buscarresponsables();" required>
+                                <select class="form-control" name="turno" id="turno" required>
                                     <option value="">Seleccione una Planta</option>
                                 </select>
                             </div>
@@ -88,6 +88,7 @@ $clientes = Clientes::get_all_clients();
                                     class="btn btn-secondary btn-sm" 
                                     href="<?php echo $base_url?>/formularios.php?form=turnos&token=<?php echo $token;?>"
                                     target="_blank"
+                                    title="Ver horarios"
                                     >
                                         <i class="material-icons">open_in_new</i>
                                         <span class="d-none">Ver horarios</span>
@@ -110,9 +111,22 @@ $clientes = Clientes::get_all_clients();
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Responsable</label> 
-                                <select class="form-control" name="responsable" id="responsable">
-                                    <option value="">Seleccione</option>
-                                </select> 
+                                <div class="d-flex align-items-center gap-1">
+                                    <select class="form-control" name="responsable" id="responsable">
+                                        <option value="">Seleccione</option>
+                                    </select> 
+                                    <a 
+                                    class="btn btn-secondary btn-sm" 
+                                    href=""
+                                    target="_blank"
+                                    title="Ver Responsables"
+                                    hidden
+                                    id="open_responsables"
+                                    >
+                                        <i class="material-icons">open_in_new</i>
+                                        <span class="d-none">Ver Responsables</span>
+                                    </a>
+                                </div>
                             </div>
                             <div class="mb-3"> 
                                 <label class="form-label">Planta En Linea</label> 
@@ -130,8 +144,11 @@ $clientes = Clientes::get_all_clients();
 
                             
                         </div> <!--end::Body--> <!--begin::Footer-->
-                        <div class="card-footer"> 
+                        <div class="card-footer d-flex gap-3"> 
                             <button type="submit" class="btn btn-primary" id="submitBtn">Enviar Reporte</button> 
+                            <button class="btn btn-secondary btn-sm" id="refreshBtn" title="Refrescar Formulario" style="display: flex; justify-content: center; align-items: center;">
+                                <i class="material-icons">refresh</i>
+                            </button>
                         </div> <!--end::Footer-->
                         <div class="col-md-6" id="mensaje" name="mensaje"> 
                 
@@ -160,11 +177,33 @@ $clientes = Clientes::get_all_clients();
     </div> <!--end::Container-->
 </div> <!--end::App Content-->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
 <script>
 //ver las plantas según el cliente ingresado
 $(document).ready(function() {
-    $('#id_cliente').change(function() {
-        var id_cliente = $(this).val();
+
+    $('#id_cliente').change(onChangeClientes);
+
+    $('#planta').change( () => {
+        onChangePlantas();
+        getTurnos();
+    });
+    
+    $('#jornada').change(getTurnos);
+
+    $('#turno').change(() => {
+        onChangeTurnos();
+        buscarresponsables();
+    });
+
+    $('#refreshBtn').click(() => {
+        getTurnos();
+        onChangeTurnos();
+        buscarresponsables();
+    });
+
+    function onChangeClientes() {
+        let id_cliente = $("#id_cliente").val();
 
         $.ajax({
             type: 'POST',
@@ -185,7 +224,7 @@ $(document).ready(function() {
                 console.log('Error en AJAX:', textStatus, errorThrown);
             }
         });
-    });
+    }
 
     function getTurnos() {
     
@@ -214,12 +253,8 @@ $(document).ready(function() {
         });
     };
 
-    $('#planta').change(getTurnos);
-    $('#jornada').change(getTurnos);
-
-    //funcion para obtener camaras
-    $('#planta').change(function() {
-        var id_plantas = $(this).val();
+    function onChangePlantas() {
+        let id_plantas = $("#planta").val();
 
         $.ajax({
             type: 'POST',
@@ -254,34 +289,14 @@ $(document).ready(function() {
                 console.log('Error en AJAX:', textStatus, errorThrown);
             }
         });
-    });
-
-});
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
-<script>
-    function buscarresponsables(){
-        document.getElementById('acciones').value = 'buscarresponsables';
-
-        $.ajax({
-            url: 'formularioreporteback.php',
-            type: 'POST',
-            data: { 
-                id_aux: document.getElementById('id_aux').value,
-                id_planta: document.getElementById('planta').value,
-                id_turno: document.getElementById('turno').value,
-                acciones: document.getElementById('acciones').value
-                },
-            success: function(response) {
-                // Asumiendo que el PHP retorna una lista de opciones en formato HTML
-                $('#responsable').html(response);
-            }
-        });
     }
 
-    $("#turno").change(function() {
-        let turno_id = $(this).val();
+    function onChangeTurnos() {
+        let turno_id = $("#turno").val();
         let planta_id = $("#planta").val();
+        
+        $("#open_responsables").prop("href", "<?php echo $base_url?>/formularios.php?form=operador&turno=" + turno_id +"&token=<?php echo $token;?>");
+        $("#open_responsables").prop("hidden", false);
 
         $.ajax({
             url: 'formularioreporteback.php',
@@ -300,8 +315,26 @@ $(document).ready(function() {
                 console.log('Error en AJAX:', textStatus, errorThrown);
             }
         });
-    });
+    }
 
+    function buscarresponsables(){
+        document.getElementById('acciones').value = 'buscarresponsables';
+
+        $.ajax({
+            url: 'formularioreporteback.php',
+            type: 'POST',
+            data: { 
+                id_aux: document.getElementById('id_aux').value,
+                id_planta: document.getElementById('planta').value,
+                id_turno: document.getElementById('turno').value,
+                acciones: document.getElementById('acciones').value
+                },
+            success: function(response) {
+                // Asumiendo que el PHP retorna una lista de opciones en formato HTML
+                $('#responsable').html(response);
+            }
+        });
+    }
 
     $(document).on("submit","#dataForm",function(e){
         e.preventDefault();
@@ -334,4 +367,6 @@ $(document).ready(function() {
             },
         });
     });
+
+});
 </script>
