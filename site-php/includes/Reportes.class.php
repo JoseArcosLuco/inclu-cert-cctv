@@ -66,7 +66,7 @@
                     FROM 
                         cctv_reporte_diario r
                     INNER JOIN 
-                        cctv_plantas p ON p.id = r.id_planta
+                        cctv_plantas p ON p.id = r.id_planta AND p.estado = 1
                     LEFT JOIN 
                         cctv_reporte_robo rr ON rr.id_planta = p.id AND DATE(rr.fecha) = DATE(r.fecha)
                     LEFT JOIN 
@@ -83,7 +83,7 @@
             }
         
             if (!empty($fecha)) {
-                $conditions[] = 'r.fecha = :fecha';
+                $conditions[] = 'DATE(r.fecha) = :fecha';
                 $params[':fecha'] = $fecha;
             }
         
@@ -97,8 +97,6 @@
             }
         
             $sql .= ' GROUP BY r.id, r.fecha ORDER BY r.id DESC;';
-            
-            //echo('sql:.. '.$sql);
 
             $stmt = $conn->prepare($sql);
             
