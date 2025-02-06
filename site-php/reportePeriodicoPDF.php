@@ -9,6 +9,11 @@ $fullDate = $fecha . ' ' . $hora;
 
 $data = Informes::get_periodicos_by_date($fullDate);
 
+if (empty($data)) {
+    echo 'No hay datos para el reporte';
+    exit;
+}
+
 
 class PDF extends FPDF
 {
