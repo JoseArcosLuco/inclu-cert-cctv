@@ -193,8 +193,6 @@
     $('#btnExcel').click(function() {
         var data = tablaInforme.rows().data().toArray();
 
-        console.log(data)
-
         var exportData = data.map(function(rowData) {
             return {
                 "ID": rowData.id,

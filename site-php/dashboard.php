@@ -118,7 +118,7 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                                 </div> <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"></path>
                                 </svg> 
-                                <a href="<?php echo $base_url?>/formularios.php?form=reporteCompleto&token=<?php echo $token;?>" 
+                                <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" 
                                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                                 >
                                     More info 
@@ -1069,7 +1069,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
             type: "POST",
             url: "./ajax_handler/dashboard.php",
             data: {
-                action: 'updateCardsWithoutCliente'
+                action: 'updateCardsWithoutCliente',
+                fecha_inicio: $('#fecha_inicio').val(),
+                fecha_fin: $('#fecha_fin').val()
             },
             dataType: "json",
             success: function(data) {
@@ -1116,7 +1118,10 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                     let plantasData = Array.isArray(data) ? data : Object.values(data).filter(item => typeof item === 'object');
 
                     plantasData.forEach(function(planta) {
+                        if (!planta) return;
+
                         $('#id_planta').append('<option value="' + planta.id + '">' + planta.nombre + '</option>');
+                        
                         plantas.push(planta.nombre);
                         reportes.push(planta.reportes);
                         contadorReportes += planta.contadorReporte;
@@ -1153,7 +1158,12 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
 
                     $('#total_reportes').text(contadorReportes);
                     $('#countPlantas').text(data.countPlantas);
-                    $('#porcentaje').text(data.porcentaje);
+
+                    if (data.porcentaje == null) {
+                        $('#porcentaje').text('0');
+                    } else {
+                        $('#porcentaje').text(data.porcentaje);
+                    };
 
                     $('#grafico_torta').text(`Incidencias de ${$('#id_cliente option:selected').text()}`);
                     $('#grafico_linea').text(`Fechas de Incidencias de ${$('#id_cliente option:selected').text()}`);
@@ -1239,7 +1249,9 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 method: "POST",
                 data: {
                     id_planta: id_planta,
-                    action: 'updateChartWithoutFecha'
+                    action: 'updateChartWithoutFecha',
+                    fecha_inicio: $('#fecha_inicio').val(),
+                    fecha_fin: $('#fecha_fin').val()
                 },
                 dataType: 'json',
                 success: function(data) {
@@ -1353,7 +1365,6 @@ $cortesInternetActivos = CortesInternet::get_all_corteInternet_Activos();
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data)
                     let fechasRobos = data[0].fechas_robos ? data[0].fechas_robos.split(',') : [];
                     let fechasCortesInternet = data[0].fechas_internet ? data[0].fechas_internet.split(',') : [];
                     let fechasCortesEnergia = data[0].fechas_energia ? data[0].fechas_energia.split(',') : [];

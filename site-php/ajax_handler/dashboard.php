@@ -19,12 +19,12 @@ if (isset($_POST)) {
             break;
         
         case 'updateCardsWithoutCliente':
-            $id_cliente = '';
-            $id_planta = '';
+            $fecha_inicio = $_POST['fecha_inicio'];
+            $fecha_fin = $_POST['fecha_fin'];
             $response['countUsers'] = Users::countUsers();
-            $response['countPlantas'] = Plantas::countPlantas($id_cliente);
-            $response['countReportes'] = ChartData::countReportesPlantas($id_planta, '', '');
-            $response['porcentaje'] = ChartData::porcentajeReportes($id_cliente, $id_planta);
+            $response['countPlantas'] = Plantas::countPlantas('');
+            $response['countReportes'] = ChartData::countReportesPlantas('', $fecha_inicio, $fecha_fin);
+            $response['porcentaje'] = ChartData::porcentajeReportes('', '');
             echo json_encode($response);
             break;
 
@@ -40,12 +40,13 @@ if (isset($_POST)) {
 
         case 'updateChartWithoutFecha':
 
-            $id_cliente = '';
             $id_planta = $_POST['id_planta'];
+            $fecha_inicio = $_POST['fecha_inicio'];
+            $fecha_fin = $_POST['fecha_fin']; 
 
             $chart_data = ChartData::obtenerDatosWithoutFecha($id_planta);
-            $chart_data['countReportes'] = ChartData::countReportesPlantas($id_planta, '', '');
-            $chart_data['porcentaje'] = ChartData::porcentajeReportes($id_cliente, $id_planta);
+            $chart_data['countReportes'] = ChartData::countReportesPlantas($id_planta, $fecha_inicio, $fecha_fin);
+            $chart_data['porcentaje'] = ChartData::porcentajeReportes('', $id_planta);
 
             echo json_encode($chart_data);
             break;

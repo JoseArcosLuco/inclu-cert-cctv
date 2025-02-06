@@ -33,6 +33,34 @@
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result;
         }
+
+        public static function get_periodicos_by_date($fecha){
+            $database = new Database();
+            $conn = $database->getConnection();
+            $sql = "
+                SELECT 
+                rd.id, 
+                rd.fecha,
+                rd.camaras,
+                rd.camaras_online,
+                rd.canal,
+                rd.observacion,
+                CONCAT(u.nombres, ' ', u.apellidos) as operador,
+                c.nombre as cliente,
+                p.nombre as planta
+                FROM cctv_reporte_diario rd
+                INNER JOIN cctv_clientes c ON rd.id_cliente = c.id
+                INNER JOIN cctv_plantas p ON rd.id_planta = p.id
+                INNER JOIN cctv_operadores o ON rd.id_operador = o.id
+                INNER JOIN cctv_users u ON o.id_users = u.id
+                WHERE DATE_FORMAT(rd.fecha, '%Y-%m-%d %H:%i') = DATE_FORMAT(:fecha, '%Y-%m-%d %H:%i');
+            ";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':fecha', $fecha);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        }
     }
 
 ?>
