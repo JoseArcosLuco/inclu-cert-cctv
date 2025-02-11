@@ -150,7 +150,7 @@ if (isset($_POST['usuario'])) {
                                 </label> </div>
                         </div> <!-- /.col -->
                         <div class="col-4">
-                            <div class="d-grid gap-2"> <button type="button" class="btn btn-primary" onClick="actionForm(this.form.id, 'index.php'); return false;">Ingresar</button> </div>
+                            <div class="d-grid gap-2"> <button type="submit" class="btn btn-primary" onClick="actionForm(this.form.id, 'index.php'); return false;">Ingresar</button> </div>
                         </div> <!-- /.col -->
                     </div> <!--end::Row-->
                 </form>
