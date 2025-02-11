@@ -1,6 +1,8 @@
 <?php
 require('fpdf.php');
 require_once('includes/Informes.class.php');
+require_once('jpgraph/src/jpgraph.php'); // Ruta a jpgraph
+require_once('jpgraph/src/jpgraph_pie.php'); // Ruta a jpgraph para gráficos circulares
 
 $fecha = $_GET['fecha'];
 $hora = $_GET['hora'];
@@ -14,9 +16,36 @@ if (empty($data)) {
     exit;
 }
 
-
 class PDF extends FPDF
 {
+    function generatePieChart($camaras, $camaras_online, $tempFilePath)
+    {
+        if (empty($camaras) || empty($camaras_online)) {
+            $width = 300;
+            $height = 200;
+            $image = imagecreate($width, $height);
+            $backgroundColor = imagecolorallocate($image, 255, 255, 255);
+            $textColor = imagecolorallocate($image, 0, 0, 0);
+            imagestring($image, 5, 50, 90, 'No hay datos', $textColor);
+            imagepng($image, $tempFilePath);
+            imagedestroy($image);
+            return;
+        }
+
+        $data = array($camaras_online, $camaras - $camaras_online);
+
+        $graph = new PieGraph(300, 200);
+        $graph->SetShadow();
+
+        $pieplot = new PiePlot($data);
+        $pieplot->SetSliceColors(array('blue', 'lightblue'));
+        $pieplot->SetLegends(array('Cámaras Online', 'Cámaras Offline'));
+
+        $graph->Add($pieplot);
+
+        $graph->Stroke($tempFilePath);
+    }
+
     function renderEstado($data) {
         $estados = [
             1 => 'En Linea',
@@ -51,6 +80,10 @@ class PDF extends FPDF
         $fechaFormateada = date("d/m/Y", strtotime($data[0]['fecha']));
         $horaFormateada = date("H:i", strtotime($data[0]['fecha']));
 
+        if (empty($cliente)) {
+            return;
+        }
+
         $this->SetFillColor(200, 220, 255);
         $this->SetTextColor(0);
         $this->SetFont('', 'B');
@@ -75,32 +108,35 @@ class PDF extends FPDF
 
         $fill = false;
         foreach ($data as $row) {
-            $this->Cell($w[0], 6, $row['id'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[1], 6, $row['camaras'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[2], 6, $row['camaras_online'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[3], 6, utf8_decode($this->renderEstado($row['canal'])), 'LR', 0, 'C', $fill);
-            $this->Cell($w[4], 6, utf8_decode($row['observacion']), 'LR', 0, 'L', $fill);
-            $this->Cell($w[5], 6, $row['planta'], 'LR', 0, 'L', $fill);
-            $this->Cell($w[6], 6, $row['operador'], 'LR', 0, 'L', $fill);
+            $tempFilePath = tempnam(sys_get_temp_dir(), 'chart') . '.png'; // Archivo temporal para la imagen
+            $this->generatePieChart($row['camaras'], $row['camaras_online'], $tempFilePath); // Generar el gráfico circular
+
+            $this->Cell($w[0], 40, $row['id'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[1], 40, $row['camaras'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[2], 40, $row['camaras_online'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[3], 40, utf8_decode($this->renderEstado($row['canal'])), 'LR', 0, 'C', $fill);
+            $this->Cell($w[4], 40, utf8_decode($row['observacion']), 'LR', 0, 'L', $fill);
+            $this->Cell($w[5], 40, $row['planta'], 'LR', 0, 'L', $fill);
+            $this->Image($tempFilePath, $this->GetX(), $this->GetY(), 50, 40); // Insertar la imagen
             $this->Ln();
             $fill = !$fill;
+
+            unlink($tempFilePath);
         }
 
         $this->Cell(array_sum($w), 0, '', 'T');
     }
 
     function GetColumnWidths($header) {
-        return array(10, 30, 30, 60, 65, 45, 35);
+        return array(10, 30, 30, 50, 65, 45, 50);
     }
 }
-
-
 
 $pdf = new PDF('L', 'mm', 'A4');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 
-$header = array('ID', utf8_decode('Cámaras'), utf8_decode('Cám Online'), 'Estado', utf8_decode('Observación'), 'Planta', 'Operador');
+$header = array('ID', utf8_decode('Cámaras'), utf8_decode('Cám Online'), 'Estado', utf8_decode('Observación'), 'Planta', utf8_decode('Gráfico'));
 
 $pdf->CreateTable($header, $data);
 
