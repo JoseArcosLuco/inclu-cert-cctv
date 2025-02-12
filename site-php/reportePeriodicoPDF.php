@@ -20,26 +20,15 @@ class PDF extends FPDF
 {
     function generatePieChart($camaras, $camaras_online, $tempFilePath)
     {
-        if (empty($camaras) || empty($camaras_online)) {
-            $width = 300;
-            $height = 200;
-            $image = imagecreate($width, $height);
-            $backgroundColor = imagecolorallocate($image, 255, 255, 255);
-            $textColor = imagecolorallocate($image, 0, 0, 0);
-            imagestring($image, 5, 50, 90, 'No hay datos', $textColor);
-            imagepng($image, $tempFilePath);
-            imagedestroy($image);
-            return;
-        }
-
         $data = array($camaras_online, $camaras - $camaras_online);
 
-        $graph = new PieGraph(300, 200);
-        $graph->SetShadow();
+        $graph = new PieGraph(260, 220);
 
         $pieplot = new PiePlot($data);
         $pieplot->SetSliceColors(array('blue', 'lightblue'));
         $pieplot->SetLegends(array('Cámaras Online', 'Cámaras Offline'));
+
+        $pieplot->SetLabels(array($camaras, $camaras - $camaras_online));
 
         $graph->Add($pieplot);
 
@@ -59,12 +48,12 @@ class PDF extends FPDF
 
     function Header()
     {
-        $this->Image('./assets/img/AdminLTEFullLogo.png', 10, 6, 30);
-        $this->Image('./assets/img/AdminLTELogo.png', 250, 6, 30);
-        $this->SetFont('Arial', 'B', 15);
+        $this->Image('./assets/img/AdminLTEFullLogo.png', 10, 6, 20);
+        $this->Image('./assets/img/AdminLTELogo.png', 250, 6, 18, 15);
+        $this->SetFont('Arial', 'B', 11);
         $this->Cell(100);
-        $this->Cell(70, 10, utf8_decode('Reporte de Cámaras CCTV'), 0, 1, 'C');
-        $this->Ln(20);
+        $this->Cell(70, 2, utf8_decode('Reporte de Cámaras CCTV'), 0, 1, 'C');
+        $this->Ln(13);
     }
 
     function Footer()
@@ -108,27 +97,30 @@ class PDF extends FPDF
 
         $fill = false;
         foreach ($data as $row) {
-            $tempFilePath = tempnam(sys_get_temp_dir(), 'chart') . '.png'; // Archivo temporal para la imagen
-            $this->generatePieChart($row['camaras'], $row['camaras_online'], $tempFilePath); // Generar el gráfico circular
+            $this->Cell($w[0], 50, $row['id'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[1], 50, $row['camaras'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[2], 50, $row['camaras_online'], 'LR', 0, 'C', $fill);
+            $this->Cell($w[3], 50, utf8_decode($this->renderEstado($row['canal'])), 'LR', 0, 'C', $fill);
+            $this->Cell($w[4], 50, utf8_decode($row['observacion']), 'LR', 0, 'L', $fill);
+            $this->Cell($w[5], 50, $row['planta'], 'LR', 0, 'L', $fill);
+            if ($row['camaras'] > 0) {
+                $tempFilePath = tempnam(sys_get_temp_dir(), 'chart') . '.png';
+                $this->generatePieChart($row['camaras'], $row['camaras_online'], $tempFilePath);
+                $this->Image($tempFilePath, $this->GetX() + 1, $this->GetY() + 1, 61, 50);
+                unlink($tempFilePath);
+            } else {
+                $this->Cell($w[6], 50, utf8_decode('Sin cámaras'), 'LR', 0, 'L', $fill);
+            }
 
-            $this->Cell($w[0], 40, $row['id'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[1], 40, $row['camaras'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[2], 40, $row['camaras_online'], 'LR', 0, 'C', $fill);
-            $this->Cell($w[3], 40, utf8_decode($this->renderEstado($row['canal'])), 'LR', 0, 'C', $fill);
-            $this->Cell($w[4], 40, utf8_decode($row['observacion']), 'LR', 0, 'L', $fill);
-            $this->Cell($w[5], 40, $row['planta'], 'LR', 0, 'L', $fill);
-            $this->Image($tempFilePath, $this->GetX(), $this->GetY(), 50, 40); // Insertar la imagen
             $this->Ln();
             $fill = !$fill;
-
-            unlink($tempFilePath);
         }
 
         $this->Cell(array_sum($w), 0, '', 'T');
     }
 
     function GetColumnWidths($header) {
-        return array(10, 30, 30, 50, 65, 45, 50);
+        return array(10, 20, 25, 43, 65, 45, 62);
     }
 }
 

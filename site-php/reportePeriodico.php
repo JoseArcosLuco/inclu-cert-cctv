@@ -361,9 +361,10 @@ $operadores = Operadores::get_all_operadores_without_turno();
             modal.find('.modal-body').append('<p>Operador: ' + operadoresMap[data.id_operador] + '</p>');
             modal.find('.modal-body').append('<p>Planta: ' + plantasMap[data.id_planta] + '</p>');
             modal.find('.modal-body').append('<p>Fecha: ' + moment(data.fecha).format('DD/MM/YYYY') || 'Fecha no válida' + '</p>');
+            modal.find('.modal-body').append(`<p>Hora: ${moment(data.fecha).format('HH:mm') === '00:00' ? 'Sin Hora' : moment(data.fecha).format('HH:mm')}</p>`);
             modal.find('.modal-body').append('<p>N° de Cámaras: ' + data.camaras + '</p>');
             modal.find('.modal-body').append('<p>N° de Cámaras en Lína: ' + data.camaras_online + '</p>');
-            modal.find('.modal-body').append('<p>Estado: ' + data.canal + '</p>');
+            modal.find('.modal-body').append('<p>Estado: ' + renderEstado(data.canal) + '</p>');
             modal.find('.modal-footer').append('<button type="button" class="btn |btn-secondary" data-bs-dismiss="modal">Cancelar</button>');
             modal.find('.modal-footer').append('<button type="button" class="btn btn-danger btnBorrar" data-bs-dismiss="modal">Eliminar</button>');
             $('#warningModal').modal('show');
@@ -713,7 +714,7 @@ $operadores = Operadores::get_all_operadores_without_turno();
                                     `<tr class="group">
                                         <td colspan="14" class="text-start groupedDate align-middle bg-secondary bg-gradient">
                                             FECHA: <span class="fecha fw-bold px-2">${moment(group).format('DD/MM/YYYY')}</span>
-                                            HORA: <span class="hora fw-bold px-2">${moment(group).format('HH:mm')}</span>
+                                            HORA: <span class="hora fw-bold px-2">${moment(group).format('HH:mm') === '00:00' ? 'Sin Hora' : moment(group).format('HH:mm')}</span>
                                         </td>
                                         <td colspan="1" class="bg-secondary bg-gradient">
                                             <button class="btnPdf btn btn-success btn-sm d-flex gap-1 align-items-center text-nowrap">
@@ -742,6 +743,8 @@ $operadores = Operadores::get_all_operadores_without_turno();
             let groupRow = $(this).closest('tr.group');
             let groupDate = groupRow.find('td.groupedDate span.fecha').text().trim();
             let groupHour = groupRow.find('td.groupedDate span.hora').text().trim();
+
+            groupHour = groupHour === 'Sin Hora' ? '00:00' : groupHour;
 
             let allRows = tablaReporte.rows({ page: 'current' }).nodes();
 
