@@ -23,13 +23,15 @@ class PDF extends FPDF
         $data = array($camaras_online, $camaras - $camaras_online);
 
         $graph = new PieGraph(260, 220);
-
+        $graph->SetShadow();
         $pieplot = new PiePlot($data);
-        $pieplot->SetSliceColors(array('green', 'lightblue'));
+        
+        $pieplot->SetSliceColors(array('MediumAquamarine', 'PeachPuff'));
         $pieplot->SetLegends(array('Cámaras Online', 'Cámaras Offline'));
 
         $pieplot->SetLabels(array($camaras, $camaras - $camaras_online));
-
+        $pieplot->SetTheme("earth");
+        //$pieplot->value->SetColor('navy');;
         $graph->Add($pieplot);
 
         $graph->Stroke($tempFilePath);
@@ -96,20 +98,37 @@ class PDF extends FPDF
 
         $fill = false;
         foreach ($data as $row) {
-            $this->Cell($w[0], 50, $row['id'], 'LBT', 0, 'C', $fill);
+            //$this->Cell($w[0], 50, $row['id'], 'LBT', 0, 'C', $fill);
+            $this->Cell($w[0], 50, utf8_decode($row['planta']), 'LBT', 0, 'C', $fill);
             $this->Cell($w[1], 50, $row['camaras'], 'LBT', 0, 'C', $fill);
             $this->Cell($w[2], 50, $row['camaras_online'], 'LBT', 0, 'C', $fill);
-            $this->Cell($w[3], 50, utf8_decode($this->renderEstado($row['canal'])), 'LBT', 0, 'C', $fill);
-            $this->Cell($w[4], 50, utf8_decode($row['observacion']), 'LBT', 0, 'C', $fill);
-            $this->Cell($w[5], 50, utf8_decode($row['planta']), 'LBT', 0, 'C', $fill);
+            $this->Cell($w[3], 50, utf8_decode($this->renderEstado($row['canal'])), 1, 0, 'J', $fill);
+            
+            // Posición actual antes de escribir la observación
+            $x = $this->GetX();
+            $y = $this->GetY();
+
+            // Definir ancho de la celda para la observación
+            $obsWidth = $w[4];
+
+            // Reemplazamos los saltos de línea con un espacio
+            $textObs = str_replace(["\r", "\n"], ' ', $row['observacion']);
+           
+            // Dibujar el cuadro de la celda
+            $this->MultiCell($obsWidth, 8, mb_convert_encoding($textObs, 'ISO-8859-1', 'UTF-8'), 1, 1,$fill);
+            // Mover la posición de X al siguiente elemento de la fila
+            $this->SetXY($x + $obsWidth, $y);
+
+            //$this->Cell($w[4], 50, utf8_decode($row['observacion']), 'LBT', 0, 'C', $fill);
+            
             if ($row['camaras'] > 0) {
                 $tempFilePath = tempnam(sys_get_temp_dir(), 'chart') . '.png';
                 $this->generatePieChart($row['camaras'], $row['camaras_online'], $tempFilePath);
                 $this->Image($tempFilePath, $this->GetX() + 1, $this->GetY() + 1, 61, 50);
-                $this->Cell($w[6], 50, '', 'LRBT', 0, 'C', false);
+                $this->Cell($w[5], 50, '', 'LRBT', 0, 'C', false);
                 unlink($tempFilePath);
             } else {
-                $this->Cell($w[6], 50, utf8_decode('Sin cámaras'), 'LRBT', 0, 'L', $fill);
+                $this->Cell($w[5], 50, utf8_decode('Sin cámaras'), 'LRBT', 0, 'L', $fill);
             }
 
             $this->Ln();
@@ -120,7 +139,7 @@ class PDF extends FPDF
     }
 
     function GetColumnWidths($header) {
-        return array(10, 20, 25, 43, 65, 45, 62);
+        return array(35, 30, 30, 30, 75, 70);
     }
 }
 
@@ -128,7 +147,7 @@ $pdf = new PDF('L', 'mm', 'A4');
 $pdf->AliasNbPages();
 $pdf->AddPage();
 
-$header = array('ID', utf8_decode('Cámaras'), utf8_decode('Cám Online'), 'Estado', utf8_decode('Observación'), 'Planta', utf8_decode('Gráfico'));
+$header = array('Planta', utf8_decode('Total Cámaras'), utf8_decode('Cám Online'), 'Estado', utf8_decode('Observación'),  utf8_decode('% de Visualización'));
 
 $pdf->CreateTable($header, $data);
 
