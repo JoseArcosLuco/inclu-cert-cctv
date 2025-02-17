@@ -125,6 +125,12 @@ if (isset($_GET['form'])) {
                                         </a> 
                                     </li> -->
                                 <?php endif; ?>
+                                <li class="nav-item"> 
+                                    <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Informes Periódicos</p>
+                                    </a> 
+                                </li>
                                 <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=formularioreporte&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveFr;?>"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Reportes CCTV</p>
                                     </a> </li>
@@ -170,12 +176,12 @@ if (isset($_GET['form'])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <?php if ($idPerfil === 1 || $idPerfil === 2): ?>
-                                    <li class="nav-item"> 
-                                        <a href="<?php echo $base_url?>/formularios.php?form=perfil&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePerfil;?>"> 
+                                <?php if ($idPerfil === 1 || $idPerfil === 2 || $idPerfil === 3): ?>
+                                    <li class="nav-item">
+                                        <a href="./formularios.php?form=camaras&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCam;?>">
                                             <i class="nav-icon bi bi-circle"></i>
-                                            <p>Admin Perfiles</p>
-                                        </a> 
+                                            <p>Admin Cámaras</p>
+                                        </a>
                                     </li>
                                 
                                     <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=tipoplanta&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveTp;?>"> <i class="nav-icon bi bi-circle"></i>
@@ -199,14 +205,10 @@ if (isset($_GET['form'])) {
                                             <p>Admin Turnos</p>
                                         </a> 
                                     </li>
-                                <?php endif; ?>
-                                <?php if ($idPerfil === 1): ?>
                                     <li class="nav-item"> <a href="<?php echo $base_url?>/formularios.php?form=clientes&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveClientes;?>"> <i class="nav-icon bi bi-circle"></i>
                                             <p>Admin Clientes</p>
                                         </a>
                                     </li>
-                                <?php endif; ?>
-                                <?php if ($idPerfil === 1): ?>
                                     <li class="nav-item"> 
                                         <a href="./formularios.php?form=plantas&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveP;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
@@ -214,6 +216,7 @@ if (isset($_GET['form'])) {
                                         </a> 
                                     </li>
                                 <?php endif; ?>
+                                
                                 <!-- <li class="nav-item"> <a href="./admCiudades.php?token=<?php echo $token;?>" class="nav-link"> <i class="nav-icon bi bi-circle"></i>
                                         <p>Ciudades</p>
                                     </a> </li> -->
@@ -224,15 +227,14 @@ if (isset($_GET['form'])) {
                                             <p>Admin Usuarios</p>
                                         </a>
                                     </li>
-                                <?php endif; ?>
-                                <?php if ($idPerfil === 1): ?>
-                                    <li class="nav-item">
-                                        <a href="./formularios.php?form=camaras&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCam;?>">
+                                    <li class="nav-item"> 
+                                        <a href="<?php echo $base_url?>/formularios.php?form=perfil&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePerfil;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
-                                            <p>Admin Cámaras</p>
-                                        </a>
+                                            <p>Admin Perfiles</p>
+                                        </a> 
                                     </li>
                                 <?php endif; ?>
+                                
                             </ul>
                         </li>
                         <li class="nav-item <?php if($menuActiveRobo!='' || $menuActiveCorteEnergia!='' || $menuActiveCorteInternet!='' || $menuActiveNovedades!=''){echo 'menu-open';}?>"> <a href="#" class="nav-link"> <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -242,7 +244,7 @@ if (isset($_GET['form'])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <?php if ($idPerfil === 1): ?>
+                                <?php if ($idPerfil === 1 || $idPerfil === 2 || $idPerfil === 3): ?>
                                     <li class="nav-item"> 
                                         <a href="<?php echo $base_url?>/formularios.php?form=robo&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveRobo;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
@@ -250,7 +252,7 @@ if (isset($_GET['form'])) {
                                         </a> 
                                     </li>
                                 <?php endif; ?>
-                                <?php if ($idPerfil === 1): ?>
+                                <?php if ($idPerfil === 1 || $idPerfil === 2 || $idPerfil === 3): ?>
                                     <li class="nav-item"> 
                                         <a href="<?php echo $base_url?>/formularios.php?form=corte_energia&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteEnergia;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
@@ -259,7 +261,7 @@ if (isset($_GET['form'])) {
                                     </li>
                                 <?php endif; ?>
                                 
-                                <?php if ($idPerfil === 1): ?>
+                                <?php if ($idPerfil === 1 || $idPerfil === 2 || $idPerfil === 3): ?>
                                     <li class="nav-item"> 
                                         <a href="<?php echo $base_url?>/formularios.php?form=corte_internet&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveCorteInternet;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
@@ -267,7 +269,7 @@ if (isset($_GET['form'])) {
                                         </a> 
                                     </li>
                                 <?php endif; ?>
-                                <?php if ($idPerfil === 1): ?>
+                                <?php if ($idPerfil === 1 || $idPerfil === 2 || $idPerfil === 3): ?>
                                     <li class="nav-item"> 
                                         <a href="<?php echo $base_url?>/formularios.php?form=novedades&token=<?php echo $token;?>" class="nav-link <?php echo $menuActiveNovedades;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>
@@ -285,7 +287,7 @@ if (isset($_GET['form'])) {
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <?php if ($idPerfil === 1): ?>
+                                <?php if ($idPerfil === 1 || $idPerfil === 2 || $idPerfil === 3): ?>
                                     <li class="nav-item"> 
                                         <a href="<?php echo $base_url?>/formularios.php?form=periodico&token=<?php echo $token;?>" class="nav-link <?php echo $menuActivePeriodico;?>"> 
                                             <i class="nav-icon bi bi-circle"></i>

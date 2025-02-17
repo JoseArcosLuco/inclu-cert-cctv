@@ -1,10 +1,10 @@
 <?php
 include("./includes/Database.class.php");
-
 require_once('./includes/Plantas.class.php');
-
 $plantas = Plantas::get_all_plantas();
 
+$idPerfil = '';
+$idPerfil = isset($_SESSION["idperfil"]) ? $_SESSION["idperfil"] : '';
 ?>
 
 <div class="app-content"> <!--begin::Container-->
@@ -13,7 +13,9 @@ $plantas = Plantas::get_all_plantas();
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
                 <div class="container d-flex gap-3">
                     <a href="<?php echo $base_url ?>/formularios.php?form=plantas&token=<?php echo $token; ?>" class="btn btn-light rounded-circle d-flex alignt-items-center jusitfy-content-center p-2" title="Volver" id="back"><i class="material-icons fs-3">arrow_back</i></a>
-                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar NVR<i class="material-icons">add</i></button>
+                    <?php if ($idPerfil === 1 || $idPerfil === 2): ?>
+                        <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addUser">Agregar NVR<i class="material-icons">add</i></button>
+                    <?php endif; ?>
                 </div>
                 <h3 class="card-title m-0 p-0 d-flex align-items-center justify-content-end col-6" id="nombrePlanta"></h3>
             </div> <!-- /.card-header -->
@@ -276,7 +278,7 @@ $plantas = Plantas::get_all_plantas();
                     }
                 },
                 {
-                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button></div></div>"
+                    "defaultContent": "<div class='text-center d-inline-block d-md-block'><div class='btn-group'><?php if($idPerfil === 1 || $idPerfil === 2):?><button class='btn btn-primary btn-sm btnEditar'><i class='material-icons'>edit</i></button><button class='btn btn-danger btn-sm btnBorrar'><i class='material-icons'>delete</i></button><?php endif;?></div></div>"
                 }
             ],
             "createdRow": function(row, data, dataIndex) {

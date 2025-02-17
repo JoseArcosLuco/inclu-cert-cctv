@@ -13,14 +13,17 @@ $comunas = Comunas::get_all_comunas_without_id();
 $comisarias = Comisarias::get_all_comisarias();
 $tiposPlanta = TipoPlanta::get_all_tipo_planta();
 $clientes = Clientes::get_all_clients();
-
+$idPerfil = '';
+$idPerfil = isset($_SESSION["idperfil"]) ? $_SESSION["idperfil"] : '';
 ?>
 
 <div class="app-content"> <!--begin::Container-->
     <div class="container-fluid"> <!--begin::Row-->
         <div class="card mb-4">
             <div class="card-header p-3 d-flex justify-content-between align-items-center">
-                <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addPlanta">Agregar Planta<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                <?php if ($idPerfil === 1 || $idPerfil === 2): ?>
+                    <button class="btn btn-primary d-flex alignt-items-center jusitfy-content-center gap-2 fs-5" id="addPlanta">Agregar Planta<i class="material-icons" style="height: 20px; width:20px;">add</i></button>
+                <?php endif; ?>
             </div> <!-- /.card-header -->
             <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-hover w-100" id="tabla">
@@ -744,7 +747,7 @@ $clientes = Clientes::get_all_clients();
                     "data": null,
                     "render": function(data, type, row) {
                         let url = '<?php echo $base_url ?>/formularios.php?form=nvr&planta=' + row.id + '&token=<?php echo $token; ?>'
-                        return '<div class="text-center d-inline-block d-md-block"><div class="btn-group"><a href="' + url + '" class="btn btn-warning btn-sm btnNVR" title="Ir a NVR"><i class="material-icons">scanner</i></a><button class="btn btn-info btn-sm btnInfo" title="Información adicional"><i class="material-icons">info</i></button><button class="btn btn-primary btn-sm btnEditar" title="Editar"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-sm btnBorrar" title="Eliminar"><i class="material-icons">delete</i></button></div></div>'
+                        return '<div class="text-center d-inline-block d-md-block"><div class="btn-group"><a href="' + url + '" class="btn btn-warning btn-sm btnNVR" title="Ir a NVR"><i class="material-icons">scanner</i></a><button class="btn btn-info btn-sm btnInfo" title="Información adicional"><i class="material-icons">info</i></button><?php if($idPerfil === 1 || $idPerfil === 2):?><button class="btn btn-primary btn-sm btnEditar" title="Editar"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-sm btnBorrar" title="Eliminar"><i class="material-icons">delete</i></button><?php endif;?></div></div>'
                     }
                 }
             ],

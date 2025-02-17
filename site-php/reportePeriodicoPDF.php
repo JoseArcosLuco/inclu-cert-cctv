@@ -25,7 +25,7 @@ class PDF extends FPDF
         $graph = new PieGraph(260, 220);
 
         $pieplot = new PiePlot($data);
-        $pieplot->SetSliceColors(array('blue', 'lightblue'));
+        $pieplot->SetSliceColors(array('green', 'lightblue'));
         $pieplot->SetLegends(array('Cámaras Online', 'Cámaras Offline'));
 
         $pieplot->SetLabels(array($camaras, $camaras - $camaras_online));
