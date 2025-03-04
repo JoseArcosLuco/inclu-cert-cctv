@@ -127,7 +127,7 @@ if (isset($_POST['usuario'])) {
     <?php echo $mensaje ?>
     <div class="login-box">
         <div class="login-logo">
-            <a href="../index2.html">
+            <a href="../index2.html" tabindex="-1">
                 <img src="./assets/img/AdminLTELogo.png" width="100" height="100" alt="Inclusive Group" class="brand-image opacity-75"> 
                 <img src="./assets/img/AdminLTEFullLogo.png" width="250" height="100" alt="AdminLTE Logo Large" class="brand-image-xs opacity-75">
                 <!--<b>inclusive</b> CCTV -->
@@ -137,7 +137,7 @@ if (isset($_POST['usuario'])) {
             <div class="card-body login-card-body">
                 <p class="login-box-msg">Ingresa tus credenciales</p>
                 <form id="form1" method="post" class="mb-5">
-                    <div class="input-group mb-3"> <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Email">
+                    <div class="input-group mb-3"> <input type="text" name="usuario" id="usuario" class="form-control" placeholder="Email" autofocus required tabindex="0">
                         <div class="input-group-text"> <span class="bi bi-envelope"></span> </div>
                     </div>
                     <div class="input-group mb-3"> <input type="password" name="password" id="password" class="form-control" placeholder="Password">
